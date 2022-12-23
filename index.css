@@ -5,7 +5,7 @@
 }
 
 body {
-   background-color: rgb(87, 99, 110);
+   background-color: rgb(109, 122, 134);
 }
 
 header {
@@ -55,7 +55,7 @@ nav {
 
 .page-div {
    width: 100vw;
-   background-color: black;
+   background-color: rgb(65, 72, 86);
 }
 
 .contact-div {
@@ -88,6 +88,10 @@ nav {
 
 .tag {
    opacity: 0.8;
+}
+
+.material-icons {
+   font-size: 50px;
 }
 
 
