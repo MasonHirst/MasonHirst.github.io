@@ -1,16 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mason Hirst Portfolio</title>
-    <link href="./index.css" rel="stylesheet">
-</head>
-<body>
-    <h1>Mason Hirst</h1>
-    <h3>I like turtles</h3>
-    <img src="https://media.tenor.com/iul7gbZeBDsAAAAd/i-like-turtles-zombie-kid.gif">
-    
-</body>
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Mason Hirst Portfolio</title>
+
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+         rel="stylesheet"
+      />
+      <link href="./reset.css" rel="stylesheet" />
+      <link href="./index.css" rel="stylesheet" />
+   </head>
+   <body>
+      <header>
+         <button class="nav-btn" id="title-btn">
+            <div class="title-div">
+               <h1 class="nameh1">Mason Hirst</h1>
+
+               <img
+                  class="profile-pic"
+                  src="./profilePic-copy.jpg"
+               />
+            </div>
+         </button>
+
+         <nav>
+            <button class="nav-btn" id="bio-btn">
+               <h4 class="nav-h3">Bio</h4>
+            </button>
+            <button class="nav-btn" id="contact-btn">
+               <h4 class="nav-h3">Contact Info</h4>
+            </button>
+            <button class="nav-btn" id="projects-btn">
+               <h4 class="nav-h3">Projects</h4>
+            </button>
+            <button class="nav-btn" id="skills-btn">
+               <h4 class="nav-h3">Skills</h4>
+            </button>
+         </nav>
+      </header>
+
+      <div class="page-div hide" id="bio-div">
+         <h1>about me</h1>
+      </div>
+
+
+      <div class="page-div hide contact-div" id="contact-div">
+         <h3>Contact Me!</h3>
+         <a class="contact-info-div">
+            <h3>Email</h3>
+            <p>mason.j.hirst@gmail.com</p>
+            <br/>
+            <h3>Phone</h3>
+            <p>(916)720-1372</p>
+            <br />
+            <a
+               class="img-btn"
+               href="https://www.linkedin.com/in/mason-hirst-540972251/"
+               target="_blank"
+            >
+            <h3>Linkedin Profile</h3>
+            <img
+               src="https://cdn-icons-png.flaticon.com/512/145/145807.png"
+               height="35px"
+            />
+         </a>
+            <a href="https://github.com/MasonHirst" target="_blank">
+               <h3>Github</h3>
+               <div class="icon-div">
+                  <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" height="30px"/>
+               </div>
+            </a>
+            <a href="https://discord.com/" target="_blank">
+               <h3>Discord</h3>
+            </a>
+            <p>Mason H<span class="tag">#4834</span></p>
+         </div>
+      </div>
+
+
+      <div class="page-div " id="projects-div">
+         <div>
+            <h3>Budget Wiz</h3>
+            <a href="https://www.youtube.com/watch?v=EtavUiHLq6A&ab_channel=MasonHirst" target="_blank">Demo video</a>
+            <a href="https://budget-wiz.herokuapp.com/" target="_blank">Live site</a>
+         </div>
+         <img src="./budgetwiz-thumbnail.png" height="250px" style="border-radius: 10px;"/>
+      </div>
+
+
+      <div class="page-div hide" id="skills-div">
+         <p>skills div</p>
+      </div>
+   </body>
+
+   <script src="./index.js"></script>
 </html>
