@@ -46,12 +46,27 @@
          </nav>
       </header>
 
-      <div class="page-div hide" id="bio-div">
-         <h1>about me</h1>
+      <div class="page-div hide bio-main-div" id="bio-div">
+         <div class="bio-images-div">
+            <img src="./wedding-photo.jpg" width="200px"/>
+            <img src="./Mountain-biking-selfie.jpeg" width="400px"/>
+            <img src="./desert-selfie.JPG" width="400px"/>
+         </div>
+         <article class="bio-article">
+            <h1>Hey!</h1>
+            <br/>
+            <p>I am a full-stack web developer with a focus on React projects</p>
+            <br/>
+            <p>I love mountain biking, piano, Smash Bros, and playing ultimate frisbee with my wife!</p>
+            <br/>
+            <p>I learn very quickly and love programming and anything technology. There is nothing quite like watching a feature finally start working correctly :)</p>
+            <br/>
+            <p>I am easy going and love working with positive people. I hope to connect soon!</p>
+         </article>
       </div>
 
 
-      <div class="page-div  contact-div" id="contact-div">
+      <div class="page-div hide contact-div" id="contact-div">
          <h3>Contact Me!</h3>
             <div>
                <h3>Email</h3>
@@ -87,13 +102,21 @@
          </div>
 
 
-      <div class="page-div hide" id="projects-div">
-         <div>
-            <h3>Budget Wiz</h3>
-            <a href="https://www.youtube.com/watch?v=EtavUiHLq6A&ab_channel=MasonHirst" target="_blank">Demo video</a>
-            <a href="https://budget-wiz.herokuapp.com/" target="_blank">Live site</a>
-         </div>
-         <img src="./budgetwiz-thumbnail.png" height="250px" style="border-radius: 10px;"/>
+      <div class="page-div projects-page-div" id="projects-div">
+         <section class="project-section">
+            <div>
+               <div class="project-title-div">
+                  <h3>Budget Wiz</h3>
+                  <a href="https://www.youtube.com/watch?v=EtavUiHLq6A&ab_channel=MasonHirst" target="_blank">Demo video</a>
+                  <a href="https://budget-wiz.herokuapp.com/" target="_blank">Live site</a>
+               </div>
+               <img src="./budgetwiz-thumbnail.png" height="250px" style="border-radius: 10px;"/>
+            </div>
+            <div>
+               <p class="project-desc">Budget Wiz is an online budgeting application for creating and tracking budgets. It gives you the ability to create a budget, add budget categories, and track expenses and incomes. All data is stored in a Heroku postgreSQL database, so it will persist over time. This project utilizes a login system with authentication. Budget Wiz is built with vanilla Javascript, and uses many tools/libraries such as Jest, bcrypt, axios, express, SQL, postgres, sequel, bcrypt, etc. </p>
+            </div>
+         </section>
+
       </div>
 
 
