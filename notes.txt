@@ -1,0 +1,5 @@
+site colors:
+  background dark blue: #11162B
+  green primary text: #0AE6B7
+  light blue secondary text: #73D9FF
+  grey faded text: #2D3142
