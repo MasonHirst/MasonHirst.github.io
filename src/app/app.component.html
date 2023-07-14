@@ -8,13 +8,11 @@
       <button
         class="nav-link active"
         style="color: rgba(256, 256, 256, 0.7)"
-        id="home-tab"
         data-bs-toggle="tab"
-        data-bs-target="#home-tab-pane"
         type="button"
         role="tab"
-        aria-controls="home-tab-pane"
         aria-selected="true"
+        routerLink="/"
       >
         Home
       </button>
@@ -23,24 +21,35 @@
       <button
         class="nav-link"
         style="color: rgba(256, 256, 256, 0.7)"
-        id="profile-tab"
         data-bs-toggle="tab"
-        data-bs-target="#profile-tab-pane"
         type="button"
         role="tab"
-        aria-controls="profile-tab-pane"
         aria-selected="false"
+        routerLink="projects"
       >
         Profile
       </button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        style="color: rgba(256, 256, 256, 0.7)"
+        data-bs-toggle="tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        routerLink="work-history"
+      >
+        Work History
+      </button>
+    </li>
   </ul>
   <button class="btn btn-outline-primary contact-btn">Contact me</button>
-  <h3 class="text-primary contact-btn" style="left: 15px; width: fit-content;">Mason Hirst</h3>
+  <h3 class=" contact-btn" style="left: 15px; width: fit-content;">Mason Hirst</h3>
 </div>
 
 
-<div class="tab-content" id="myTabContent">
+<!-- <div class="tab-content" id="myTabContent">
   <div
     class="tab-pane fade show active"
     id="home-tab-pane"
@@ -59,4 +68,15 @@
   >
     <app-projects-page></app-projects-page>
   </div>
-</div>
+  <div
+    class="tab-pane fade"
+    id="resume-tab-pane"
+    role="tabpanel"
+    aria-labelledby="resume-tab"
+    tabindex="0"
+  >
+    <app-work-history></app-work-history>
+  </div>
+</div> -->
+
+<router-outlet></router-outlet>
