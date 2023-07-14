@@ -1,0 +1,35 @@
+.page-cont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pag-inner-cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  /* border: 1px solid red; */
+}
+
+.hero-img {
+  /* width: min(100%, 400px); */
+  width: 100%;
+}
+
+.intro-card {
+  /* background-color: #212948; */
+  background: linear-gradient(to bottom left, #212948, #11162b);
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: 7px;
+  width: fit-content;
+  margin-top: 30px;
+  font-size: 14px;
+}
+.margin-left {
+  margin-left: 20%;
+}

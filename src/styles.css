@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+.text-faded {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  background-color: #11162B;
+  /* border-color: #73D9FF; */
+  border-color: #0AE6B7;
+  border-bottom-color: #11162B;
+  color: #0AE6B7 !important;
+}
+.nav-tabs {
+  /* border-bottom-color: #73D9FF !important; */
+  border-bottom-color: #0AE6B7 !important;
+}
