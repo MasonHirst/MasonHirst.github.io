@@ -1,3 +1,7 @@
+.index-body {
+  background-color: #11162b;
+  color: rgba(256, 256, 256, 0.9);
+}
 .text-faded {
   color: rgba(255, 255, 255, 0.8);
 }
@@ -29,10 +33,6 @@
   border-bottom-color: #0ae6b7 !important;
 }
 
-.index-body {
-  background-color: #11162b;
-  color: rgba(256, 256, 256, 0.9);
-}
 
 .flex-col {
   display: flex;
@@ -41,7 +41,7 @@
 
 .fade-in {
   opacity: 0;
-  animation: fade-in-animation .5s ease-in forwards;
+  animation: fade-in-animation 0.6s ease-in forwards;
 }
 
 @keyframes fade-in-animation {
@@ -51,4 +51,23 @@
   to {
     opacity: 1;
   }
+}
+
+.fading-line-primary {
+  width: 100%;
+  height: 3px;
+  border: none;
+  margin: 20px 0;
+  background: linear-gradient(to right, rgba(10, 230, 183, 0), #0AE6B7 10%, #0AE6B7 90%, rgba(10, 230, 183, 0));
+}
+
+.history-card {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: linear-gradient(to bottom, #212948, #13182e);
+  border-radius: 7px;
+  flex: 1;
+  height: fit-content;
 }

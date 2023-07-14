@@ -52,14 +52,62 @@
       </div>
     </div>
 
-    <div style="width: 80%; padding: 30px 0">
+    <div style="width: min(100%, 800px); padding: 30px 0">
       <h2
         class="text-primary"
-        style="font-size: 40px; font-weight: bold; margin: 0"
+        style="font-size: 34px; font-weight: bold; margin: 0"
       >
-        #02
+        #Industry Experience
       </h2>
-      <h2 class="text-info">Years</h2>
+      <!-- <h3 class="text-info">Years</h3> -->
+
+      <div class="w-100 work-cards-holder">
+        <ng-template let-exp let-index="index" ngFor [ngForOf]="experiences">
+          <div
+            class="history-card"
+            [ngStyle]="{
+              marginTop: index * 25 + 'px',
+            }"
+          >
+            <p class="text-primary">
+              {{ exp.startDate + " - " + exp.endDate }}
+            </p>
+            <h6 class="text-info">{{ exp.title }}</h6>
+            <p style="margin-top: -5px; font-size: 15px" class="text-primary">
+              {{ exp.company }}
+            </p>
+            <p style="color: #8c9fb7">{{ exp.description }}</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <hr class="fading-line-primary" />
+
+    <div style="width: min(100%, 800px); padding: 30px 0">
+      <h2 class="text-primary" style="font-size: 34px; font-weight: bold">
+        #Latest Projects
+      </h2>
+      <h4 class="text-info" style="max-width: 600px; margin-bottom: 50px;">
+        I am always working on a personal project to improve my skills. Check
+        out one of my apps!
+      </h4>
+
+      <div class="w-100">
+        <ng-template let-proj let-index="index" ngFor [ngForOf]="projects">
+          <div class="proj-preview-card">
+            <section class="w-100">
+              <h4 class="float-end text-primary">{{ proj.title }}</h4>
+              <p class="float-end" style="max-width: 470px;">{{ proj.description }}</p>
+            </section>
+            <img
+              [src]="proj.imgPath"
+              [alt]="proj.title"
+              class="proj-preview-img"
+            />
+          </div>
+        </ng-template>
+      </div>
     </div>
     <!-- End of page content -->
   </div>

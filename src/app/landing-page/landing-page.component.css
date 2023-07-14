@@ -5,7 +5,7 @@
 
 .intro-card {
   /* background-color: #212948; */
-  background: linear-gradient(to bottom left, #212948, #13182E);
+  background: linear-gradient(to bottom left, #212948, #13182e);
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
@@ -17,4 +17,32 @@
 }
 .margin-left {
   margin-left: 20%;
+}
+
+.work-cards-holder {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: space-evenly;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.card-bot {
+  margin-top: 30px;
+}
+.card-top {
+  margin-bottom: 30px;
+}
+
+.proj-preview-img {
+  max-width: 100%;
+  border-radius: 7px;
+}
+
+.proj-preview-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
