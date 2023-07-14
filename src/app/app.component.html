@@ -1,17 +1,10 @@
 <div class="header-cont">
-  <ul
-    class="nav nav-tabs justify-content-center"
-    id="myTab"
-    role="tablist"
-  >
+  <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <button
-        class="nav-link active"
+        class="nav-link"
+        [ngClass]="{ active: activeTab === 'home' }"
         style="color: rgba(256, 256, 256, 0.7)"
-        data-bs-toggle="tab"
-        type="button"
-        role="tab"
-        aria-selected="true"
         routerLink="/"
       >
         Home
@@ -20,11 +13,8 @@
     <li class="nav-item" role="presentation">
       <button
         class="nav-link"
+        [ngClass]="{ active: activeTab === 'projects' }"
         style="color: rgba(256, 256, 256, 0.7)"
-        data-bs-toggle="tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
         routerLink="projects"
       >
         Projects
@@ -33,50 +23,20 @@
     <li class="nav-item" role="presentation">
       <button
         class="nav-link"
+        [ngClass]="{ active: activeTab === 'work-history' }"
         style="color: rgba(256, 256, 256, 0.7)"
-        data-bs-toggle="tab"
-        type="button"
-        role="tab"
-        aria-selected="false"
         routerLink="work-history"
       >
         Work History
       </button>
     </li>
   </ul>
-  <button class="btn btn-outline-primary contact-btn">Contact me</button>
-  <h3 class=" contact-btn" style="left: 15px; width: fit-content;">Mason Hirst</h3>
+  <button class="btn btn-outline-info contact-btn">Contact me</button>
+  <h3 class="contact-btn" style="left: 15px; width: fit-content">
+    Mason Hirst
+  </h3>
 </div>
 
-
-<!-- <div class="tab-content" id="myTabContent">
-  <div
-    class="tab-pane fade show active"
-    id="home-tab-pane"
-    role="tabpanel"
-    aria-labelledby="home-tab"
-    tabindex="0"
-  >
-    <app-landing-page></app-landing-page>
-  </div>
-  <div
-    class="tab-pane fade"
-    id="profile-tab-pane"
-    role="tabpanel"
-    aria-labelledby="profile-tab"
-    tabindex="0"
-  >
-    <app-projects-page></app-projects-page>
-  </div>
-  <div
-    class="tab-pane fade"
-    id="resume-tab-pane"
-    role="tabpanel"
-    aria-labelledby="resume-tab"
-    tabindex="0"
-  >
-    <app-work-history></app-work-history>
-  </div>
-</div> -->
-
-<router-outlet></router-outlet>
+<div style="padding-bottom: 300px;">
+  <router-outlet></router-outlet>
+</div>

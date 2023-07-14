@@ -43,6 +43,25 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 3px;
+  margin-top: 50px;
+}
+
+.proj-card-link-wrapper {
+  display: flex;
+  gap: 10px;
   align-items: center;
-  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.faded-grey-line-left {
+  height: 2px;
+  border: none;
+  background: linear-gradient(to right, rgba(10, 230, 183, 0), #808080 30%);
+}
+
+.faded-grey-line-right {
+  height: 2px;
+  border: none;
+  background: linear-gradient(to left, rgba(10, 230, 183, 0), #808080 30%);
 }
