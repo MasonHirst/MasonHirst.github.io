@@ -1,42 +1,41 @@
 <div class="header-cont">
-  <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
-        [ngClass]="{ active: activeTab === 'home' }"
-        style="color: rgba(256, 256, 256, 0.7)"
-        routerLink="/"
-      >
-        Home
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
-        [ngClass]="{ active: activeTab === 'projects' }"
-        style="color: rgba(256, 256, 256, 0.7)"
-        routerLink="projects"
-      >
-        Projects
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
-        [ngClass]="{ active: activeTab === 'work-history' }"
-        style="color: rgba(256, 256, 256, 0.7)"
-        routerLink="work-history"
-      >
-        Work History
-      </button>
-    </li>
+  <ul
+    class="nav nav-tabs justify-content-center"
+    [ngClass]="{
+      'justify-content-center': screen >= 600,
+      'justify-content-start': screen < 600
+    }"
+    style="padding: 0px 10px"
+    id="myTab"
+    role="tablist"
+  >
+    <ng-template let-tab ngFor [ngForOf]="tabs">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          [ngClass]="{ active: activeTab.includes(tab.route) }"
+          style="color: rgba(256, 256, 256, 0.7); font-size: 13px;"
+          routerLink="{{ tab.route }}"
+        >
+          {{ tab.name }}
+        </button>
+      </li>
+    </ng-template>
   </ul>
-  <button class="btn btn-outline-info contact-btn">Contact me</button>
-  <h3 class="contact-btn" style="left: 15px; width: fit-content">
+  <a class="btn btn-outline-info contact-btn" [ngClass]="{
+    'btn-sm': screen < 600,
+    'display-none': screen < 400,
+  }" href="#footer">Contact {{ screen >= 600 ? 'me' : ''}}</a>
+  <h5
+    class="contact-btn"
+    style="left: 15px; width: fit-content"
+    [ngClass]="{
+    'display-none': screen < 600,
+  }"
+  >
     Mason Hirst
-  </h3>
+  </h5>
 </div>
 
-<div style="padding-bottom: 300px;">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>
+<app-footer></app-footer>

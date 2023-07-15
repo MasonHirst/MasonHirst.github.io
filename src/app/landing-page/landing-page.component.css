@@ -10,7 +10,6 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  border-radius: 7px;
   width: fit-content;
   margin-top: 30px;
   font-size: 14px;
@@ -36,7 +35,6 @@
 
 .proj-preview-img {
   max-width: 100%;
-  border-radius: 7px;
 }
 
 .proj-preview-card {

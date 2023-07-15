@@ -27,7 +27,7 @@
           Hello
         </h1>
         <h1 class="text-info">I'm Mason</h1>
-        <div class="intro-card">
+        <div class="intro-card rounded-2">
           <code style="color: rgba(256, 256, 256, 0.4)"
             >// My self introduction</code
           >
@@ -43,7 +43,7 @@
           <code class="text-faded">{{ "}" }}</code>
         </div>
 
-        <div class="intro-card margin-left">
+        <div class="intro-card margin-left rounded-2">
           <code class="text-faded"
             ><span style="color: #cf81e5">What I do</span> {{ "{" }}</code
           >
@@ -69,12 +69,11 @@
       >
         #Industry Experience
       </h2>
-      <!-- <h3 class="text-info">Years</h3> -->
 
       <div class="w-100 work-cards-holder">
         <ng-template let-exp let-index="index" ngFor [ngForOf]="experiences">
           <div
-            class="history-card"
+            class="history-card rounded-2"
             [ngStyle]="{
               marginTop: index * 25 + 'px',
             }"
@@ -90,6 +89,16 @@
           </div>
         </ng-template>
       </div>
+      <!-- <a>
+        <h5 class="text-primary float-end text-btn">View full work history <i class="bi bi-chevron-right"></i></h5>
+      </a> -->
+      <button
+        class="btn btn-outline-primary"
+        style="margin-top: -80px"
+        routerLink="/work-history"
+      >
+        View full work history <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
 
     <hr class="fading-line-primary" />
@@ -111,19 +120,19 @@
               <section class="proj-card-link-wrapper">
                 <a
                   class="btn btn-outline-info"
-                  href="{{ proj.github }}"
-                  target="_blank"
-                  style="margin-left: 10px"
-                  >Github repo</a
-                >
-                <a
-                  class="btn btn-outline-info"
                   [ngStyle]="{ display: proj.liveLink ? 'block' : 'none' }"
                   href="{{ proj.liveLink }}"
                   target="_blank"
                   >Live site</a
                 >
-                <button class="btn btn-outline-primary" routerLink="projects">
+                <a
+                  class="btn btn-outline-info"
+                  href="{{ proj.github }}"
+                  target="_blank"
+                  style="margin-left: 10px"
+                  >Github repo</a
+                >
+                <button class="btn btn-outline-primary" routerLink="/projects">
                   More details <i class="bi bi-chevron-right"></i>
                 </button>
               </section>
@@ -139,11 +148,38 @@
           </div>
         </ng-template>
       </div>
+      <a class="btn btn-outline-primary float-end"
+        >See all projects <i class="bi bi-chevron-right"></i
+      ></a>
     </div>
 
-    <div>
-      <h3 class="text-primary">Don't be shy,</h3>
-      <h4 class="text-info">Say hi</h4>
+    <div style="width: min(100%, 800px); padding: 30px 0">
+      <h2 class="text-primary" style="font-size: 34px; font-weight: bold; margin-bottom: 20px;">
+        #About Me
+      </h2>
+      <div class="d-flex gap-3">
+        <img
+          class="rounded-2"
+          src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689364252/wedding-photo-us_auwmkw.jpg"
+          alt="Mason and his wife"
+          style="max-width: min(35%, 300px); height: fit-content"
+        />
+        <section class="d-flex flex-column gap-3">
+          <p style="margin: 0; max-width: 400px;">
+            I have been married to my awesome wife since 2022, and we are
+            expecting our first boy soon!
+          </p>
+          <img
+          class="rounded-2"
+          src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689365082/Screenshot_2023-07-14_at_2.03.53_PM_iapink.png"
+          alt="Mason mountain biking"
+          style="max-width: 100%"
+          />
+          <p class="" style="max-width: 400px;">
+            I also love mountain biking, ultimate frisbee, ping-pong, smash bros, and piano!
+          </p>
+        </section>
+      </div>
     </div>
     <!-- End of page content -->
   </div>

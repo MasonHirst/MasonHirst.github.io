@@ -7,7 +7,7 @@ import { WorkHistoryComponent } from './work-history/work-history.component';
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
   { path: 'projects', component: ProjectsPageComponent },
-  { path: 'work-history', component: WorkHistoryComponent },
+  { path: 'resume', component: WorkHistoryComponent },
   { path: '**', redirectTo: 'home' },
 ];
 
