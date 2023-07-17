@@ -16,19 +16,12 @@ export class AppComponent implements OnInit {
     new Tab('Home', 'home'),
     new Tab('Projects', 'projects'),
     new Tab('Resume', 'resume'),
+    new Tab('Games', 'games')
   ]
 
-  constructor(private router: Router, private styleService: StylingService) {}
+  constructor(private styleService: StylingService,) {}
 
   ngOnInit() {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        // Extract the updated URL extension
-        const urlExtension = event.urlAfterRedirects.split('/').pop();
-        this.activeTab = urlExtension;
-      })
-    
       this.styleService.screenSize$.subscribe((size) => {
         this.screen = size;
       })

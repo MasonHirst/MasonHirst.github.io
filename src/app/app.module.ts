@@ -8,6 +8,9 @@ import { ProjectsPageComponent } from './projects-page/projects-page.component';
 import { WorkHistoryComponent } from './work-history/work-history.component';
 import { FooterComponent } from './footer/footer.component';
 import { StylingService } from './styling.service';
+import { GamesComponent } from './games/games.component';
+import { ProjectComponent } from './projects-page/project/project.component';
+import { DataService } from './data.service';
 
 @NgModule({
   declarations: [
@@ -15,13 +18,15 @@ import { StylingService } from './styling.service';
     LandingPageComponent,
     ProjectsPageComponent,
     WorkHistoryComponent,
-    FooterComponent
+    FooterComponent,
+    GamesComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [StylingService],
+  providers: [StylingService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

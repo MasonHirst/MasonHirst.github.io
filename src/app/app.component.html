@@ -13,7 +13,7 @@
       <li class="nav-item" role="presentation">
         <button
           class="nav-link"
-          [ngClass]="{ active: activeTab.includes(tab.route) }"
+          routerLinkActive="active"
           style="color: rgba(256, 256, 256, 0.7); font-size: 13px;"
           routerLink="{{ tab.route }}"
         >
@@ -28,7 +28,8 @@
   }" href="#footer">Contact {{ screen >= 600 ? 'me' : ''}}</a>
   <h5
     class="contact-btn"
-    style="left: 15px; width: fit-content"
+    style="left: 15px; width: fit-content; cursor: pointer;"
+    routerLink="/home"
     [ngClass]="{
     'display-none': screen < 600,
   }"
@@ -38,4 +39,4 @@
 </div>
 
 <router-outlet></router-outlet>
-<app-footer></app-footer>
+

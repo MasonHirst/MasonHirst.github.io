@@ -1,7 +1,29 @@
-<div class="page-cont fade-in">
-  <div class="pag-inner-cont">
+<div class="page-cont fade-in" style="margin: 0 !important; padding: 0 !important;">
+  <div class="mt-2 d-flex gap-4" style="width: 1000px;">
     <!-- Your content goes here -->
-    <p style="color: white">projects-page works!</p>
+    <div
+      class="nav flex-column nav-pills me-3"
+      style="margin: 0; height: 100%; padding-top: 50px;"
+      id="v-pills-tab"
+      role="tablist"
+      aria-orientation="vertical"
+    >
+      <button
+        *ngFor="let proj of projects"
+        class="nav-link text-faded"
+        style="white-space: nowrap;"
+        routerLinkActive="active"
+        [routerLink]="proj.path"
+      >
+        {{ proj.title }}
+      </button>
+    </div>
+
+    <div class="v-line" style="margin-bottom: 9px;"></div>
+
+    <div>
+      <router-outlet></router-outlet>
+    </div>
     <!-- End of page content -->
   </div>
 </div>

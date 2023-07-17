@@ -6,22 +6,22 @@
       style="gap: 5px; margin-bottom: 5px; max-width: 700px"
     >
       <hr class="faded-grey-line-left w-100" />
-      <p style="opacity: 0.4; white-space: nowrap; margin: 0; font-size: 14px">
+      <p style="opacity: 0.4; white-space: nowrap; margin: 0; font-size: clamp(11px, 2vw, 14px)">
         This site was built using Angular and Bootstrap
       </p>
       <hr class="faded-grey-line-right w-100" />
     </section>
-    <div class="row" style="width: 100%">
-      <div style="width: 50%">
+    <div class="d-flex justify-content-center" style="width: 100%; justify-content: space-between;" *ngIf="screen >= 600">
+      <div style="width: 50%;">
         <img
           src="../../assets/mason-hirst-bg-half.png"
           alt="Mason Hirst"
           class="hero-img float-end"
         />
       </div>
-      <div style="width: 50%">
+      <div style="">
         <h1
-          class="text-primary"
+          class="text-primary m-0"
           style="font-size: clamp(60px, 10vw, 90px); font-weight: bold"
         >
           Hello
@@ -62,6 +62,60 @@
       </div>
     </div>
 
+    <div class="d-flex w-100 justify-content-evenly" *ngIf="screen < 600">
+      <div style="width: 50%">
+        <img
+          src="../../assets/mason-hirst-bg-half.png"
+          alt="Mason Hirst"
+          class="hero-img float-end"
+        />
+      </div>
+      <div class="d-flex flex-column justify-content-center">
+        <h1
+          class="text-primary"
+          style="font-size: clamp(35px, 10vw, 90px); font-weight: bold"
+        >
+          Hello
+        </h1>
+        <h1 class="text-info" style="font-size: clamp(20px, 6vw, 60px);">I'm Mason</h1>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3 p-4 w-100" *ngIf="screen < 600" style="max-width: 350px;">
+      <div class="intro-card rounded-2"  style="height: fit-content; margin: 0;">
+        <code style="color: rgba(256, 256, 256, 0.4)"
+          >// My self introduction</code
+        >
+        <code class="text-faded"
+          ><span style="color: #cf81e5">Name</span> {{ "{" }}</code
+        >
+        <code style="margin-left: 15px" class="text-faded"
+          >First name: <span class="text-info">Mason</span>;</code
+        >
+        <code style="margin-left: 15px" class="text-faded"
+          >Last name: <span class="text-info">Hirst</span>;</code
+        >
+        <code class="text-faded">{{ "}" }}</code>
+      </div>
+
+      <div class="intro-card rounded-2 align-self-end" style="height: fit-content; margin: 0;">
+        <code class="text-faded"
+          ><span style="color: #cf81e5">What I do</span> {{ "{" }}</code
+        >
+        <code style="margin-left: 15px" class="text-faded"
+          >Profession: <br /><code style="margin-left: 15px" class="text-info"
+            >Full Stack Developer</code
+          >;</code
+        >
+        <code style="margin-left: 15px" class="text-faded"
+          >Strength: <br /><code style="margin-left: 15px" class="text-info"
+            >Javascript Frameworks</code
+          >;</code
+        >
+        <code class="text-faded">{{ "}" }}</code>
+      </div>
+    </div>
+
     <div style="width: min(100%, 800px); padding: 30px 0">
       <h2
         class="text-primary"
@@ -89,13 +143,10 @@
           </div>
         </ng-template>
       </div>
-      <!-- <a>
-        <h5 class="text-primary float-end text-btn">View full work history <i class="bi bi-chevron-right"></i></h5>
-      </a> -->
       <button
         class="btn btn-outline-primary"
         style="margin-top: -80px"
-        routerLink="/work-history"
+        routerLink="/resume"
       >
         View full work history <i class="bi bi-chevron-right"></i>
       </button>
@@ -129,10 +180,9 @@
                   class="btn btn-outline-info"
                   href="{{ proj.github }}"
                   target="_blank"
-                  style="margin-left: 10px"
                   >Github repo</a
                 >
-                <button class="btn btn-outline-primary" routerLink="/projects">
+                <button class="btn btn-outline-primary" routerLink="{{ '/projects/' + proj.path }}">
                   More details <i class="bi bi-chevron-right"></i>
                 </button>
               </section>
@@ -149,12 +199,16 @@
         </ng-template>
       </div>
       <a class="btn btn-outline-primary float-end"
+        routerLink="/projects"
         >See all projects <i class="bi bi-chevron-right"></i
       ></a>
     </div>
 
     <div style="width: min(100%, 800px); padding: 30px 0">
-      <h2 class="text-primary" style="font-size: 34px; font-weight: bold; margin-bottom: 20px;">
+      <h2
+        class="text-primary"
+        style="font-size: 34px; font-weight: bold; margin-bottom: 20px"
+      >
         #About Me
       </h2>
       <div class="d-flex gap-3">
@@ -165,18 +219,19 @@
           style="max-width: min(35%, 300px); height: fit-content"
         />
         <section class="d-flex flex-column gap-3">
-          <p style="margin: 0; max-width: 400px;">
+          <p style="margin: 0; max-width: 400px">
             I have been married to my awesome wife since 2022, and we are
             expecting our first boy soon!
           </p>
           <img
-          class="rounded-2"
-          src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689365082/Screenshot_2023-07-14_at_2.03.53_PM_iapink.png"
-          alt="Mason mountain biking"
-          style="max-width: 100%"
+            class="rounded-2"
+            src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689365082/Screenshot_2023-07-14_at_2.03.53_PM_iapink.png"
+            alt="Mason mountain biking"
+            style="max-width: 100%"
           />
-          <p class="" style="max-width: 400px;">
-            I also love mountain biking, ultimate frisbee, ping-pong, smash bros, and piano!
+          <p class="" style="max-width: 400px">
+            I also love mountain biking, ultimate frisbee, ping-pong, smash
+            bros, and piano!
           </p>
         </section>
       </div>
@@ -184,3 +239,4 @@
     <!-- End of page content -->
   </div>
 </div>
+<app-footer></app-footer>

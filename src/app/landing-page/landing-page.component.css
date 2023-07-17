@@ -33,25 +33,6 @@
   margin-bottom: 30px;
 }
 
-.proj-preview-img {
-  max-width: 100%;
-}
-
-.proj-preview-card {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-top: 50px;
-}
-
-.proj-card-link-wrapper {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 3px;
-}
-
 .faded-grey-line-left {
   height: 2px;
   border: none;
