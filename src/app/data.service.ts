@@ -3,13 +3,14 @@ import { Project } from './projects-page/project.model';
 import { ExperienceModel } from './landing-page/experience.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   experiences: ExperienceModel[] = [
     new ExperienceModel(
       'Full Stack Developer',
       'Fidelity Investments',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689656944/Screenshot_2023-07-17_at_11.08.01_PM_vueaa4.png',
       'Salt Lake City, Utah',
       'Jul 2023',
       'Present',
@@ -18,14 +19,16 @@ export class DataService {
     new ExperienceModel(
       'Software Engineer Intern',
       'Sparkz Development',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657359/sparkz-logo_gqcisu.png',
       'Pleasant Grove, Utah',
       'Jan 2023',
       'Jul 2023',
-      'I particpated in an agile development team, developing a web platform for building and hosting client websites.'
+      'I participated in an agile development team, developing a web platform for building and hosting client websites.'
     ),
     new ExperienceModel(
       'Student Developer',
       'Devmountain',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657549/devmountain-logo_my7756.png',
       'Lehi, Utah',
       'Jul 2022',
       'Jan 2023',
@@ -34,13 +37,14 @@ export class DataService {
     new ExperienceModel(
       'Sheets programmer',
       'CAL-MAT',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657647/CAL-MAT-logo_stclag.png',
       'Sacramento, CA',
       'Jun 2021',
       'Jan 2022',
       'Developed spreadsheet formulas and structures for the California emergency medical services authority to help with tracking assetts.'
     ),
-  ]
-  
+  ];
+
   projects: Project[] = [
     new Project(
       'Pokerface',
@@ -61,16 +65,26 @@ export class DataService {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689621804/Screenshot_2023-07-17_at_1.21.51_PM_qp6md9.png',
       'https://kmail.fly.dev/',
       'https://github.com/MasonHirst/kmail-react-build'
-    ),
+      ),
+      new Project(
+        'Malena Hirst',
+        'malena-hirst',
+        "A portfolio and class signup website for my wife's brand, Malena Hirst. Built in React, with an express server and PostreSQL database.",
+        '',
+        'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689358083/Screenshot_2023-07-14_at_12.07.28_PM_dmjsbp.png',
+        'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689623098/Screenshot_2023-07-17_at_1.44.37_PM_tkyyvh.png',
+        'https://malenahirst.fly.dev',
+        'https://github.com/MasonHirst/malena-website'
+      ),
     new Project(
-      'Malena Hirst',
-      'malena-hirst',
-      "A portfolio and class signup website for my wife's brand, Malena Hirst. Built in React, with an express server and PostreSQL database.",
-      '',
-      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689358083/Screenshot_2023-07-14_at_12.07.28_PM_dmjsbp.png',
-      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689623098/Screenshot_2023-07-17_at_1.44.37_PM_tkyyvh.png',
-      'https://malenahirst.fly.dev',
-      'https://github.com/MasonHirst/malena-website'
+      'Dad Joke Generator',
+      'dad-joke-generator',
+      'A project to learn about secure authentication and account recovery practices. Create an account and start cringing!',
+      'This project used a React front-end with Material UI, and a Node.js backend with a PostgreSQL database, and JWT processes for authentication.',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689628327/Screenshot_2023-07-17_at_3.08.35_PM_cn2csd.png',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689628327/Screenshot_2023-07-17_at_3.08.55_PM_a9vopo.png',
+      'https://dad-joke-generator.fly.dev',
+      'https://github.com/MasonHirst/dad-joke-generator-capstone'
     ),
     // new Project(
     //   'Minesweeper live',
@@ -82,19 +96,19 @@ export class DataService {
     //   '',
     //   'https://github.com/MasonHirst/MasonHirst.github.io',
     // ),
-  ]
+  ];
 
   getProjects() {
-    return this.projects.slice()
+    return this.projects.slice();
   }
 
   getProject(path: String) {
-    return this.projects.filter((proj) => proj.path === path)[0]
+    return this.projects.filter((proj) => proj.path === path)[0];
   }
 
   getExperiences() {
-    return this.experiences.slice()
+    return this.experiences.slice();
   }
 
-  constructor() { }
+  constructor() {}
 }

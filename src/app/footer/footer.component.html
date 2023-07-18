@@ -1,25 +1,29 @@
-<div id="footer" class="page-cont fade-in mt-5" style="padding-bottom: 200px">
+<div
+  id="footer"
+  class="page-cont fade-in mt-5"
+  style="padding-bottom: 50px; background-color: #13152a"
+>
   <div class="pag-inner-cont">
     <!-- Start of page content -->
-    <div class="" style="width: 700px">
+    <div class=" d-flex justify-content-center flex-col align-items-center mb-2">
       <h3 class="text-primary">Don't be shy,</h3>
       <h4 class="text-info">Say hi</h4>
     </div>
 
-    <section class="d-flex" [ngStyle]="{
+    <section
+      class="d-flex"
+      [ngStyle]="{
       flexDirection: screenSize < 600 ? 'column' : 'row',
       gap: screenSize < 600 ? '10px' : '20px',
-    }">
+    }"
+    >
       <a
         (click)="onCopyEmail()"
         class="text-faded link-underline link-underline-opacity-0 d-flex align-items-center gap-2"
         [ngClass]="{ 'text-primary': emailLink !== 'mhirstdev@gmail.com' }"
         style="cursor: pointer"
       >
-        <i
-          class="bi bi-envelope-fill text-faded"
-        ></i
-        >{{ emailLink }}
+        <i class="bi bi-envelope-fill text-faded"></i>{{ emailLink }}
       </a>
 
       <a
@@ -27,23 +31,16 @@
         href="https://www.linkedin.com/in/mason-hirst-540972251/"
         target="_blank"
       >
-        <i
-          class="bi bi-linkedin text-faded"
-        ></i
-        >LinkedIn
+        <i class="bi bi-linkedin text-faded"></i>LinkedIn
       </a>
       <a
         class="text-faded link-underline link-underline-opacity-0 d-flex align-items-center gap-2"
         href="https://www.facebook.com/MasonHirst2000"
         target="_blank"
       >
-        <i
-          class="bi bi-facebook text-faded"
-        ></i
-        >Facebook
+        <i class="bi bi-facebook text-faded"></i>Facebook
       </a>
     </section>
-    <p>{{ screenSize }}</p>
     <!-- End of page content -->
   </div>
 </div>

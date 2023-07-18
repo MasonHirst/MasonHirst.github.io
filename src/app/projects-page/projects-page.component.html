@@ -1,9 +1,9 @@
-<div class="page-cont fade-in" style="margin: 0 !important; padding: 0 !important;">
-  <div class="mt-2 d-flex gap-4" style="width: 1000px;">
+<div class="w-100">
+  <div class="mt-2 d-flex" style="margin-left: 20px">
     <!-- Your content goes here -->
     <div
       class="nav flex-column nav-pills me-3"
-      style="margin: 0; height: 100%; padding-top: 50px;"
+      style="margin: 0; height: 100%; padding-top: 50px"
       id="v-pills-tab"
       role="tablist"
       aria-orientation="vertical"
@@ -11,7 +11,7 @@
       <button
         *ngFor="let proj of projects"
         class="nav-link text-faded"
-        style="white-space: nowrap;"
+        style="white-space: nowrap"
         routerLinkActive="active"
         [routerLink]="proj.path"
       >
@@ -19,9 +19,9 @@
       </button>
     </div>
 
-    <div class="v-line" style="margin-bottom: 9px;"></div>
+    <div class="v-line" style="margin-right: 20px;"></div>
 
-    <div>
+    <div style="overflow: auto; width: 100%;" class="d-flex justify-content-center">
       <router-outlet></router-outlet>
     </div>
     <!-- End of page content -->

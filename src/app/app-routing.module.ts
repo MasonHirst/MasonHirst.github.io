@@ -11,7 +11,10 @@ const routes: Routes = [
   {
     path: 'projects',
     component: ProjectsPageComponent,
-    children: [{ path: ':name', component: ProjectComponent }],
+    children: [
+      { path: ':name', component: ProjectComponent },
+      { path: '**', redirectTo: 'pokerface' },
+    ],
   },
   { path: 'resume', component: WorkHistoryComponent },
   { path: 'games', component: GamesComponent },

@@ -14,7 +14,7 @@
         <button
           class="nav-link"
           routerLinkActive="active"
-          style="color: rgba(256, 256, 256, 0.7); font-size: 13px;"
+          style="color: rgba(256, 256, 256, 0.7); font-size: 13px"
           routerLink="{{ tab.route }}"
         >
           {{ tab.name }}
@@ -22,21 +22,27 @@
       </li>
     </ng-template>
   </ul>
-  <a class="btn btn-outline-info contact-btn" [ngClass]="{
-    'btn-sm': screen < 600,
-    'display-none': screen < 400,
-  }" href="#footer">Contact {{ screen >= 600 ? 'me' : ''}}</a>
+  <a href="#footer">
+    <h6
+      style="cursor: pointer"
+      class="contact-btn text-info"
+      [ngClass]="{
+      'display-none': screen < 400,
+    }"
+    >
+      Contact {{ screen >= 600 ? "me" : "" }}
+    </h6>
+  </a>
   <h5
     class="contact-btn"
-    style="left: 15px; width: fit-content; cursor: pointer;"
+    style="left: 15px; width: fit-content; cursor: pointer"
     routerLink="/home"
     [ngClass]="{
-    'display-none': screen < 600,
-  }"
+      'display-none': screen < 600,
+    }"
   >
     Mason Hirst
   </h5>
 </div>
 
 <router-outlet></router-outlet>
-
