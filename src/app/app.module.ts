@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,6 +12,7 @@ import { StylingService } from './styling.service';
 import { GamesComponent } from './games/games.component';
 import { ProjectComponent } from './projects-page/project/project.component';
 import { DataService } from './data.service';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -20,11 +22,13 @@ import { DataService } from './data.service';
     WorkHistoryComponent,
     FooterComponent,
     GamesComponent,
-    ProjectComponent
+    ProjectComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [StylingService, DataService],
   bootstrap: [AppComponent]

@@ -14,7 +14,12 @@ export class LandingPageComponent implements OnInit {
   projects: Project[]
   screen: number
 
+  filterRelevantExps(exps: ExperienceModel[]) {
+    return exps.filter((exp) => exp.relevant)
+  }
+
   constructor(private styleService: StylingService, private dataService: DataService) {}
+
 
   ngOnInit() {
     this.styleService.screenSize$.subscribe((size) => {

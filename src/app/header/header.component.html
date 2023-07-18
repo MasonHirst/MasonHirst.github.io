@@ -1,0 +1,46 @@
+<div class="header-cont">
+  <ul
+    class="nav nav-tabs justify-content-center"
+    [ngClass]="{
+      'justify-content-center': screen >= 600,
+      'justify-content-start': screen < 600
+    }"
+    style="padding: 0px 10px"
+    id="myTab"
+    role="tablist"
+  >
+    <ng-template let-tab ngFor [ngForOf]="tabs">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          routerLinkActive="active"
+          style="color: rgba(256, 256, 256, 0.7); font-size: 13px"
+          routerLink="{{ tab.route }}"
+        >
+          {{ tab.name }}
+        </button>
+      </li>
+    </ng-template>
+  </ul>
+  <a href="#footer">
+    <h6
+      style="cursor: pointer"
+      class="contact-btn text-info"
+      [ngClass]="{
+      'display-none': screen < 400,
+    }"
+    >
+      Contact {{ screen >= 600 ? "me" : "" }}
+    </h6>
+  </a>
+  <h5
+    class="contact-btn"
+    style="left: 15px; width: fit-content; cursor: pointer"
+    routerLink="/home"
+    [ngClass]="{
+      'display-none': screen < 600,
+    }"
+  >
+    Mason Hirst
+  </h5>
+</div>

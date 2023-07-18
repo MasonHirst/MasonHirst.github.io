@@ -6,20 +6,31 @@
       style="gap: 5px; margin-bottom: 5px; max-width: 700px"
     >
       <hr class="faded-grey-line-left w-100" />
-      <p style="opacity: 0.4; white-space: nowrap; margin: 0; font-size: clamp(11px, 2vw, 14px)">
+      <p
+        style="
+          opacity: 0.4;
+          white-space: nowrap;
+          margin: 0;
+          font-size: clamp(11px, 2vw, 14px);
+        "
+      >
         This site was built using Angular and Bootstrap
       </p>
       <hr class="faded-grey-line-right w-100" />
     </section>
-    <div class="d-flex justify-content-center" style="width: 100%; justify-content: space-between;" *ngIf="screen >= 600">
-      <div style="width: 50%;">
+    <div
+      class="d-flex justify-content-center"
+      style="width: 100%; justify-content: space-between"
+      *ngIf="screen >= 600"
+    >
+      <div style="width: 50%">
         <img
           src="../../assets/mason-hirst-bg-half.png"
           alt="Mason Hirst"
           class="hero-img float-end"
         />
       </div>
-      <div style="">
+      <div>
         <h1
           class="text-primary m-0"
           style="font-size: clamp(60px, 10vw, 90px); font-weight: bold"
@@ -77,12 +88,18 @@
         >
           Hello
         </h1>
-        <h1 class="text-info" style="font-size: clamp(20px, 6vw, 60px);">I'm Mason</h1>
+        <h1 class="text-info" style="font-size: clamp(20px, 6vw, 60px)">
+          I'm Mason
+        </h1>
       </div>
     </div>
 
-    <div class="d-flex flex-column gap-3 p-4 w-100" *ngIf="screen < 600" style="max-width: 350px;">
-      <div class="intro-card rounded-2"  style="height: fit-content; margin: 0;">
+    <div
+      class="d-flex flex-column gap-3 p-4 w-100"
+      *ngIf="screen < 600"
+      style="max-width: 350px"
+    >
+      <div class="intro-card rounded-2" style="height: fit-content; margin: 0">
         <code style="color: rgba(256, 256, 256, 0.4)"
           >// My self introduction</code
         >
@@ -98,7 +115,10 @@
         <code class="text-faded">{{ "}" }}</code>
       </div>
 
-      <div class="intro-card rounded-2 align-self-end" style="height: fit-content; margin: 0;">
+      <div
+        class="intro-card rounded-2 align-self-end"
+        style="height: fit-content; margin: 0"
+      >
         <code class="text-faded"
           ><span style="color: #cf81e5">What I do</span> {{ "{" }}</code
         >
@@ -125,8 +145,9 @@
       </h2>
 
       <div class="w-100 work-cards-holder">
-        <ng-template let-exp let-index="index" ngFor [ngForOf]="experiences">
+        <ng-template let-exp let-index="index" ngFor [ngForOf]="filterRelevantExps(experiences)">
           <div
+            *ngIf="index < 4"
             class="history-card rounded-2"
             [ngStyle]="{
               marginTop: index * 25 + 'px',
@@ -165,7 +186,7 @@
 
       <div class="w-100">
         <ng-template let-proj let-index="index" ngFor [ngForOf]="projects">
-          <div class="proj-preview-card">
+          <div *ngIf="index < 3" class="proj-preview-card">
             <section class="d-flex justify-content-between align-items-center">
               <h4 class="text-primary">{{ proj.title }}</h4>
               <section class="proj-card-link-wrapper">
@@ -182,7 +203,10 @@
                   target="_blank"
                   >Github repo</a
                 >
-                <button class="btn btn-outline-primary" routerLink="{{ '/projects/' + proj.path }}">
+                <button
+                  class="btn btn-outline-primary"
+                  routerLink="{{ '/projects/' + proj.path }}"
+                >
                   More details <i class="bi bi-chevron-right"></i>
                 </button>
               </section>
@@ -198,8 +222,7 @@
           </div>
         </ng-template>
       </div>
-      <a class="btn btn-outline-primary float-end"
-        routerLink="/projects"
+      <a class="btn btn-outline-primary float-end" routerLink="/projects"
         >See all projects <i class="bi bi-chevron-right"></i
       ></a>
     </div>

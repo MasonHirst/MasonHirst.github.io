@@ -1,0 +1,10 @@
+.custom-switch .form-check-input {
+  width: 2.4rem;
+  height: 1.3rem;
+  padding: 0.20rem;
+}
+
+.custom-switch .form-check-input:checked {
+  background-color: #0AE6B7;
+  border-color: #0AE6B7;
+}

@@ -8,8 +8,8 @@ import { ExperienceModel } from '../landing-page/experience.model';
   styleUrls: ['./work-history.component.css'],
 })
 export class WorkHistoryComponent implements OnInit {
-  experiences: ExperienceModel[]
-  isCollapsed: boolean = true;
+  experiences: ExperienceModel[];
+  hideOtherExp: Boolean = false;
 
   constructor(private dataService: DataService) {}
 
@@ -35,7 +35,7 @@ export class WorkHistoryComponent implements OnInit {
       if (months > 0) {
         result += ` ${months} ${months === 1 ? 'month' : 'months'}`;
       }
-      if (months < 1 && years < 1) return '0 months'
+      if (months < 1 && years < 1) return '0 months';
       return result.trim();
     } else {
       const [month1, year1] = date1.split(' ');
