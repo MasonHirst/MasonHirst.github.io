@@ -136,8 +136,9 @@ export class DataService {
       'I followed many designs and UI flows from planningpokeronline.com in order to practice creating modern and clean web apps.',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689308270/Screenshot_2023-07-13_at_10.12.49_PM_xfert1.png',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689621644/Screenshot_2023-07-17_at_1.20.06_PM_et9vyc.png',
-      'https://pokerface.fly.dev/home',
-      'https://github.com/MasonHirst/pokerface-meetings'
+      'https://pokerface.fly.dev/',
+      'https://github.com/MasonHirst/pokerface-meetings',
+      true,
     ),
     new Project(
       'Kmail',
@@ -147,7 +148,8 @@ export class DataService {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689356433/Screenshot_2023-07-14_at_11.37.29_AM_j9nzmn.png',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689621804/Screenshot_2023-07-17_at_1.21.51_PM_qp6md9.png',
       'https://kmail.fly.dev/',
-      'https://github.com/MasonHirst/kmail-react-build'
+      'https://github.com/MasonHirst/kmail-react-build',
+      true,
     ),
     new Project(
       'Malena Hirst',
@@ -157,7 +159,8 @@ export class DataService {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689358083/Screenshot_2023-07-14_at_12.07.28_PM_dmjsbp.png',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689623098/Screenshot_2023-07-17_at_1.44.37_PM_tkyyvh.png',
       'https://malenahirst.fly.dev',
-      'https://github.com/MasonHirst/malena-website'
+      'https://github.com/MasonHirst/malena-website',
+      false,
     ),
     new Project(
       'Haven Homeless Shelter',
@@ -166,8 +169,9 @@ export class DataService {
       'This project uses Vue and a Docker local database to manage residents at a homeless shelter',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689700047/haven-shelter-thumbnail_xlwwda.png',
       '',
-      'https://dad-joke-generator.fly.dev',
-      'https://github.com/MasonHirst/dad-joke-generator-capstone'
+      '',
+      'https://github.com/MasonHirst/homeless-shelter-vue-project',
+      false,
     ),
     new Project(
       'Dad Joke Generator',
@@ -177,18 +181,9 @@ export class DataService {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689628327/Screenshot_2023-07-17_at_3.08.35_PM_cn2csd.png',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689628327/Screenshot_2023-07-17_at_3.08.55_PM_a9vopo.png',
       'https://dad-joke-generator.fly.dev',
-      'https://github.com/MasonHirst/dad-joke-generator-capstone'
+      'https://github.com/MasonHirst/dad-joke-generator-capstone',
+      false,
     ),
-    // new Project(
-    //   'Minesweeper live',
-    //   'minesweeper-live',
-    //   'Play minesweeper against your friends!',
-    //   '',
-    //   '',
-    //   '',
-    //   '',
-    //   'https://github.com/MasonHirst/MasonHirst.github.io',
-    // ),
   ];
 
   getProjects() {

@@ -1,8 +1,8 @@
 <div
   class="fade-in mt-4"
-  style="max-height: calc(100vh - 70px); padding-right: 15px; max-width: 1000px"
+  style="max-height: calc(100vh - 85px); padding-right: 15px; max-width: 1240px"
 >
-  <div class="proj-preview-card" style="margin: 0">
+  <div class="proj-preview-card" style="margin: 0" *ngIf="proj.title">
     <section
       class="w-100 d-flex justify-content-between align-items-center mb-4"
     >
@@ -20,9 +20,16 @@
         >
       </section>
     </section>
-    <section
-      class="d-flex justify-content-between align-items-center"
-    ></section>
+    <section *ngIf="proj.iframe" class="d-flex flex-col align-items-center">
+      <h6>Embedded site!</h6>
+      <iframe
+        [src]="safeLiveSiteUrl"
+        frameborder="0"
+        width="100%"
+        [height]="screen < 600 ? 600 : 850"
+        style="margin-bottom: 80px; border-radius: 5px; background-color: white"
+      ></iframe>
+    </section>
     <img [src]="proj.imgPath" [alt]="proj.title" class="proj-preview-img" />
     <p style="max-width: 550px; margin-left: 10px; margin-top: 8px">
       {{ proj.description }}

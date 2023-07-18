@@ -7,6 +7,7 @@ export class Project {
       public imgPath: string,
       public imgPath2: string,
       public liveLink: string,
-      public github: string
+      public github: string,
+      public iframe: boolean
     ) {}
 }
