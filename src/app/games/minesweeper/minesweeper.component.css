@@ -1,0 +1,6 @@
+.unopened-cell-img {
+  background-image: url('../../../assets/unopened-cell.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
