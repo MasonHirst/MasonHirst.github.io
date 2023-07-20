@@ -1,17 +1,21 @@
 <button class="btn btn-primary" (click)="onNewGame()">New game</button>
+
 <div
   *ngIf="gameRows.length"
   class="d-flex flex-col justify-content-center align-items-center"
-  style="
-    /* background-color: white; */
-    /* width: calc(100vw - 10px); */
-    /* max-width: 1000px; */
-    min-width: 300px;
-    padding: 5px;
-  "
+  style="min-width: 300px; padding: 5px"
 >
-  <div class="w-100">
+  <div class="w-100 d-flex justify-content-between">
     <h5>{{ getTimerValue() }}</h5>
+    <h5
+      *ngIf="gameState !== 'new'"
+      [ngClass]="{
+        'text-primary': gameState === 'win',
+        'text-danger': gameState === 'loss'
+      }"
+    >
+      {{ gameState === "win" ? "You won!" : "You lost" }}
+    </h5>
   </div>
   <div class="minesweeper-border">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
@@ -19,7 +23,7 @@
         *ngFor="let cell of row; let k = index"
         class="d-flex justify-content-center align-items-center"
         [ngClass]="{
-          'unopened-cell-img': !cell.revealed,
+          'unopened-cell-img': cell.flagged && cell.value === 'bomb' && cell.revealed || !cell.revealed,
         }"
         style="
           width: 26px;
@@ -54,7 +58,12 @@
           class="drop-in"
         />
         <img
-          *ngIf="cell.revealed && cell.value !== 'bomb' && cell.value"
+          *ngIf="
+            cell.revealed &&
+            cell.value !== 'bomb' &&
+            cell.value &&
+            !cell.flagged
+          "
           [src]="'../../../assets/' + getNumberImg(+cell.value)"
           alt="number"
           style="width: 90%"

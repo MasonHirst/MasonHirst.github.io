@@ -20,20 +20,24 @@
     </section>
     <div
       class="d-flex justify-content-center"
-      style="width: 100%; justify-content: space-between"
+      style="width: 100%"
       *ngIf="screen >= 600"
     >
-      <div style="width: 50%">
+      <div class="d-flex align-items-center" style="width: 50%">
         <img
           src="../../assets/mason-gradient.png"
           alt="Mason Hirst"
-          class="hero-img float-end"
+          class="hero-img"
         />
       </div>
-      <div>
+      <div style="width: 40%; min-width: 295px;">
         <h1
           class="text-primary m-0"
-          style="font-size: clamp(60px, 10vw, 90px); font-weight: bold"
+          style="
+            font-size: clamp(60px, 10vw, 90px);
+            font-weight: bold;
+            margin-right: 25px;
+          "
         >
           Hello
         </h1>
@@ -76,7 +80,7 @@
     <div class="d-flex w-100 justify-content-evenly" *ngIf="screen < 600">
       <div style="width: 50%">
         <img
-          src="../../assets/mason-hirst-bg-half.png"
+          src="../../assets/mason-gradient.png"
           alt="Mason Hirst"
           class="hero-img float-end"
         />
@@ -145,7 +149,12 @@
       </h2>
 
       <div class="w-100 work-cards-holder">
-        <ng-template let-exp let-index="index" ngFor [ngForOf]="filterRelevantExps(experiences)">
+        <ng-template
+          let-exp
+          let-index="index"
+          ngFor
+          [ngForOf]="filterRelevantExps(experiences)"
+        >
           <div
             *ngIf="index < 4"
             class="history-card rounded-2"

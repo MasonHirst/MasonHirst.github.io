@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./minesweeper.component.css'],
 })
 export class MinesweeperComponent implements OnInit {
+  settingsModal: boolean = false
   height: number = 25;
   width: number = 15;
   bombs: number = 5;
@@ -13,8 +14,10 @@ export class MinesweeperComponent implements OnInit {
   gameStarted: boolean = false;
   stopWatch: any;
   timer: number = 0;
+  gameState: string = 'new'
 
   onNewGame() {
+    this.gameState = 'new'
     this.gameStarted = false;
     this.toggleTimer(false);
     this.timer = 0;
@@ -123,11 +126,13 @@ export class MinesweeperComponent implements OnInit {
     cell.flagged = !cell.flagged;
 
     if (this.checkWin()) {
-      return alert('You win!');
+      this.gameState = 'win'
+      return
     }
   }
 
   onClickCell(row: number, col: number) {
+    if (this.gameState !== 'new') return
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     const game = this.gameRows;
@@ -140,11 +145,14 @@ export class MinesweeperComponent implements OnInit {
     cell.revealed = true;
 
     if (this.checkWin()) {
-      return alert('You win!');
+      this.gameState = 'win'
+      return
     }
+
 
     if (cell.value === 'bomb') {
       this.toggleTimer(false);
+      this.gameState = 'loss'
       cell.destroyed = true;
       for (let i = 0; i < this.gameRows.length; i++) {
         for (let k = 0; k < this.gameRows[i].length; k++) {
@@ -200,6 +208,7 @@ export class MinesweeperComponent implements OnInit {
       }
     }
     if (win) {
+      this.gameState = 'win'
       this.toggleTimer(false);
       const bestTime = localStorage.getItem('mineSweeperBestTime')
       if (bestTime && this.timer < +bestTime) {

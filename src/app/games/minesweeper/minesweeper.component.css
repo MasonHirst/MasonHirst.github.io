@@ -24,20 +24,16 @@
 }
 
 
-
-.minesweeper-border {
-  background-color: #ddd; /* Set the background color of the border */
-  border: 2px solid #777; /* Set the border color and width */
-  border-radius: 4px; /* Add rounded corners to the border */
-  padding: 3px; /* Add some padding inside the border */
+img {
+  user-select: none;
 }
 
-/* Optional: Add some shadow effect to the border */
-.minesweeper-border {
-  /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); */
-}
 
-/* Optional: Add some gradient background to the border */
+
 .minesweeper-border {
+  background-color: #ddd;
+  border: 2px solid #777;
+  border-radius: 4px;
+  padding: 3px;
   background-image: linear-gradient(to bottom right, #eee, #ccc);
 }

@@ -6,7 +6,7 @@
 .intro-card {
   /* background-color: #212948; */
   background: linear-gradient(to bottom left, #212948, #13182e);
-  padding: 20px 30px;
+  padding: 20px 29px;
   display: flex;
   flex-direction: column;
   gap: 3px;
