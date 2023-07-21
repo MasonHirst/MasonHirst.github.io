@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Minesweeper } from './minesweeper.model';
+import { MinesweeperService } from '../minesweeper.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -8,7 +9,8 @@ import { Minesweeper } from './minesweeper.model';
 })
 export class MinesweeperComponent implements OnInit {
   settingsModal: boolean = false;
-  gameSize: Minesweeper = new Minesweeper(16, 24, 50);
+  // gameSize: Minesweeper = new Minesweeper(16, 24, 50);
+  gameSize: Minesweeper;
   gameRows = [];
   gameStarted: boolean = false;
   stopWatch: any;
@@ -234,30 +236,37 @@ export class MinesweeperComponent implements OnInit {
     return win;
   }
 
-  getNumberImg(val: number) {
-    switch (val) {
-      case 1:
-        return 'num-1.png';
-      case 2:
-        return 'num-2.png';
-      case 3:
-        return 'num-3.png';
-      case 4:
-        return 'num-4.png';
-      case 5:
-        return 'num-5.png';
-      case 6:
-        return 'num-6.png';
-      case 7:
-        return 'num-7.png';
-      default:
-        return 'num-8.png';
-    }
-  }
+  // I don't think I need this anymore
+  // getNumberImg(val: number) {
+  //   switch (val) {
+  //     case 1:
+  //       return 'num-1.png';
+  //     case 2:
+  //       return 'num-2.png';
+  //     case 3:
+  //       return 'num-3.png';
+  //     case 4:
+  //       return 'num-4.png';
+  //     case 5:
+  //       return 'num-5.png';
+  //     case 6:
+  //       return 'num-6.png';
+  //     case 7:
+  //       return 'num-7.png';
+  //     default:
+  //       return 'num-8.png';
+  //   }
+  // }
 
-  constructor() {}
+  constructor(private mineService: MinesweeperService) {}
 
   ngOnInit(): void {
+    this.gameSize = this.mineService.getGameSize();
+    this.mineService.gameSizeChanged.subscribe((size) => {
+      console.log('bro')
+      this.gameSize = size;
+      this.onNewGame();
+    });
     this.onNewGame();
   }
 }

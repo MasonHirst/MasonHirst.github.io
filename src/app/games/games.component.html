@@ -7,3 +7,321 @@
 </div>
 
 <app-footer></app-footer>
+
+<!-- minesweeper settings modal -->
+<div
+  class="modal fade"
+  id="minesweeper-settings-modal"
+  tabindex="-1"
+  aria-labelledby="minesweeper-settings-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Minesweeper settings</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- start of modal body content -->
+        <!-- <div class="container">
+          <div class="row">
+            <div class="col">
+              <h6>Difficulty</h6>
+            </div>
+            <div class="col">
+              <h6>Height</h6>
+            </div>
+            <div class="col">
+              <h6>Width</h6>
+            </div>
+            <div class="col">
+              <h6>Bombs</h6>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="difficulty"
+                  id="easy"
+                  value="easy"
+                  [(ngModel)]="minesweeperDifficulty"
+                />
+                <label class="form-check-label" for="easy">Easy</label>
+              </div>
+            </div>
+            <div class="col">
+              <label for="easyHeight d-flex align-items-center">10</label>
+            </div>
+            <div class="col">
+              <label for="easyWidth">10</label>
+            </div>
+            <div class="col">
+              <label for="easyBombCount">12</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="difficulty"
+                  id="intermediate"
+                  value="intermediate"
+                  [(ngModel)]="minesweeperDifficulty"
+                />
+                <label class="form-check-label" for="intermediate"
+                  >Intermediate</label
+                >
+              </div>
+            </div>
+            <div class="col">
+              <label for="intermediateHeight">16</label>
+            </div>
+            <div class="col">
+              <label for="intermediateWidth">24</label>
+            </div>
+            <div class="col">
+              <label for="intermediateBombCount">50</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="difficulty"
+                  id="hard"
+                  value="hard"
+                  [(ngModel)]="minesweeperDifficulty"
+                />
+                <label class="form-check-label" for="hard">Hard</label>
+              </div>
+            </div>
+            <div class="col">
+              <label for="hardHeight">24</label>
+            </div>
+            <div class="col">
+              <label for="hardWidth">36</label>
+            </div>
+            <div class="col">
+              <label for="hardBombCount">150</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="difficulty"
+                  id="expert"
+                  value="expert"
+                  [(ngModel)]="minesweeperDifficulty"
+                />
+                <label class="form-check-label" for="expert">Expert</label>
+              </div>
+            </div>
+            <div class="col">
+              <label for="hardHeight">24</label>
+            </div>
+            <div class="col">
+              <label for="hardWidth">36</label>
+            </div>
+            <div class="col">
+              <label for="hardBombCount">150</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="difficulty"
+                  id="custom"
+                  value="custom"
+                  [(ngModel)]="minesweeperDifficulty"
+                />
+                <label class="form-check-label" for="custom">Custom</label>
+              </div>
+            </div>
+            <div class="col">
+              <input
+                class="form-control"
+                type="number"
+                name="height"
+                id="customHeight"
+                [(ngModel)]="minesweeperHeight"
+                [disabled]="minesweeperDifficulty !== 'custom'"
+              />
+            </div>
+            <div class="col">
+              <input
+                class="form-control"
+                type="number"
+                name="width"
+                id="customWidth"
+                [(ngModel)]="minesweeperWidth"
+                [disabled]="minesweeperDifficulty !== 'custom'"
+              />
+            </div>
+            <div class="col">
+              <input
+                class="form-control"
+                type="number"
+                name="bombCount"
+                id="customBombCount"
+                [(ngModel)]="minesweeperBombs"
+                [disabled]="minesweeperDifficulty !== 'custom'"
+              />
+            </div>
+          </div>
+        </div> -->
+        <!-- end of modal body content -->
+
+        <div class="d-flex remove-p-margin gap-1">
+          <div class="col d-flex flex-col">
+            <h6 class="2-100" style="text-align: center">Difficulty</h6>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="difficulty"
+                id="easy"
+                value="easy"
+                [(ngModel)]="minesweeperDifficulty"
+              />
+              <label class="form-check-label" for="easy">Easy</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="difficulty"
+                id="intermediate"
+                value="intermediate"
+                [(ngModel)]="minesweeperDifficulty"
+              />
+              <label class="form-check-label" for="intermediate"
+                >Intermediate</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="difficulty"
+                id="hard"
+                value="hard"
+                [(ngModel)]="minesweeperDifficulty"
+              />
+              <label class="form-check-label" for="hard">Hard</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="difficulty"
+                id="expert"
+                value="expert"
+                [(ngModel)]="minesweeperDifficulty"
+              />
+              <label class="form-check-label" for="expert">Expert</label>
+            </div>
+            <div class="form-check mt-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="difficulty"
+                id="custom"
+                value="custom"
+                [(ngModel)]="minesweeperDifficulty"
+              />
+              <label class="form-check-label" for="custom">Custom</label>
+            </div>
+          </div>
+
+          <div class="col d-flex flex-col align-items-center">
+            <h6>Height</h6>
+            <p>10</p>
+            <p>15</p>
+            <p>20</p>
+            <p>15</p>
+            <input
+              class="form-control"
+              type="number"
+              name="height"
+              id="customHeight"
+              [(ngModel)]="minesweeperHeight"
+              [disabled]="minesweeperDifficulty !== 'custom'"
+            />
+          </div>
+
+          <div class="col d-flex flex-col align-items-center">
+            <h6>Width</h6>
+            <p>10</p>
+            <p>15</p>
+            <p>20</p>
+            <p>15</p>
+            <input
+              class="form-control"
+              type="number"
+              name="width"
+              id="customWidth"
+              [(ngModel)]="minesweeperWidth"
+              [disabled]="minesweeperDifficulty !== 'custom'"
+            />
+          </div>
+
+          <div class="col d-flex flex-col align-items-center">
+            <h6>Bombs</h6>
+            <p>10</p>
+            <p>15</p>
+            <p>20</p>
+            <p>15</p>
+            <input
+              class="form-control"
+              type="number"
+              name="bombCount"
+              id="customBombCount"
+              [(ngModel)]="minesweeperBombs"
+              [ngStyle]="{
+                cursor: minesweeperDifficulty !== 'custom' && 'disabled'
+              }"
+              [disabled]="minesweeperDifficulty !== 'custom'"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="onChangeMinesweeperSize()"
+        >
+          New game
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
