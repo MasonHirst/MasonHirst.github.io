@@ -263,7 +263,6 @@ export class MinesweeperComponent implements OnInit {
   ngOnInit(): void {
     this.gameSize = this.mineService.getGameSize();
     this.mineService.gameSizeChanged.subscribe((size) => {
-      console.log('bro')
       this.gameSize = size;
       this.onNewGame();
     });

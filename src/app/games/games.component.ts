@@ -14,24 +14,20 @@ export class GamesComponent implements OnInit {
   minesweeperWidth: number;
   minesweeperBombs: number;
   onChangeMinesweeperSize() {
-    console.log(
-      this.minesweeperHeight,
-      this.minesweeperWidth,
-      this.minesweeperBombs
-    );
     let size: Minesweeper;
     switch (this.minesweeperDifficulty) {
       case 'easy':
-        size = new Minesweeper(8, 8, 10);
+        size = new Minesweeper(10, 10, 12);
         break;
-      case 'medium':
+      case 'intermediate':
         size = new Minesweeper(16, 16, 40);
         break;
       case 'hard':
-        size = new Minesweeper(16, 24, 99);
+        size = new Minesweeper(16, 24, 85);
         break;
       case 'expert':
-        size = new Minesweeper(16, 30, 150);
+        console.log('match')
+        size = new Minesweeper(20, 35, 150);
       default:
         size = new Minesweeper(
           this.minesweeperHeight,
@@ -40,14 +36,7 @@ export class GamesComponent implements OnInit {
         );
         break;
     }
-
-    if (this.minesweeperDifficulty === 'custom') {
-      size = new Minesweeper(
-        this.minesweeperHeight,
-        this.minesweeperWidth,
-        this.minesweeperBombs
-      );
-    } else this.mineService.updateGameSize(new Minesweeper(16, 24, 50));
+    this.mineService.updateGameSize(size);
   }
 
   constructor(private mineService: MinesweeperService) {}
