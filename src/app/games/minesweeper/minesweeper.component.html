@@ -7,7 +7,7 @@
 >
   <div class="w-100 d-flex justify-content-between">
     <h5>{{ getTimerValue() }}</h5>
-    <h5
+    <h4
       *ngIf="gameState !== 'new'"
       [ngClass]="{
         'text-primary': gameState === 'win',
@@ -15,27 +15,22 @@
       }"
     >
       {{ gameState === "win" ? "You won!" : "You lost" }}
-    </h5>
+    </h4>
   </div>
   <div class="minesweeper-border">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
       <div
         *ngFor="let cell of row; let k = index"
-        class="d-flex justify-content-center align-items-center"
+        class="d-flex justify-content-center align-items-center minesweeper-cell"
         [ngClass]="{
           'unopened-cell-img': cell.flagged && cell.value === 'bomb' && cell.revealed || !cell.revealed,
         }"
-        style="
-          width: 26px;
-          height: 26px;
-          border-right: 1.8px solid grey;
-          border-bottom: 1.8px solid grey;
-        "
         [ngStyle]="{
           backgroundColor: cell.destroyed ? 'red' : '#BDBDBD',
         }"
-        (click)="onClickCell(i, k)"
         (contextmenu)="onRightClick(i, k, $event)"
+        (click)="onClickCell(i, k)"
+        (mousedown)="onMouseDown(i, k)" (mouseup)="onMouseUp()"
       >
         <img
           *ngIf="cell.revealed && cell.value === 'bomb' && !cell.flagged"

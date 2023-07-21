@@ -1,5 +1,5 @@
 .unopened-cell-img {
-  background-image: url('../../../assets/unopened-cell.png');
+  background-image: url("../../../assets/unopened-cell.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -7,14 +7,14 @@
 
 .drop-in {
   width: 200%;
-  opacity: .5;
+  opacity: 0.5;
   animation: dropInAnimation 0.15s linear forwards;
 }
 
 @keyframes dropInAnimation {
   0% {
     width: 200%;
-    opacity: .5;
+    opacity: 0.5;
   }
   100% {
     width: 55%;
@@ -23,12 +23,16 @@
   }
 }
 
-
 img {
   user-select: none;
 }
 
-
+.minesweeper-cell {
+  width: 31px;
+  height: 31px;
+  border-right: 1.8px solid grey;
+  border-bottom: 1.8px solid grey;
+}
 
 .minesweeper-border {
   background-color: #ddd;
@@ -36,4 +40,13 @@ img {
   border-radius: 4px;
   padding: 3px;
   background-image: linear-gradient(to bottom right, #eee, #ccc);
+}
+
+
+
+@media (max-width: 1024px) {
+  .minesweeper-cell {
+    width: 26px;
+    height: 26px;
+  }
 }

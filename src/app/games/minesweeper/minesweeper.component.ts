@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Minesweeper } from './minesweeper.model';
 
 @Component({
   selector: 'app-minesweeper',
@@ -7,9 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MinesweeperComponent implements OnInit {
   settingsModal: boolean = false;
-  height: number = 25;
-  width: number = 15;
-  bombs: number = 5;
+  gameSize: Minesweeper = new Minesweeper(16, 24, 50);
   gameRows = [];
   gameStarted: boolean = false;
   stopWatch: any;
@@ -24,9 +23,9 @@ export class MinesweeperComponent implements OnInit {
 
     // Generate rows and columns based on height and width
     this.gameRows = [];
-    for (let i = 0; i < this.height; i++) {
+    for (let i = 0; i < this.gameSize.height; i++) {
       let row = [];
-      for (let k = 0; k < this.width; k++) {
+      for (let k = 0; k < this.gameSize.width; k++) {
         row.push({
           value: '',
           revealed: false,
@@ -39,9 +38,9 @@ export class MinesweeperComponent implements OnInit {
 
     // randomly place as many bombs as specified
     let bombsPlaced = 0;
-    while (bombsPlaced < this.bombs) {
-      const randomRow = Math.floor(Math.random() * this.height);
-      const randomCol = Math.floor(Math.random() * this.width);
+    while (bombsPlaced < this.gameSize.bombs) {
+      const randomRow = Math.floor(Math.random() * this.gameSize.height);
+      const randomCol = Math.floor(Math.random() * this.gameSize.width);
       if (this.gameRows[randomRow][randomCol].value !== 'bomb') {
         this.gameRows[randomRow][randomCol].value = 'bomb';
         bombsPlaced++;
@@ -49,8 +48,8 @@ export class MinesweeperComponent implements OnInit {
     }
 
     // loop through every cell
-    for (let i = 0; i < this.height; i++) {
-      for (let k = 0; k < this.width; k++) {
+    for (let i = 0; i < this.gameSize.height; i++) {
+      for (let k = 0; k < this.gameSize.width; k++) {
         const cell = this.gameRows[i][k];
         if (cell.value !== 'bomb') {
           // if cell isn't a bomb, determine how many bombs are touching
@@ -67,9 +66,9 @@ export class MinesweeperComponent implements OnInit {
       for (let k = col - 1; k <= col + 1; k++) {
         if (
           i >= 0 &&
-          i < this.height &&
+          i < this.gameSize.height &&
           k >= 0 &&
-          k < this.width &&
+          k < this.gameSize.width &&
           !(i === row && k === col)
         ) {
           if (this.gameRows[i]?.[k]?.value === 'bomb') {
@@ -118,8 +117,8 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
-  onRightClick(row: number, col: number, event: MouseEvent) {
-    event.preventDefault();
+  onRightClick(row: number, col: number, event: any) {
+    if (event) event.preventDefault();
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     if (cell.revealed) return;
@@ -132,12 +131,17 @@ export class MinesweeperComponent implements OnInit {
   }
 
   onClickCell(row: number, col: number) {
+    if (this.isLongClick) return;
     if (this.gameState !== 'new') return;
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     const game = this.gameRows;
 
-    if (!cell.flagged) cell.revealed = true;
+    if (!cell.flagged) {
+      cell.revealed = true;
+    } else {
+      return;
+    }
 
     if (this.checkWin()) {
       this.gameState = 'win';
@@ -183,6 +187,22 @@ export class MinesweeperComponent implements OnInit {
         }
       }
     }
+  }
+
+  clickHoldTimeout: any;
+  clickHoldThreshold: number = 220;
+  isLongClick: boolean;
+
+  onMouseDown(row: number, col: number) {
+    this.isLongClick = false;
+    this.clickHoldTimeout = setTimeout(() => {
+      this.onRightClick(row, col, 0);
+      this.isLongClick = true;
+    }, this.clickHoldThreshold);
+  }
+
+  onMouseUp() {
+    clearTimeout(this.clickHoldTimeout);
   }
 
   checkWin() {
