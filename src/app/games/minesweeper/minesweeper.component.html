@@ -1,3 +1,5 @@
+<h4 class="text-info float-end">Minesweeper</h4>
+
 <button class="btn btn-primary" (click)="onNewGame()">New game</button>
 
 <div
@@ -24,6 +26,7 @@
         class="d-flex justify-content-center align-items-center minesweeper-cell"
         [ngClass]="{
           'unopened-cell-img': cell.flagged && cell.value === 'bomb' && cell.revealed || !cell.revealed,
+          'question-cell-img': cell.question && !cell.revealed,
         }"
         [ngStyle]="{
           backgroundColor: cell.destroyed ? 'red' : '#BDBDBD',
@@ -59,7 +62,7 @@
             cell.value &&
             !cell.flagged
           "
-          [src]="'../../../assets/' + getNumberImg(+cell.value)"
+          [src]="'../../../assets/num-' + cell.value + '.png'"
           alt="number"
           style="width: 90%"
         />
@@ -67,3 +70,12 @@
     </div>
   </div>
 </div>
+
+
+
+
+<!-- Triggers the modal in games.component.html -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#minesweeper-settings-modal">
+  Game settings
+</button>
+

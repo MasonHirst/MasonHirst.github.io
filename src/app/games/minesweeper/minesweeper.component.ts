@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Minesweeper } from './minesweeper.model';
+import { MinesweeperService } from '../minesweeper.service';
 
 @Component({
   selector: 'app-minesweeper',
@@ -8,7 +9,8 @@ import { Minesweeper } from './minesweeper.model';
 })
 export class MinesweeperComponent implements OnInit {
   settingsModal: boolean = false;
-  gameSize: Minesweeper = new Minesweeper(16, 24, 50);
+  // gameSize: Minesweeper = new Minesweeper(16, 24, 50);
+  gameSize: Minesweeper;
   gameRows = [];
   gameStarted: boolean = false;
   stopWatch: any;
@@ -30,6 +32,7 @@ export class MinesweeperComponent implements OnInit {
           value: '',
           revealed: false,
           flagged: false,
+          question: false,
           destroyed: false,
         });
       }
@@ -122,7 +125,24 @@ export class MinesweeperComponent implements OnInit {
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     if (cell.revealed) return;
-    cell.flagged = !cell.flagged;
+
+    if (cell.flagged) {
+      console.log('is flagged bro!')
+      if (cell.question) {
+        cell.question = false;
+        cell.flagged = false;
+      } else {
+        cell.flagged = false;
+        cell.question = true;
+      }
+    } else if (cell.question) {
+      cell.question = false;
+    } else {
+      cell.flagged = true;
+      cell.question = false;
+    }
+
+    console.log(cell.flagged, cell.question)
 
     if (this.checkWin()) {
       this.gameState = 'win';
@@ -137,7 +157,7 @@ export class MinesweeperComponent implements OnInit {
     const cell = this.gameRows[row][col];
     const game = this.gameRows;
 
-    if (!cell.flagged) {
+    if (!cell.flagged && !cell.question) {
       cell.revealed = true;
     } else {
       return;
@@ -234,30 +254,14 @@ export class MinesweeperComponent implements OnInit {
     return win;
   }
 
-  getNumberImg(val: number) {
-    switch (val) {
-      case 1:
-        return 'num-1.png';
-      case 2:
-        return 'num-2.png';
-      case 3:
-        return 'num-3.png';
-      case 4:
-        return 'num-4.png';
-      case 5:
-        return 'num-5.png';
-      case 6:
-        return 'num-6.png';
-      case 7:
-        return 'num-7.png';
-      default:
-        return 'num-8.png';
-    }
-  }
-
-  constructor() {}
+  constructor(private mineService: MinesweeperService) {}
 
   ngOnInit(): void {
+    this.gameSize = this.mineService.getGameSize();
+    this.mineService.gameSizeChanged.subscribe((size) => {
+      this.gameSize = size;
+      this.onNewGame();
+    });
     this.onNewGame();
   }
 }
