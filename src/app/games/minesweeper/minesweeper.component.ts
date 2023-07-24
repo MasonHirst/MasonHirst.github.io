@@ -32,6 +32,7 @@ export class MinesweeperComponent implements OnInit {
           value: '',
           revealed: false,
           flagged: false,
+          question: false,
           destroyed: false,
         });
       }
@@ -124,7 +125,24 @@ export class MinesweeperComponent implements OnInit {
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     if (cell.revealed) return;
-    cell.flagged = !cell.flagged;
+
+    if (cell.flagged) {
+      console.log('is flagged bro!')
+      if (cell.question) {
+        cell.question = false;
+        cell.flagged = false;
+      } else {
+        cell.flagged = false;
+        cell.question = true;
+      }
+    } else if (cell.question) {
+      cell.question = false;
+    } else {
+      cell.flagged = true;
+      cell.question = false;
+    }
+
+    console.log(cell.flagged, cell.question)
 
     if (this.checkWin()) {
       this.gameState = 'win';
@@ -139,7 +157,7 @@ export class MinesweeperComponent implements OnInit {
     const cell = this.gameRows[row][col];
     const game = this.gameRows;
 
-    if (!cell.flagged) {
+    if (!cell.flagged && !cell.question) {
       cell.revealed = true;
     } else {
       return;

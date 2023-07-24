@@ -23,11 +23,11 @@ export class GamesComponent implements OnInit {
         size = new Minesweeper(16, 16, 40);
         break;
       case 'hard':
-        size = new Minesweeper(16, 24, 85);
+        size = new Minesweeper(16, 24, 80);
         break;
       case 'expert':
         console.log('match')
-        size = new Minesweeper(20, 35, 150);
+        size = new Minesweeper(20, 35, 140);
       default:
         size = new Minesweeper(
           this.minesweeperHeight,
