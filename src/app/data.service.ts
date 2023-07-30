@@ -168,7 +168,7 @@ export class DataService {
       'My Sparkz Dev internship asked me to build this app to learn the Vue framework, and to test my coding abilities.',
       'This project uses Vue and a Docker local database to manage residents at a homeless shelter',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689700047/haven-shelter-thumbnail_xlwwda.png',
-      '',
+      'https://res.cloudinary.com/dk9vsivmu/image/upload/v1690315250/Screenshot_2023-07-25_at_1.46.51_PM_yv53lo.png',
       '',
       'https://github.com/MasonHirst/homeless-shelter-vue-project',
       false,

@@ -5,6 +5,8 @@ import { ProjectsPageComponent } from './projects-page/projects-page.component';
 import { WorkHistoryComponent } from './work-history/work-history.component';
 import { GamesComponent } from './games/games.component';
 import { ProjectComponent } from './projects-page/project/project.component';
+import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
+import { GameSelectComponent } from './games/game-select/game-select.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -17,7 +19,15 @@ const routes: Routes = [
     ],
   },
   { path: 'resume', component: WorkHistoryComponent },
-  { path: 'games', component: GamesComponent },
+  {
+    path: 'games',
+    component: GamesComponent,
+    children: [
+      { path: '', component: GameSelectComponent },
+      { path: 'minesweeper', component: MinesweeperComponent },
+      { path: '**', redirectTo: '' },
+    ],
+  },
   { path: '**', redirectTo: 'home' },
 ];
 

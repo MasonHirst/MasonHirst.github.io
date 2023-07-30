@@ -6,12 +6,12 @@ import { Minesweeper } from './minesweeper/minesweeper.model';
 })
 export class MinesweeperService {
   gameSizeChanged = new EventEmitter<Minesweeper>()
-  private gameSize: Minesweeper = new Minesweeper(16, 24, 50)
+  private gameSize: Minesweeper = new Minesweeper(16, 16, 40) // start in hard mode
 
   constructor() { }
 
   updateGameSize(size: Minesweeper) {
-    if (JSON.stringify(this.gameSize) === JSON.stringify(size)) return
+    // if (JSON.stringify(this.gameSize) === JSON.stringify(size)) return
     this.gameSize = size
     this.gameSizeChanged.emit(this.gameSize)
   }

@@ -14,6 +14,7 @@ import { ProjectComponent } from './projects-page/project/project.component';
 import { DataService } from './data.service';
 import { HeaderComponent } from './header/header.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
+import { GameSelectComponent } from './games/game-select/game-select.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MinesweeperComponent } from './games/minesweeper/minesweeper.component'
     GamesComponent,
     ProjectComponent,
     HeaderComponent,
-    MinesweeperComponent
+    MinesweeperComponent,
+    GameSelectComponent
   ],
   imports: [
     BrowserModule,

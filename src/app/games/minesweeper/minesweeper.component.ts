@@ -9,7 +9,6 @@ import { MinesweeperService } from '../minesweeper.service';
 })
 export class MinesweeperComponent implements OnInit {
   settingsModal: boolean = false;
-  // gameSize: Minesweeper = new Minesweeper(16, 24, 50);
   gameSize: Minesweeper;
   gameRows = [];
   gameStarted: boolean = false;
@@ -127,7 +126,6 @@ export class MinesweeperComponent implements OnInit {
     if (cell.revealed) return;
 
     if (cell.flagged) {
-      console.log('is flagged bro!')
       if (cell.question) {
         cell.question = false;
         cell.flagged = false;
@@ -141,8 +139,6 @@ export class MinesweeperComponent implements OnInit {
       cell.flagged = true;
       cell.question = false;
     }
-
-    console.log(cell.flagged, cell.question)
 
     if (this.checkWin()) {
       this.gameState = 'win';
@@ -263,5 +259,69 @@ export class MinesweeperComponent implements OnInit {
       this.onNewGame();
     });
     this.onNewGame();
+  }
+
+  minesweeperDifficulty: string = 'intermediate';
+  minesweeperHeight: number = 5;
+  minesweeperWidth: number = 5;
+  minesweeperBombs: number = 4;
+  changeSizeError: string = '';
+  onChangeMinesweeperSize() {
+    let size: Minesweeper;
+    switch (this.minesweeperDifficulty) {
+      case 'easy':
+        size = new Minesweeper(10, 10, 12);
+        break;
+      case 'intermediate':
+        size = new Minesweeper(16, 16, 40);
+        break;
+      case 'hard':
+        size = new Minesweeper(16, 24, 80);
+        break;
+      case 'expert':
+        size = new Minesweeper(20, 35, 140);
+        break;
+      case 'custom':
+        if (!this.checkCustomSize()) return;
+        size = new Minesweeper(
+          this.minesweeperHeight,
+          this.minesweeperWidth,
+          this.minesweeperBombs
+        );
+        break;
+    }
+    this.changeSizeError = '';
+    this.mineService.updateGameSize(size);
+  }
+
+  checkCustomSize() {
+    const { minesweeperHeight, minesweeperWidth, minesweeperBombs } = this;
+    if (
+      minesweeperHeight === undefined ||
+      minesweeperWidth === undefined ||
+      minesweeperBombs === undefined
+    ) {
+      this.changeSizeError = 'Please fill out all fields';
+      return false;
+    } else if (this.minesweeperHeight < 1 || this.minesweeperWidth < 1) {
+      this.changeSizeError = 'Height and width must be greater than 0';
+      return false;
+    } else if (this.minesweeperBombs < 0) {
+      this.changeSizeError = 'Bomb count cannot be negative';
+      return false;
+    } else if (
+      this.minesweeperBombs >
+      this.minesweeperHeight * this.minesweeperWidth
+    ) {
+      const total = minesweeperHeight * minesweeperWidth;
+      this.changeSizeError = `There ${total > 1 ? 'are' : 'is'} only ${
+        minesweeperWidth * minesweeperHeight
+      } square${
+        total > 1 ? 's' : ''
+      } in a ${minesweeperWidth} x ${minesweeperHeight} grid`;
+      return false;
+    } else {
+      return true;
+    }
   }
 }
