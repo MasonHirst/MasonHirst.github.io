@@ -15,6 +15,8 @@ import { DataService } from './data.service';
 import { HeaderComponent } from './header/header.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { GameSelectComponent } from './games/game-select/game-select.component';
+import { StateGuesserComponent } from './games/state-guesser/state-guesser.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -27,9 +29,11 @@ import { GameSelectComponent } from './games/game-select/game-select.component';
     ProjectComponent,
     HeaderComponent,
     MinesweeperComponent,
-    GameSelectComponent
+    GameSelectComponent,
+    StateGuesserComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule

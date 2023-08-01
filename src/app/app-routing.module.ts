@@ -7,6 +7,7 @@ import { GamesComponent } from './games/games.component';
 import { ProjectComponent } from './projects-page/project/project.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { GameSelectComponent } from './games/game-select/game-select.component';
+import { StateGuesserComponent } from './games/state-guesser/state-guesser.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
     children: [
       { path: '', component: GameSelectComponent },
       { path: 'minesweeper', component: MinesweeperComponent },
+      { path: 'state-guesser', component: StateGuesserComponent },
       { path: '**', redirectTo: '' },
     ],
   },
