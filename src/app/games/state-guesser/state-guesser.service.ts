@@ -87,6 +87,7 @@ export class StateGuesserService {
   }
 
   makeGuess(stateCode: string, stateName: string) {
+    
     if (stateCode === this.directedState.code) {
       this.correctStates.push({code: stateCode, name: stateName})
       document.getElementById(this.directedState.code).style.fill = '#7872E8';
@@ -99,12 +100,20 @@ export class StateGuesserService {
   }
   
   isGameOver() {
-    if (this.shuffledStates.length === 0) {
+    if (this.correctStates.length + this.missedStates.length === 50) {
       this.directedState = null
+      this.directedStateChange.emit(this.directedState)
       return true
     } else {
       return false
     }
+  }
+
+  getGameSummary() {
+    return {
+      correct: this.correctStates,
+      missed: this.missedStates,
+    };
   }
 
   shuffleStates(states: any[]) {

@@ -5,6 +5,7 @@ import {
   OnChanges,
   Input,
 } from '@angular/core';
+import { Modal } from 'bootstrap'
 import { StateGuesserService } from './state-guesser.service';
 
 @Component({
@@ -13,23 +14,25 @@ import { StateGuesserService } from './state-guesser.service';
   styleUrls: ['./state-guesser.component.css'],
 })
 export class StateGuesserComponent implements OnChanges, OnInit {
-  @Input()
-  ids: any;
-  @Input()
-  enableTooltip: boolean;
-  @Input()
-  toolTipObject: any;
-  @Input()
-  colors: any = {
+  @Input() ids: any;
+  @Input() enableTooltip: boolean;
+  @Input() toolTipObject: any;
+  @Input() colors: any = {
     unfill: '#b6b6b6',
     fill: '#518a38',
   };
-  showToolTip: boolean;
   change: any;
   statelist: {};
 
+  // timer variables
+  stopWatch: any;
+  timer: number = 0;
+
   // game variables
   directedState: { code: string; name: string };
+
+  // summary variables
+  summary: any;
 
   constructor(private gameService: StateGuesserService) {}
   ngOnInit(): void {
@@ -39,8 +42,21 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     });
   }
 
+  toggleTimer(start: boolean) {
+    if (start) {
+      this.stopWatch = setInterval(() => {
+        this.timer++;
+      }, 10);
+    } else {
+      clearInterval(this.stopWatch);
+    }
+  }
+
   onStartGame() {
+    this.summary = null
+    this.timer = 0;
     this.gameService.startNewGame();
+    this.toggleTimer(true);
   }
 
   onClickState(event: MouseEvent) {
@@ -50,7 +66,13 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     if (!this.directedState) return;
     this.gameService.makeGuess(dataId, dataName);
     if (this.gameService.isGameOver()) {
-      alert('Game Over');
+      this.summary = {
+        ...this.gameService.getGameSummary(),
+        time: this.getTimerValue()
+      }
+      this.toggleTimer(false);
+      const summaryModal = new Modal(document.getElementById('summary-modal'))
+      summaryModal.show()
     }
   }
 
@@ -69,11 +91,38 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   }
 
   mouseEnter(ttid, e, id) {
+    if (!this.directedState) return;
     document.getElementById(id).style['stroke-width'] = '3.5';
     document.getElementById(id).style.stroke = '#FF0000';
+    // document.getElementById(id).style.fill = '#FF0000';
   }
   mouseLeave(ttid, e, id) {
     document.getElementById(id).style['stroke-width'] = '0.98';
     document.getElementById(id).style.stroke = '#000000';
+    // document.getElementById(id).style.fill = '#e2e2e2';
+  }
+
+  getTimerValue() {
+    if (this.timer > 0) {
+      const decisecond = Math.floor(this.timer % 100)
+        .toString()
+        .padStart(2, '0');
+      const seconds = Math.floor((this.timer / 100) % 60)
+        .toString()
+        .padStart(2, '0');
+      const minutes = Math.floor((this.timer / 100 / 60) % 60)
+        .toString()
+        .padStart(2, '0');
+      const hours = Math.floor((this.timer / 100 / 60 / 60) % 24)
+        .toString()
+        .padStart(2, '0');
+      if (+hours > 0) {
+        return `${hours}:${minutes}:${seconds}.${decisecond}`;
+      } else {
+        return `${minutes}:${seconds}.${decisecond}`;
+      }
+    } else {
+      return '00:00:00';
+    }
   }
 }
