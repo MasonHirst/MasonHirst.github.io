@@ -243,7 +243,6 @@ export class MinesweeperComponent implements OnInit {
       const { easy, intermediate, hard, expert } = JSON.parse(
         localStorage.getItem('mineSweeperBestTimes')
       );
-      console.log('times: ', easy, intermediate, hard, expert);
 
       switch (this.minesweeperDifficulty) {
         case 'easy':
