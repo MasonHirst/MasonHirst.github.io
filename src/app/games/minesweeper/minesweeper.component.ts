@@ -240,11 +240,66 @@ export class MinesweeperComponent implements OnInit {
     if (win) {
       this.gameState = 'win';
       this.toggleTimer(false);
-      const bestTime = localStorage.getItem('mineSweeperBestTime');
-      if (bestTime && this.timer < +bestTime) {
-        localStorage.setItem('mineSweeperBestTime', JSON.stringify(this.timer));
-      } else if (!bestTime) {
-        localStorage.setItem('mineSweeperBestTime', JSON.stringify(this.timer));
+      const { easy, intermediate, hard, expert } = JSON.parse(
+        localStorage.getItem('mineSweeperBestTimes')
+      );
+      console.log('times: ', easy, intermediate, hard, expert);
+
+      switch (this.minesweeperDifficulty) {
+        case 'easy':
+          if (!easy || this.timer < easy) {
+            localStorage.setItem(
+              'mineSweeperBestTimes',
+              JSON.stringify({
+                easy: this.timer,
+                intermediate,
+                hard,
+                expert,
+              })
+            );
+          }
+          break;
+        case 'intermediate':
+          if (!intermediate || this.timer < intermediate) {
+            localStorage.setItem(
+              'mineSweeperBestTimes',
+              JSON.stringify({
+                easy,
+                intermediate: this.timer,
+                hard,
+                expert,
+              })
+            );
+          }
+          break;
+
+        case 'hard':
+          if (!hard || this.timer < hard) {
+            localStorage.setItem(
+              'mineSweeperBestTimes',
+              JSON.stringify({
+                easy,
+                intermediate,
+                hard: this.timer,
+                expert,
+              })
+            );
+          }
+          break;
+
+        case 'expert':
+          if (!expert || this.timer < expert) {
+            localStorage.setItem(
+              'mineSweeperBestTimes',
+              JSON.stringify({
+                easy,
+                intermediate,
+                hard,
+                expert: this.timer,
+              })
+            );
+          }
+          break;
       }
     }
     return win;
@@ -253,6 +308,17 @@ export class MinesweeperComponent implements OnInit {
   constructor(private mineService: MinesweeperService) {}
 
   ngOnInit(): void {
+    if (!localStorage.getItem('mineSweeperBestTimes')) {
+      localStorage.setItem(
+        'mineSweeperBestTimes',
+        JSON.stringify({
+          easy: null,
+          intermediate: null,
+          hard: null,
+          expert: null,
+        })
+      );
+    }
     this.gameSize = this.mineService.getGameSize();
     this.mineService.gameSizeChanged.subscribe((size) => {
       this.gameSize = size;
