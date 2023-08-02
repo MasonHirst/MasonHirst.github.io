@@ -5,7 +5,7 @@ import {
   OnChanges,
   Input,
 } from '@angular/core';
-import { Modal } from 'bootstrap'
+import { Modal } from 'bootstrap';
 import { StateGuesserService } from './state-guesser.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   };
   change: any;
   statelist: {};
+  remainingStates: number = null;
 
   // timer variables
   stopWatch: any;
@@ -40,6 +41,20 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     this.gameService.directedStateChange.subscribe((state) => {
       this.directedState = state;
     });
+
+    this.gameService.shuffledStatesChange.subscribe((guesses) => {
+      this.remainingStates = guesses;
+    });
+
+    if (!localStorage.getItem('stateGuesserHighScores')) {
+      localStorage.setItem(
+        'stateGuesserHighScores',
+        JSON.stringify({
+          highScore: null,
+          perfectTime: null,
+        })
+      );
+    }
   }
 
   toggleTimer(start: boolean) {
@@ -53,7 +68,7 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   }
 
   onStartGame() {
-    this.summary = null
+    this.summary = null;
     this.timer = 0;
     this.gameService.startNewGame();
     this.toggleTimer(true);
@@ -62,18 +77,71 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   onClickState(event: MouseEvent) {
     const targetElement = event.target as HTMLElement;
     const dataId = targetElement.getAttribute('data-id');
-    const dataName = targetElement.getAttribute('data-name');
+    // const dataName = targetElement.getAttribute('data-name');
     if (!this.directedState) return;
-    this.gameService.makeGuess(dataId, dataName);
+    this.gameService.makeGuess(dataId);
+
     if (this.gameService.isGameOver()) {
-      this.summary = {
-        ...this.gameService.getGameSummary(),
-        time: this.getTimerValue()
-      }
-      this.toggleTimer(false);
-      const summaryModal = new Modal(document.getElementById('summary-modal'))
-      summaryModal.show()
+      this.handleGameOver();
     }
+  }
+
+  handleGameOver() {
+    this.toggleTimer(false);
+    const summaryModal = new Modal(document.getElementById('summary-modal'));
+    summaryModal.show();
+
+    // high scores logic
+    const { highScore, perfectTime } = JSON.parse(
+      localStorage.getItem('stateGuesserHighScores')
+    );
+    if (highScore === null || this.calculateScore() > highScore) {
+      localStorage.setItem(
+        'stateGuesserHighScores',
+        JSON.stringify({
+          highScore: this.calculateScore(),
+          perfectTime,
+        })
+      );
+    }
+    if (
+      this.summary.correct.length > 49 &&
+      (perfectTime === null || this.timer < perfectTime)
+    ) {
+      localStorage.setItem(
+        'stateGuesserHighScores',
+        JSON.stringify({
+          highScore,
+          perfectTime: this.timer,
+        })
+      );
+    }
+  }
+
+  calculateScore(): number {
+    const percentageWeight = 12;
+    const maxTimeScore = 500;
+    const score = this.gameService.getGameSummary().correct.length;
+
+    const correctGuessesPercentage = score * 2;
+    const correctGuessesScore = correctGuessesPercentage * percentageWeight;
+    let timeScore = maxTimeScore - this.timer / 50;
+    if (timeScore < 0) {
+      timeScore = 0;
+    }
+    let totalScore = correctGuessesScore + timeScore;
+    if (score < 1) {
+      totalScore = 0;
+    } else if (score < 49) {
+      totalScore += 100;
+    }
+
+    this.summary = {
+      ...this.gameService.getGameSummary(),
+      score: totalScore,
+      time: this.getTimerValue(),
+    };
+    return totalScore;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -90,16 +158,15 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     });
   }
 
-  mouseEnter(ttid, e, id) {
+  mouseEnter(ttid, e, id: string) {
     if (!this.directedState) return;
+    if (this.gameService.isAlreadyRevealed(id)) return;
     document.getElementById(id).style['stroke-width'] = '3.5';
     document.getElementById(id).style.stroke = '#FF0000';
-    // document.getElementById(id).style.fill = '#FF0000';
   }
-  mouseLeave(ttid, e, id) {
+  mouseLeave(ttid, e, id: string) {
     document.getElementById(id).style['stroke-width'] = '0.98';
     document.getElementById(id).style.stroke = '#000000';
-    // document.getElementById(id).style.fill = '#e2e2e2';
   }
 
   getTimerValue() {
@@ -122,7 +189,7 @@ export class StateGuesserComponent implements OnChanges, OnInit {
         return `${minutes}:${seconds}.${decisecond}`;
       }
     } else {
-      return '00:00:00';
+      return '00:00.00';
     }
   }
 }

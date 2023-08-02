@@ -52,8 +52,8 @@ img {
 
 @media (max-width: 1024px) {
   .minesweeper-cell {
-    width: 26px;
-    height: 26px;
+    width: 25px;
+    height: 25px;
   }
 }
 

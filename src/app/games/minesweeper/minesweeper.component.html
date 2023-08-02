@@ -1,4 +1,3 @@
-<h1>{{ minesweeperDifficulty }}</h1>
 <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
   <!-- Triggers the modal in games.component.html -->
   <div class="d-flex align-items-center gap-2">
@@ -22,7 +21,7 @@
   style="min-width: 400px; padding: 5px"
 >
   <div class="w-100 d-flex justify-content-between align-items-center mb-2">
-    <h5 style="margin: 0">{{ getTimerValue() }}</h5>
+    <h5 style="margin: 0">{{ getTimerValue(timer) }}</h5>
     <h4
       *ngIf="gameState !== 'new'"
       [ngClass]="{
@@ -88,6 +87,38 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+<div class="d-flex flex-col mt-5" style="max-width: min(360px, 100vw - 25px); margin: 0 auto; gap: 10px">
+  <div class="d-flex justify-content-between">
+    <p style="margin: 0;">Easy:</p>
+    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
+    <p style="margin: 0;">{{ getBestTime('easy') }}</p>
+  </div>
+  <div class="d-flex justify-content-between">
+    <p style="margin: 0;">Intermediate: </p>
+    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
+    <p style="margin: 0;">{{ getBestTime('intermediate') }}</p>
+  </div>
+  <div class="d-flex justify-content-between">
+    <p style="margin: 0;">Hard: </p>
+    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
+    <p style="margin: 0;">{{ getBestTime('hard') }}</p>
+  </div>
+  <div class="d-flex justify-content-between">
+    <p style="margin: 0;">Expert: </p>
+    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
+    <p style="margin: 0;">{{ getBestTime('expert') }}</p>
+  </div>
+</div>
+
+
+
+
 
 <!-- minesweeper settings modal -->
 <div

@@ -95,18 +95,18 @@ export class MinesweeperComponent implements OnInit {
     }
   }
 
-  getTimerValue() {
-    if (this.timer > 0) {
-      const decisecond = Math.floor(this.timer % 100)
+  getTimerValue(timer: number) {
+    if (timer > 0) {
+      const decisecond = Math.floor(timer % 100)
         .toString()
         .padStart(2, '0');
-      const seconds = Math.floor((this.timer / 100) % 60)
+      const seconds = Math.floor((timer / 100) % 60)
         .toString()
         .padStart(2, '0');
-      const minutes = Math.floor((this.timer / 100 / 60) % 60)
+      const minutes = Math.floor((timer / 100 / 60) % 60)
         .toString()
         .padStart(2, '0');
-      const hours = Math.floor((this.timer / 100 / 60 / 60) % 24)
+      const hours = Math.floor((timer / 100 / 60 / 60) % 24)
         .toString()
         .padStart(2, '0');
       if (+hours > 0) {
@@ -115,7 +115,7 @@ export class MinesweeperComponent implements OnInit {
         return `${minutes}:${seconds}.${decisecond}`;
       }
     } else {
-      return '00:00:00';
+      return '00:00.00';
     }
   }
 
@@ -271,7 +271,6 @@ export class MinesweeperComponent implements OnInit {
             );
           }
           break;
-
         case 'hard':
           if (!hard || this.timer < hard) {
             localStorage.setItem(
@@ -285,7 +284,6 @@ export class MinesweeperComponent implements OnInit {
             );
           }
           break;
-
         case 'expert':
           if (!expert || this.timer < expert) {
             localStorage.setItem(
@@ -307,7 +305,10 @@ export class MinesweeperComponent implements OnInit {
   constructor(private mineService: MinesweeperService) {}
 
   ngOnInit(): void {
-    if (!localStorage.getItem('mineSweeperBestTimes')) {
+    if (
+      !localStorage.getItem('mineSweeperBestTimes') ||
+      localStorage.getItem('mineSweeperBestTimes').length < 15
+    ) {
       localStorage.setItem(
         'mineSweeperBestTimes',
         JSON.stringify({
@@ -357,6 +358,13 @@ export class MinesweeperComponent implements OnInit {
     }
     this.changeSizeError = '';
     this.mineService.updateGameSize(size);
+  }
+
+  getBestTime(level: string) {
+    const times = JSON.parse(localStorage.getItem('mineSweeperBestTimes'));
+    if (times[level]) {
+      return this.getTimerValue(times[level]);
+    } else return 'Incomplete'
   }
 
   checkCustomSize() {
