@@ -8,6 +8,9 @@ import { ProjectComponent } from './projects-page/project/project.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { GameSelectComponent } from './games/game-select/game-select.component';
 import { StateGuesserComponent } from './games/state-guesser/state-guesser.component';
+import { ExtrasComponent } from './extras/extras.component';
+import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
+import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -30,6 +33,11 @@ const routes: Routes = [
       { path: '**', redirectTo: '' },
     ],
   },
+  { path: 'extras', component: ExtrasComponent, children: [
+    { path: '', component: SelectExtraComponent },
+    { path: 'poké-search', component: PokeSearchComponent },
+    { path: '**', redirectTo: '' },
+  ] },
   { path: '**', redirectTo: 'home' },
 ];
 

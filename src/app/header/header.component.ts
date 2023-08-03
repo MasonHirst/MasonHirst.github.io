@@ -14,7 +14,8 @@ export class HeaderComponent {
     new Tab('Home', 'home'),
     new Tab('Projects', 'projects'),
     new Tab('Resume', 'resume'),
-    new Tab('Games', 'games')
+    new Tab('Games', 'games'),
+    new Tab('Extras', 'extras')
   ]
 
   constructor(private styleService: StylingService,) {}

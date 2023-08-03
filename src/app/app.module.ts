@@ -17,6 +17,9 @@ import { MinesweeperComponent } from './games/minesweeper/minesweeper.component'
 import { GameSelectComponent } from './games/game-select/game-select.component';
 import { StateGuesserComponent } from './games/state-guesser/state-guesser.component';
 import { CommonModule } from '@angular/common';
+import { ExtrasComponent } from './extras/extras.component';
+import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
+import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { CommonModule } from '@angular/common';
     HeaderComponent,
     MinesweeperComponent,
     GameSelectComponent,
-    StateGuesserComponent
+    StateGuesserComponent,
+    ExtrasComponent,
+    PokeSearchComponent,
+    SelectExtraComponent
   ],
   imports: [
     CommonModule,
