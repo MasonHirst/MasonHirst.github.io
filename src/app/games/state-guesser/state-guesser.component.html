@@ -13,27 +13,39 @@
 
   <div
     class="d-flex justify-content-between"
-    style="height: 50px; align-items: flex-end;"
+    style="height: 50px; align-items: flex-end"
   >
-    <div class="d-flex gap-4" style="align-items: flex-end;">
-      <button class="btn btn-primary mb-1" (click)="onStartGame()">
+    <div class="d-flex gap-4" style="align-items: flex-end">
+      <button class="btn btn-outline-primary mb-1" (click)="onStartGame()">
         Start new game
       </button>
-      <h2 *ngIf="directedState?.name" style="text-align: center; margin: 0">
-        <span style="font-size: 1.2rem; opacity: 0.7">find: </span
+      <h2
+        class="mb-0 text-primary"
+        *ngIf="directedState?.name"
+        style="text-align: center; font-weight: bold"
+      >
+        <span
+          style="
+            font-size: 1.2rem;
+            opacity: 0.7;
+            font-weight: normal;
+            color: white;
+          "
+          >find: </span
         >{{ directedState.name }}
       </h2>
     </div>
-    <div class="d-flex gap-5" style="align-items: flex-end;">
-      <div *ngIf="remainingStates !== null" class="d-flex flex-col align-items-center">
-        <p class="mb-0" style="opacity: .7;">States:</p>
-        <h5 class="mb-0">
-          {{ remainingStates }} left
-        </h5>
+    <div class="d-flex gap-5" style="align-items: flex-end">
+      <div
+        *ngIf="remainingStates !== null"
+        class="d-flex flex-col align-items-center"
+      >
+        <p class="mb-0" style="opacity: 0.7">States:</p>
+        <h5 class="mb-0">{{ remainingStates }} left</h5>
       </div>
       <div class="d-flex flex-col align-items-center">
-        <p class="mb-0" style="opacity: .7;">Timer:</p>
-        <h5 class="mb-0" style="width: 91px">{{ getTimerValue() }}</h5>
+        <p class="mb-0" style="opacity: 0.7">Timer:</p>
+        <h5 class="mb-0" style="width: 91px">{{ getTimerValue(timer) }}</h5>
       </div>
     </div>
   </div>
@@ -62,9 +74,56 @@
       </div>
       <div class="modal-body" *ngIf="summary" style="overflow-x: auto">
         <!-- start of modal body content -->
-        <p>{{ summary.correct.length }}/50 correct guesses</p>
-        <p>{{ summary.correct.length * 2 }}% accuracy</p>
-        <p>Your time: {{ summary.time }}</p>
+        <div class="d-flex flex-col gap-2" style="padding: 20px 0;">
+          <div
+            *ngIf="summary.correct.length === 50"
+            class="mt-2"
+            style="width: fit-content; position: relative; margin: 12px auto"
+          >
+            <img
+              src="../../../assets/golden-emphasis.png"
+              alt="decoration lines"
+              class="golden-emphasis-left"
+            />
+            <h3 class="text-info" style="font-weight: bold">Perfect!</h3>
+            <img
+              src="../../../assets/golden-emphasis.png"
+              alt="decoration lines"
+              class="golden-emphasis-right"
+            />
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <p class="mb-0">Accuracy:</p>
+            <div class="filler-dotted-line"></div>
+            <p class="mb-0">
+              <span class="text-primary" style="font-weight: bold">{{
+                summary.correct.length
+              }}</span
+              >/50
+            </p>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <p class="mb-0">Time:</p>
+            <div class="filler-dotted-line"></div>
+            <p class="mb-0">
+              <span class="text-primary" style="font-weight: bold">{{
+                summary.time
+              }}</span>
+            </p>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <p class="mb-0">Score:</p>
+            <div class="filler-dotted-line"></div>
+            <p class="mb-0">
+              <span class="text-primary" style="font-weight: bold">{{
+                summary.score
+              }}</span>
+            </p>
+          </div>
+        </div>
         <!-- end of modal body content -->
       </div>
       <div class="modal-footer">
@@ -77,7 +136,7 @@
 </div>
 <!-- end of summary modal -->
 
-<div style="width: min(1300px, 95vw)">
+<div style="width: min(1300px, 98vw); transform: translateX(-5%)">
   <svg
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cc="http://creativecommons.org/ns#"
@@ -658,4 +717,32 @@
       style="stroke-width: 0.97063118000000004; fill: #e2e2e2"
     />
   </svg>
+</div>
+
+<div
+  class="d-flex flex-col mt-5"
+  style="max-width: min(360px, 100vw - 25px); margin: 0 auto; gap: 10px"
+>
+  <div class="d-flex justify-content-between">
+    <p class="mb-0">High score:</p>
+    <div class="filler-dotted-line"></div>
+    <p class="text-primary mb-0" style="margin: 0">
+      {{ getBestTime("highScore") }}
+    </p>
+  </div>
+  <div class="d-flex justify-content-between">
+    <p class="mb-0">Best perfect time:</p>
+    <div class="filler-dotted-line"></div>
+    <p
+      class="mb-0"
+      [ngClass]="{
+        'text-primary': getBestTime('perfectTime') !== 'Incomplete',
+      }"
+      [ngStyle]="{
+        opacity: getBestTime('perfectTime') === 'Incomplete' ? .8 : 1
+      }"
+    >
+      {{ getBestTime("perfectTime") }}
+    </p>
+  </div>
 </div>

@@ -8,15 +8,23 @@ import { MinesweeperService } from '../minesweeper.service';
   styleUrls: ['./minesweeper.component.css'],
 })
 export class MinesweeperComponent implements OnInit {
-  settingsModal: boolean = false;
-  gameSize: Minesweeper;
   gameRows = [];
   gameStarted: boolean = false;
   stopWatch: any;
   timer: number = 0;
   gameState: string = 'new';
+  // settings variables
+  settingsModal: boolean = false;
+  gameSize: Minesweeper;
+  pocketOpened: boolean = false;
+  squaresRevealed: number = 0;
+  noPocketRestart: boolean = JSON.parse(localStorage.getItem('minesweeperNoPocketRestart'));
+  firstSquareRestart: boolean = JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart'));
+  lStorage: any = localStorage;
 
   onNewGame() {
+    this.pocketOpened = false;
+    this.squaresRevealed = 0;
     this.gameState = 'new';
     this.gameStarted = false;
     this.toggleTimer(false);
@@ -155,6 +163,7 @@ export class MinesweeperComponent implements OnInit {
 
     if (!cell.flagged && !cell.question) {
       cell.revealed = true;
+      this.squaresRevealed++;
     } else {
       return;
     }
@@ -165,6 +174,16 @@ export class MinesweeperComponent implements OnInit {
     }
 
     if (cell.value === 'bomb') {
+      if (
+        (this.firstSquareRestart && this.squaresRevealed < 2) ||
+        (this.noPocketRestart && !this.pocketOpened)
+      ) {
+        setTimeout(() => {
+          this.onNewGame();
+          this.onClickCell(row, col);
+        }, 200);
+      }
+
       this.toggleTimer(false);
       this.gameState = 'loss';
       cell.destroyed = true;
@@ -199,6 +218,9 @@ export class MinesweeperComponent implements OnInit {
           neighborCol < game[neighborRow].length &&
           !game[neighborRow][neighborCol].revealed
         ) {
+          if (!this.pocketOpened) {
+            this.pocketOpened = true;
+          }
           this.onClickCell(neighborRow, neighborCol);
         }
       }
@@ -364,7 +386,7 @@ export class MinesweeperComponent implements OnInit {
     const times = JSON.parse(localStorage.getItem('mineSweeperBestTimes'));
     if (times[level]) {
       return this.getTimerValue(times[level]);
-    } else return 'Incomplete'
+    } else return 'Incomplete';
   }
 
   checkCustomSize() {

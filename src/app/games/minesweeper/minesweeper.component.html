@@ -1,16 +1,21 @@
 <div class="d-flex align-items-center justify-content-between mt-5 mb-3">
   <!-- Triggers the modal in games.component.html -->
   <div class="d-flex align-items-center gap-2">
-    <i style="font-size: 22px; cursor: pointer;" class="bi bi-chevron-left" routerLink="../"></i>
+    <i
+      style="font-size: 22px; cursor: pointer"
+      class="bi bi-chevron-left"
+      routerLink="../"
+    ></i>
     <h4 class="text-info" style="margin: 0">Minesweeper</h4>
   </div>
   <button
     type="button"
     class="btn btn-outline-primary"
-    style="margin-right: 5px;"
+    style="margin-right: 5px"
     data-bs-toggle="modal"
     data-bs-target="#minesweeper-settings-modal"
   >
+    Settings
     <i class="bi bi-gear-fill"></i>
   </button>
 </div>
@@ -88,37 +93,71 @@
   </div>
 </div>
 
-
-
-
-
-
-<div class="d-flex flex-col mt-5" style="max-width: min(360px, 100vw - 25px); margin: 0 auto; gap: 10px">
+<div
+  class="d-flex flex-col mt-5"
+  style="max-width: min(360px, 100vw - 25px); margin: 0 auto; gap: 10px"
+>
   <div class="d-flex justify-content-between">
-    <p style="margin: 0;">Easy:</p>
-    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
-    <p style="margin: 0;">{{ getBestTime('easy') }}</p>
+    <p class="mb-0">Easy:</p>
+    <div class="filler-dotted-line"></div>
+    <p
+      class="mb-0"
+      [ngClass]="{
+        'text-primary': getBestTime('easy') !== 'Incomplete',
+      }"
+      [ngStyle]="{
+        opacity: getBestTime('easy') === 'Incomplete' ? 0.8 : 1
+      }"
+    >
+      {{ getBestTime("easy") }}
+    </p>
   </div>
   <div class="d-flex justify-content-between">
-    <p style="margin: 0;">Intermediate: </p>
-    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
-    <p style="margin: 0;">{{ getBestTime('intermediate') }}</p>
+    <p class="mb-0">Intermediate:</p>
+    <div class="filler-dotted-line"></div>
+    <p
+      class="mb-0"
+      [ngClass]="{
+        'text-primary': getBestTime('intermediate') !== 'Incomplete',
+      }"
+      [ngStyle]="{
+        opacity: getBestTime('intermediate') === 'Incomplete' ? 0.8 : 1
+      }"
+    >
+      {{ getBestTime("intermediate") }}
+    </p>
   </div>
   <div class="d-flex justify-content-between">
-    <p style="margin: 0;">Hard: </p>
-    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
-    <p style="margin: 0;">{{ getBestTime('hard') }}</p>
+    <p class="mb-0">Hard:</p>
+    <div class="filler-dotted-line"></div>
+    <p
+      class="mb-0"
+      [ngClass]="{
+        'text-primary': getBestTime('hard') !== 'Incomplete',
+      }"
+      [ngStyle]="{
+        opacity: getBestTime('hard') === 'Incomplete' ? 0.8 : 1
+      }"
+    >
+      {{ getBestTime("hard") }}
+    </p>
   </div>
   <div class="d-flex justify-content-between">
-    <p style="margin: 0;">Expert: </p>
-    <div style="border-bottom: 2px dotted white; flex: 1; margin: 0 5px; margin-bottom: 5px;"></div>
-    <p style="margin: 0;">{{ getBestTime('expert') }}</p>
+    <p class="mb-0">Expert:</p>
+    <div class="filler-dotted-line"></div>
+    <p
+      class="mb-0"
+      [ngClass]="{
+        'text-primary': getBestTime('expert') !== 'Incomplete',
+      }"
+      [ngStyle]="{
+        opacity: getBestTime('expert') === 'Incomplete' ? 0.8 : 1
+      }"
+    >
+      {{ getBestTime("expert") }}
+    </p>
   </div>
 </div>
-
-
-
-
 
 <!-- minesweeper settings modal -->
 <div
@@ -274,6 +313,49 @@
         <p class="remove-p-margin text-danger float-end">
           {{ changeSizeError }}
         </p>
+
+        <div class="d-flex flex-col mt-3 gap-2">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckChecked"
+              [(ngModel)]="firstSquareRestart"
+              (ngModelChange)="lStorage.setItem('minesweeperFirstSquareRestart', $event)"
+            />
+            <label class="form-check-label" for="flexSwitchCheckChecked"
+              >Auto retry on first cell</label
+            >
+          </div>
+          <p style="margin-top: -5px">
+            <span class="text-info bi bi-info-circle"></span
+            ><i style="opacity: 0.7; margin-left: 7px"
+              >If the first cell you open is a bomb, the game will restart with
+              the same starting cell.</i
+            >
+          </p>
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckChecked"
+              [(ngModel)]="noPocketRestart"
+              (ngModelChange)="lStorage.setItem('minesweeperNoPocketRestart', $event)"
+            />
+            <label class="form-check-label" for="flexSwitchCheckChecked"
+              >Auto retry if no pockets opened</label
+            >
+          </div>
+          <p style="margin-top: -5px">
+            <span class="text-info bi bi-info-circle"></span
+            ><i style="opacity: 0.7; margin-left: 7px"
+              >If you explode before any pockets open up, the game will restart
+              with the cell last opened.</i
+            >
+          </p>
+        </div>
         <!-- end of modal body content -->
       </div>
       <div class="modal-footer">

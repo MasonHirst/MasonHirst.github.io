@@ -129,7 +129,7 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     if (timeScore < 0) {
       timeScore = 0;
     }
-    let totalScore = correctGuessesScore + timeScore;
+    let totalScore = Math.floor(correctGuessesScore + timeScore);
     if (score < 1) {
       totalScore = 0;
     } else if (score < 49) {
@@ -139,9 +139,20 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     this.summary = {
       ...this.gameService.getGameSummary(),
       score: totalScore,
-      time: this.getTimerValue(),
+      time: this.getTimerValue(this.timer),
     };
-    return totalScore;
+    return totalScore
+  }
+
+  getBestTime(level: string) {
+    const times = JSON.parse(localStorage.getItem('stateGuesserHighScores'));
+    if (times[level]) {
+      if (level === 'perfectTime') {
+        return this.getTimerValue(times[level]);
+      } else if (level === 'highScore') {
+        return times[level];
+      }
+    } else return 'Incomplete';
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -169,24 +180,26 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     document.getElementById(id).style.stroke = '#000000';
   }
 
-  getTimerValue() {
-    if (this.timer > 0) {
-      const decisecond = Math.floor(this.timer % 100)
+  getTimerValue(timer: number) {
+    if (timer > 0) {
+      const decisecond = Math.floor(timer % 100)
         .toString()
         .padStart(2, '0');
-      const seconds = Math.floor((this.timer / 100) % 60)
+      const seconds = Math.floor((timer / 100) % 60)
         .toString()
         .padStart(2, '0');
-      const minutes = Math.floor((this.timer / 100 / 60) % 60)
+      const minutes = Math.floor((timer / 100 / 60) % 60)
         .toString()
         .padStart(2, '0');
-      const hours = Math.floor((this.timer / 100 / 60 / 60) % 24)
+      const hours = Math.floor((timer / 100 / 60 / 60) % 24)
         .toString()
         .padStart(2, '0');
       if (+hours > 0) {
         return `${hours}:${minutes}:${seconds}.${decisecond}`;
-      } else {
+      } else if (+minutes > 0) {
         return `${minutes}:${seconds}.${decisecond}`;
+      } else {
+        return `${seconds}.${decisecond}`;
       }
     } else {
       return '00:00.00';
