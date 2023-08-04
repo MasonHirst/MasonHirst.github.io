@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center justify-content-between mt-5 mb-3">
+<div class="d-flex align-items-center justify-content-between mt-3 mb-3">
   <!-- Triggers the modal in games.component.html -->
   <div class="d-flex align-items-center gap-2">
     <i
@@ -6,11 +6,19 @@
       class="bi bi-chevron-left"
       routerLink="../"
     ></i>
-    <h4 class="text-info" style="margin: 0">Minesweeper</h4>
+    <h4
+      class="text-info mb-0"
+      [ngStyle]="{
+        fontSize: screen < 400 ? '1.2rem' : '1.5rem'
+      }"
+    >
+      Minesweeper
+    </h4>
   </div>
   <button
     type="button"
     class="btn btn-outline-primary"
+    [ngClass]="{ 'btn-sm': screen < 400 }"
     style="margin-right: 5px"
     data-bs-toggle="modal"
     data-bs-target="#minesweeper-settings-modal"
@@ -21,34 +29,70 @@
 </div>
 
 <div
-  *ngIf="gameRows.length"
-  class="d-flex flex-col justify-content-center align-items-center"
-  style="min-width: 400px; padding: 5px"
+  class="w-100 d-flex justify-content-between align-items-center mb-2"
+  style="padding: 0 5px"
 >
-  <div class="w-100 d-flex justify-content-between align-items-center mb-2">
-    <h5 style="margin: 0">{{ getTimerValue(timer) }}</h5>
-    <h4
-      *ngIf="gameState !== 'new'"
-      [ngClass]="{
-        'text-primary': gameState === 'win',
-        'text-danger': gameState === 'loss'
-      }"
-    >
-      {{ gameState === "win" ? "You won!" : "Boom!" }}
-    </h4>
-    <button class="btn btn-outline-primary" (click)="onNewGame()">
-      New game
-    </button>
+  <h5
+    class="mb-0"
+    [ngStyle]="{ 'font-size': screen < 400 ? '1rem' : '1.4rem' }"
+  >
+    {{ getTimerValue(timer) }}
+  </h5>
+  <!-- <h4
+    *ngIf="gameState !== 'new' && screen >= 400"
+    class="mb-0"
+    [ngClass]="{
+      'text-primary': gameState === 'win',
+      'text-danger': gameState === 'loss'
+    }"
+  >
+  {{ gameState === "win" ? "You won!" : "Boom!" }}
+</h4> -->
+  <div class="d-flex flex-col align-items-center">
+    <p class="mb-0">Bombs</p>
+    <h5 class="mb-0 text-danger">{{ getRemainingBombCount() }}</h5>
   </div>
-  <div id="mine-sweeper-game" class="minesweeper-border">
+  <button
+    class="btn btn-outline-primary"
+    [ngClass]="{ 'btn-sm': screen < 400 }"
+    (click)="onNewGame()"
+  >
+    New game
+  </button>
+</div>
+
+<!-- <h4
+  *ngIf="gameState !== 'new' && screen < 400"
+  class="mb-0"
+  [ngClass]="{
+    'text-primary': gameState === 'win',
+    'text-danger': gameState === 'loss'
+  }"
+  style="text-align: center"
+>
+  {{ gameState === "win" ? "You won!" : "Boom!" }}
+</h4> -->
+
+<div
+  *ngIf="gameRows.length"
+  class="d-flex justify-content-start align-items-center"
+  style="
+    min-width: min(500px, 100vw - 15px);
+    padding: 5px;
+    max-width: calc(100vw - 15px) !important;
+    overflow-x: auto;
+  "
+>
+  <!-- start of minesweeper game -->
+  <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
       <div
         *ngFor="let cell of row; let k = index"
         class="d-flex justify-content-center align-items-center minesweeper-cell"
         [ngClass]="{
-          'unopened-cell-img': cell.flagged && cell.value === 'bomb' && cell.revealed || !cell.revealed,
-          'question-cell-img': cell.question && !cell.revealed,
-        }"
+            'unopened-cell-img': cell.flagged && cell.value === 'bomb' && cell.revealed || !cell.revealed,
+            'question-cell-img': cell.question && !cell.revealed,
+          }"
         [ngStyle]="{
           backgroundColor: cell.destroyed ? 'red' : '#BDBDBD',
         }"
@@ -91,6 +135,7 @@
       </div>
     </div>
   </div>
+  <!-- end of minesweeper game -->
 </div>
 
 <div
@@ -158,6 +203,70 @@
     </p>
   </div>
 </div>
+
+
+
+
+<!-- minesweeper victory modal -->
+<div
+  #settingsModal
+  class="modal fade"
+  id="minesweeper-victory-modal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="minesweeper-victory-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" style="overflow-x: auto">
+        <!-- start of modal body content -->
+        <div
+            class="mt-3"
+            style="width: fit-content; position: relative; margin: 12px auto"
+          >
+            <img
+              src="../../../assets/golden-emphasis.png"
+              alt="decoration lines"
+              class="golden-emphasis-left"
+            />
+            <h3 class="text-info mb-0" style="font-weight: bold">You win!</h3>
+            <img
+              src="../../../assets/golden-emphasis.png"
+              alt="decoration lines"
+              class="golden-emphasis-right"
+            />
+          </div>
+
+          <div>
+            <p class="mb-1">Your time: <span class="text-primary">{{ getTimerValue(timer) }}</span></p>
+            <p class="capitalize">Difficulty: <span class="text-primary">{{ minesweeperDifficulty }}</span></p>
+          </div>
+        <!-- end of modal body content -->
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end of minesweeper victory modal -->
+
+
 
 <!-- minesweeper settings modal -->
 <div
@@ -245,7 +354,7 @@
           </div>
 
           <div class="col d-flex flex-col align-items-center">
-            <h6>Height</h6>
+            <h6>{{ screen < 600 ? "Width" : "Height" }}</h6>
             <p>10</p>
             <p>16</p>
             <p>16</p>
@@ -266,7 +375,7 @@
           </div>
 
           <div class="col d-flex flex-col align-items-center">
-            <h6>Width</h6>
+            <h6>{{ screen < 600 ? "Height" : "Width" }}</h6>
             <p>10</p>
             <p>16</p>
             <p>24</p>
@@ -310,7 +419,7 @@
             </div>
           </div>
         </div>
-        <p class="remove-p-margin text-danger float-end">
+        <p *ngIf="minesweeperDifficulty === 'custom'" class="remove-p-margin text-danger" style="text-align: end;">
           {{ changeSizeError }}
         </p>
 
@@ -322,7 +431,9 @@
               role="switch"
               id="flexSwitchCheckChecked"
               [(ngModel)]="firstSquareRestart"
-              (ngModelChange)="lStorage.setItem('minesweeperFirstSquareRestart', $event)"
+              (ngModelChange)="
+                lStorage.setItem('minesweeperFirstSquareRestart', $event)
+              "
             />
             <label class="form-check-label" for="flexSwitchCheckChecked"
               >Auto retry on first cell</label
@@ -342,7 +453,9 @@
               role="switch"
               id="flexSwitchCheckChecked"
               [(ngModel)]="noPocketRestart"
-              (ngModelChange)="lStorage.setItem('minesweeperNoPocketRestart', $event)"
+              (ngModelChange)="
+                lStorage.setItem('minesweeperNoPocketRestart', $event)
+              "
             />
             <label class="form-check-label" for="flexSwitchCheckChecked"
               >Auto retry if no pockets opened</label

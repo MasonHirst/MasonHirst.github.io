@@ -9,7 +9,7 @@ export class PokeDetailComponent implements OnInit {
   @Input() poke: any = null;
   @Input() imgLoading: boolean = false;
   // I need an event that will emit when the image is loaded
-  @Output() imgLoaded: EventEmitter<any> = new EventEmitter();
+  @Output() imgLoaded: EventEmitter<void> = new EventEmitter();
 
   constructor() {}
 

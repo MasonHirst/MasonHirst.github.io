@@ -1,10 +1,10 @@
-<div class="header-cont" data-bs-theme="light">
+<div
+  *ngIf="screen >= 700; else drawerHeader"
+  class="header-cont"
+  data-bs-theme="light"
+>
   <ul
     class="nav nav-tabs justify-content-center"
-    [ngClass]="{
-      'justify-content-center': screen >= 600,
-      'justify-content-start': screen < 600
-    }"
     style="padding: 0px 10px"
     id="myTab"
     role="tablist"
@@ -44,3 +44,61 @@
     Mason Hirst
   </h5>
 </div>
+
+<!-- Drawer header on smaller screens -->
+<ng-template #drawerHeader>
+  <div
+    class="header-cont d-flex justify-content-between align-items-center"
+    style="border-bottom: 1px solid #0ae6b7; padding: 8px 15px"
+  >
+    <a
+      class="navbar-toggler"
+      data-bs-toggle="offcanvas"
+      href="#drawer"
+      role="button"
+      aria-controls="drawer"
+    >
+      <span class="navbar-toggler-icon" style="font-size: 20px"></span>
+    </a>
+
+    <h5 class="mb-0" style="cursor: pointer" routerLink="/home">Mason Hirst</h5>
+  </div>
+
+  <div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="drawer"
+    aria-labelledby="drawer"
+    data-bs-dismiss="offcanvas"
+    data-bs-backdrop="true"
+    style="width: 220px"
+  >
+    <div class="offcanvas-header">
+      <h5 class="mb-0" style="cursor: pointer" routerLink="/home">Mason Hirst</h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="offcanvas-body">
+      <div
+      class="nav flex-column nav-pills"
+      id="v-pills-tab"
+      role="tablist"
+      aria-orientation="vertical"
+    >
+      <button
+        *ngFor="let tab of tabs"
+        class="nav-link text-faded"
+        style="white-space: nowrap"
+        routerLinkActive="active"
+        [routerLink]="tab.route"
+      >
+        {{ tab.name }}
+      </button>
+    </div>
+    </div>
+  </div>
+</ng-template>

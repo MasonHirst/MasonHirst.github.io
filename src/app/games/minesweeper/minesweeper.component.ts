@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Minesweeper } from './minesweeper.model';
 import { MinesweeperService } from '../minesweeper.service';
+import { StylingService } from 'src/app/styling.service';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-minesweeper',
@@ -8,6 +10,8 @@ import { MinesweeperService } from '../minesweeper.service';
   styleUrls: ['./minesweeper.component.css'],
 })
 export class MinesweeperComponent implements OnInit {
+  screen: number;
+
   gameRows = [];
   gameStarted: boolean = false;
   stopWatch: any;
@@ -18,8 +22,12 @@ export class MinesweeperComponent implements OnInit {
   gameSize: Minesweeper;
   pocketOpened: boolean = false;
   squaresRevealed: number = 0;
-  noPocketRestart: boolean = JSON.parse(localStorage.getItem('minesweeperNoPocketRestart'));
-  firstSquareRestart: boolean = JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart'));
+  noPocketRestart: boolean = JSON.parse(
+    localStorage.getItem('minesweeperNoPocketRestart')
+  );
+  firstSquareRestart: boolean = JSON.parse(
+    localStorage.getItem('minesweeperFirstSquareRestart')
+  );
   lStorage: any = localStorage;
 
   onNewGame() {
@@ -30,11 +38,13 @@ export class MinesweeperComponent implements OnInit {
     this.toggleTimer(false);
     this.timer = 0;
 
+    const { width, height, bombs } = this.gameSize;
+
     // Generate rows and columns based on height and width
     this.gameRows = [];
-    for (let i = 0; i < this.gameSize.height; i++) {
+    for (let i = 0; i < height; i++) {
       let row = [];
-      for (let k = 0; k < this.gameSize.width; k++) {
+      for (let k = 0; k < width; k++) {
         row.push({
           value: '',
           revealed: false,
@@ -48,9 +58,9 @@ export class MinesweeperComponent implements OnInit {
 
     // randomly place as many bombs as specified
     let bombsPlaced = 0;
-    while (bombsPlaced < this.gameSize.bombs) {
-      const randomRow = Math.floor(Math.random() * this.gameSize.height);
-      const randomCol = Math.floor(Math.random() * this.gameSize.width);
+    while (bombsPlaced < bombs) {
+      const randomRow = Math.floor(Math.random() * height);
+      const randomCol = Math.floor(Math.random() * width);
       if (this.gameRows[randomRow][randomCol].value !== 'bomb') {
         this.gameRows[randomRow][randomCol].value = 'bomb';
         bombsPlaced++;
@@ -129,6 +139,7 @@ export class MinesweeperComponent implements OnInit {
 
   onRightClick(row: number, col: number, event: any) {
     if (event) event.preventDefault();
+    if (this.gameState !== 'new') return;
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     if (cell.revealed) return;
@@ -260,6 +271,10 @@ export class MinesweeperComponent implements OnInit {
       }
     }
     if (win) {
+      const summaryModal = new Modal(
+        document.getElementById('minesweeper-victory-modal')
+      );
+      summaryModal.show();
       this.gameState = 'win';
       this.toggleTimer(false);
       const { easy, intermediate, hard, expert } = JSON.parse(
@@ -324,9 +339,16 @@ export class MinesweeperComponent implements OnInit {
     return win;
   }
 
-  constructor(private mineService: MinesweeperService) {}
+  constructor(
+    private mineService: MinesweeperService,
+    private styleService: StylingService
+  ) {}
 
   ngOnInit(): void {
+    this.styleService.screenSize$.subscribe((size) => {
+      this.screen = size;
+    });
+
     if (
       !localStorage.getItem('mineSweeperBestTimes') ||
       localStorage.getItem('mineSweeperBestTimes').length < 15
@@ -378,8 +400,29 @@ export class MinesweeperComponent implements OnInit {
         );
         break;
     }
+    if (this.screen < 600) {
+      const { height, width, bombs } = size;
+      size = new Minesweeper(width, height, bombs);
+    }
     this.changeSizeError = '';
     this.mineService.updateGameSize(size);
+  }
+
+  getRemainingBombCount() {
+    // count how many bombs are in the game, and substract that from how many cells have flagged=true
+    let bombCount = 0;
+    let flaggedCount = 0;
+    this.gameRows.forEach((row: any) => {
+      row.forEach((cell: any) => {
+        if (cell.value === 'bomb') {
+          bombCount++;
+        }
+        if (cell.flagged) {
+          flaggedCount++;
+        }
+      });
+    });
+    return bombCount - flaggedCount;
   }
 
   getBestTime(level: string) {
@@ -390,6 +433,7 @@ export class MinesweeperComponent implements OnInit {
   }
 
   checkCustomSize() {
+    if (this.minesweeperDifficulty !== 'custom') return true;
     const { minesweeperHeight, minesweeperWidth, minesweeperBombs } = this;
     if (
       minesweeperHeight === undefined ||

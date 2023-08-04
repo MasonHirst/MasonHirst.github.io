@@ -1,28 +1,30 @@
-<h1 class="text-primary mt-4" style="text-align: center">Play a game!</h1>
-<h6 class="text-faded" style="text-align: center">
-  Enjoy simple games built from scratch by yours truly.
-</h6>
+<div class="fade-in" style="margin: 0 auto;">
+  <h1 class="text-primary mt-4" style="text-align: center">Play a game!</h1>
+  <h6 class="text-faded" style="text-align: center">
+    Enjoy simple games built from scratch by yours truly.
+  </h6>
 
-<div
-  class="d-flex gap-4 mt-5"
-  style="flex-wrap: wrap; width: min(500px, 100vw - 25px)"
->
   <div
-    *ngFor="let game of gameLinks"
-    class="d-flex flex-col align-items-center justify-content-center shadow p-3 game-preview-card w-100"
-    style="cursor: pointer"
-    [ngStyle]="{
-      backgroundImage: 'url(' + game.imgUrl + ')',
-    }"
-    role="button"
-    routerLink="{{ game.link }}"
+    class="d-flex gap-4 mt-5"
+    style="flex-wrap: wrap; width: min(500px, 100vw - 25px); margin-left: auto; margin-right: auto;"
   >
-    <div class="dark-overlay"></div>
-    <h2
-      class="mb-0"
-      style="z-index: 1; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7)"
+    <div
+      *ngFor="let game of gameLinks"
+      class="d-flex flex-col align-items-center justify-content-center shadow p-3 game-preview-card w-100"
+      style="cursor: pointer"
+      [ngStyle]="{
+    backgroundImage: 'url(' + game.imgUrl + ')',
+  }"
+      role="button"
+      routerLink="{{ game.link }}"
     >
-      {{ game.name }}
-    </h2>
+      <div class="dark-overlay"></div>
+      <h2
+        class="mb-0"
+        style="z-index: 1; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7)"
+      >
+        {{ game.name }}
+      </h2>
+    </div>
   </div>
 </div>
