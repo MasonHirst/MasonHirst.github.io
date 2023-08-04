@@ -1,0 +1,9 @@
+.extra-preview-card {
+  height: 200px;
+  border-radius: 10px;
+  position: relative;
+  background-color: #202847;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+}

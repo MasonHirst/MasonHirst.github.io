@@ -1,0 +1,151 @@
+.poke-info-card {
+  flex: 1;
+  max-width: 50%;
+  /* border: 1px solid pink */
+}
+
+.poke-detail-hero {
+  width: 100%;
+  /* border: 1px solid red; */
+}
+
+.poke-img {
+  width: 100%;
+}
+
+.poke-attrs-card {
+  border-radius: 10px;
+  background-color: #202847;
+  padding: 25px 35px;
+  row-gap: 30px;
+  flex-wrap: wrap;
+}
+
+.attrs-attr {
+  width: 40%;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0;
+}
+
+.bar-outline {
+  height: 250px;
+  width: 50px;
+  display: flex;
+  align-items: flex-end;
+  background-color: rgba(256, 256, 256, .3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background-color: #0AE6B7;
+  width: 100%;
+}
+.bar-fill > p {
+  color: #11162B;
+  /* color: black; */
+  text-align: center;
+}
+
+/* pokemon-types.css */
+
+.poke-type-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.poke-type-badge-normal {
+  background-color: #a8a878;
+  color: #fff;
+}
+
+.poke-type-badge-fire {
+  background-color: #f08030;
+  color: #fff;
+}
+
+.poke-type-badge-water {
+  background-color: #6890f0;
+  color: #fff;
+}
+
+.poke-type-badge-electric {
+  background-color: #f8d030;
+  color: #333;
+}
+
+.poke-type-badge-grass {
+  background-color: #78c850;
+  color: #333;
+}
+
+.poke-type-badge-ice {
+  background-color: #98d8d8;
+  color: #333;
+}
+
+.poke-type-badge-fighting {
+  background-color: #c03028;
+  color: #fff;
+}
+
+.poke-type-badge-poison {
+  background-color: #a040a0;
+  color: #fff;
+}
+
+.poke-type-badge-ground {
+  background-color: #e0c068;
+  color: #333;
+}
+
+.poke-type-badge-flying {
+  background-color: #a890f0;
+  color: #333;
+}
+
+.poke-type-badge-psychic {
+  background-color: #f85888;
+  color: #fff;
+}
+
+.poke-type-badge-bug {
+  background-color: #a8b820;
+  color: #fff;
+}
+
+.poke-type-badge-rock {
+  background-color: #b8a038;
+  color: #fff;
+}
+
+.poke-type-badge-ghost {
+  background-color: #705898;
+  color: #fff;
+}
+
+.poke-type-badge-dragon {
+  background-color: #7038f8;
+  color: #fff;
+}
+
+.poke-type-badge-dark {
+  background-color: #705848;
+  color: #fff;
+}
+
+.poke-type-badge-steel {
+  background-color: #b8b8d0;
+  color: #333;
+}
+
+.poke-type-badge-fairy {
+  background-color: #ffaec9;
+  color: #333;
+}

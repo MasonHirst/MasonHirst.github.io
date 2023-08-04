@@ -1,3 +1,28 @@
-<h4>select-extra works!</h4>
+<h1 class="text-primary mt-4" style="text-align: center">Try an extra feature!</h1>
+<h6 class="text-faded" style="text-align: center">
+  Just some random extra things I felt like building.
+</h6>
 
-<a routerLink="poké-search">Pokémon search</a>
+<div
+  class="d-flex gap-4 mt-5"
+  style="flex-wrap: wrap; width: min(500px, 100vw - 25px)"
+>
+  <div
+    *ngFor="let extra of extrasLinks"
+    class="d-flex flex-col align-items-center justify-content-center shadow p-3 extra-preview-card w-100"
+    style="cursor: pointer"
+    [ngStyle]="{
+      backgroundImage: 'url(' + extra.imgUrl + ')',
+    }"
+    role="button"
+    routerLink="{{ extra.link }}"
+  >
+    <div class="dark-overlay"></div>
+    <h2
+      class="mb-0"
+      style="z-index: 1; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7)"
+    >
+      {{ extra.name }}
+    </h2>
+  </div>
+</div>

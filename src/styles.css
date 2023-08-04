@@ -140,3 +140,16 @@
   top: 0;
   transform: translateX(90%) translateY(-10%) rotate(50deg) scaleX(-1);
 }
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.dark-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}

@@ -3,15 +3,7 @@
   border-radius: 10px;
   position: relative;
   background-color: #202847;
+  overflow: hidden;
   background-position: center;
   background-size: cover;
-}
-
-.dark-overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
 }

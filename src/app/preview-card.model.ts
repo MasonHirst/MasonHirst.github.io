@@ -1,4 +1,4 @@
-export class GameLink {
+export class PreviewCard {
     constructor(
         public name: string,
         public link: string,
