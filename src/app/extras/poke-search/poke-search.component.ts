@@ -15,6 +15,7 @@ export class PokeSearchComponent implements OnInit {
   detailedPoke: any = null;
   allDetailedPokes: any[] = [];
   loading: boolean = false;
+  imgLoading: boolean = false;
 
   constructor() {}
 
@@ -58,6 +59,7 @@ export class PokeSearchComponent implements OnInit {
       );
       return;
     }
+    this.imgLoading = true;
     this.loading = true;
     axios
       .get(url)
@@ -107,9 +109,7 @@ export class PokeSearchComponent implements OnInit {
           .finally(() => {
             // save the data in temporary memory
             this.allDetailedPokes.push(this.detailedPoke);
-            setTimeout(() => {
-              this.loading = false;
-            }, 200);
+            this.loading = false;
           });
       })
       .catch(console.error);

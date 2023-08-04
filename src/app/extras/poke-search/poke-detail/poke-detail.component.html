@@ -1,34 +1,48 @@
-<div class="d-flex flex-col align-items-center">
+<div class="d-flex flex-col align-items-center" [ngStyle]="{
+  maxHeight: imgLoading ? 0 : 'fit-content',
+  overflow: 'hidden',
+}">
   <div class="d-flex gap-3 align-items-end mb-3">
     <h2 class="mb-0 text-primary capitalize">
       {{ poke.name }}
     </h2>
     <h4 class="text-faded mb-0">{{ formatId(poke.id) }}</h4>
   </div>
-
-  <div class="d-flex align-items-start poke-detail-hero">
-    <!-- <img src="{{ poke.sprites.other.dream_world.front_default }}" alt="{{ poke.name }}" style="width: 200px"> -->
+  <div
+    class="d-flex align-items-start poke-detail-hero"
+  >
     <div style="width: 50%">
       <img
         src="{{ poke.sprites.other['official-artwork'].front_default }}"
         alt="{{ poke.name }}"
         class="poke-img"
+        (load)="onImgLoad($event)"
+        (error)="onImgLoad($event)"
       />
 
       <div class="bar-graph d-flex gap-1 mt-2 justify-content-center">
-        <div *ngFor="let stat of poke.stats" class="d-flex flex-col align-items-center" style="width: 60px">
+        <div
+          *ngFor="let stat of poke.stats"
+          class="d-flex flex-col align-items-center"
+          style="width: 60px"
+        >
           <div class="w-100">
-            <div class="bar-outline" style="margin: 0 auto;">
+            <div class="bar-outline" style="margin: 0 auto">
               <div
-              class="bar-fill"
-              [ngStyle]="{
+                class="bar-fill"
+                [ngStyle]="{
                 height: stat.base_stat / 1.8 + '%',
               }"
               >
-              <p class="capitalize">{{ stat.base_stat }}</p>
+                <p class="capitalize">{{ stat.base_stat }}</p>
+              </div>
             </div>
-          </div>
-          <p class="mt-1" style="text-align: center; font-size: .9rem; line-height: 1.2;">{{ formatStatName(stat.stat.name) }}</p>
+            <p
+              class="mt-1"
+              style="text-align: center; font-size: 0.9rem; line-height: 1.2"
+            >
+              {{ formatStatName(stat.stat.name) }}
+            </p>
           </div>
         </div>
       </div>
@@ -47,7 +61,7 @@
         </div>
         <div class="attrs-attr">
           <p>Category</p>
-          <p class="text-info capitalize">{{ poke.category }}</p>
+          <p class="text-info capitalize">{{ formatCategoryName(poke.category) }}</p>
         </div>
         <div class="attrs-attr">
           <p>Gender</p>
@@ -64,18 +78,25 @@
       <div class="types-section">
         <div>
           <h5>Type</h5>
-          <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap;">
-            <span *ngFor="let type of poke.types" class="{{ 'poke-type-badge poke-type-badge-' + type.type.name }}">{{ type.type.name }}</span>
+          <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap">
+            <span
+              *ngFor="let type of poke.types"
+              class="{{ 'poke-type-badge poke-type-badge-' + type.type.name }}"
+              >{{ type.type.name }}</span
+            >
           </div>
         </div>
         <div>
           <h5>Weaknesses</h5>
-          <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap;">
-            <span *ngFor="let weak of poke.weaknesses" class="{{ 'poke-type-badge poke-type-badge-' + weak }}">{{ weak }}</span>
+          <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap">
+            <span
+              *ngFor="let weak of poke.weaknesses"
+              class="{{ 'poke-type-badge poke-type-badge-' + weak }}"
+              >{{ weak }}</span
+            >
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!-- <pre>{{ poke | json }}</pre> -->

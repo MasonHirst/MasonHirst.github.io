@@ -12,7 +12,7 @@
 <div class="d-flex" style="width: min(1100px, 100vw - 25px)">
   <div
     style="
-      width: clamp(170px, 15vw, 300px);
+      width: clamp(140px, 15vw, 300px);
       max-height: calc(100vh - 168px);
       overflow-y: auto;
     "
@@ -43,19 +43,10 @@
       role="tabpanel"
       aria-labelledby="{{ focusedPoke.name }}"
     >
-      <app-poke-detail [poke]="detailedPoke"></app-poke-detail>
+      <app-poke-detail [poke]="detailedPoke" [imgLoading]="imgLoading" (imgLoaded)="imgLoading = false"></app-poke-detail>
     </div>
-    <!-- <div
-      *ngIf="!focusedPoke && !loading"
-      class="tab-pane fade show active"
-      id="list-home"
-      role="tabpanel"
-      aria-labelledby="list-home-list"
-    >
-      <h3>Select a Pokémon to learn more about it!</h3>
-    </div> -->
 
-    <div *ngIf="loading" class="d-flex justify-content-center">
+    <div *ngIf="loading || imgLoading" class="d-flex justify-content-center">
       <div
         class="spinner-border text-primary"
         role="status"
