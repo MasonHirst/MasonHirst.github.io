@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { StylingService } from 'src/app/styling.service';
 
 @Component({
   selector: 'app-poke-detail',
@@ -6,14 +7,19 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./poke-detail.component.css'],
 })
 export class PokeDetailComponent implements OnInit {
+  screen: number;
   @Input() poke: any = null;
   @Input() imgLoading: boolean = false;
   // I need an event that will emit when the image is loaded
   @Output() imgLoaded: EventEmitter<void> = new EventEmitter();
 
-  constructor() {}
+  constructor(private styleService: StylingService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.styleService.screenSize$.subscribe((screen) => {
+      this.screen = screen;
+    });
+  }
 
   weightToLbs(weight: number) {
     return Math.round(weight * 0.220462);

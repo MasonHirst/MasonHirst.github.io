@@ -1,7 +1,10 @@
-<div class="d-flex flex-col align-items-center" [ngStyle]="{
-  maxHeight: imgLoading ? 0 : 'fit-content',
-  overflow: 'hidden',
-}">
+<div
+  class="d-flex flex-col align-items-center"
+  [ngStyle]="{
+    maxHeight: imgLoading ? 0 : 'fit-content',
+    overflow: 'hidden',
+  }"
+>
   <div class="d-flex gap-3 align-items-end mb-3">
     <h2 class="mb-0 text-primary capitalize">
       {{ poke.name }}
@@ -10,8 +13,11 @@
   </div>
   <div
     class="d-flex align-items-start poke-detail-hero"
+    [ngClass]="{
+    'flex-col': screen < 750,
+  }"
   >
-    <div style="width: 50%">
+    <div [ngStyle]="{ width: screen < 750 ? '100%' : '50%' }">
       <img
         src="{{ poke.sprites.other['official-artwork'].front_default }}"
         alt="{{ poke.name }}"
@@ -20,29 +26,32 @@
         (error)="onImgLoad($event)"
       />
 
-      <div class="bar-graph d-flex gap-1 mt-2 justify-content-center">
-        <div
-          *ngFor="let stat of poke.stats"
-          class="d-flex flex-col align-items-center"
-          style="width: 60px"
-        >
-          <div class="w-100">
-            <div class="bar-outline" style="margin: 0 auto">
-              <div
-                class="bar-fill"
-                [ngStyle]="{
+      <div class="bar-graph-wrapper">
+        <h5 class="text-center">Stats</h5>
+        <div class="bar-graph d-flex gap-1 mt-2 justify-content-center">
+          <div
+            *ngFor="let stat of poke.stats"
+            class="d-flex flex-col align-items-center"
+            style="width: 60px"
+          >
+            <div class="w-100">
+              <div class="bar-outline" style="margin: 0 auto">
+                <div
+                  class="bar-fill"
+                  [ngStyle]="{
                 height: stat.base_stat / 1.8 + '%',
               }"
-              >
-                <p class="capitalize">{{ stat.base_stat }}</p>
+                >
+                  <p class="capitalize">{{ stat.base_stat }}</p>
+                </div>
               </div>
+              <p
+                class="mt-1 stat-txt"
+                style="text-align: center; line-height: 1.2"
+              >
+                {{ formatStatName(stat.stat.name) }}
+              </p>
             </div>
-            <p
-              class="mt-1"
-              style="text-align: center; font-size: 0.9rem; line-height: 1.2"
-            >
-              {{ formatStatName(stat.stat.name) }}
-            </p>
           </div>
         </div>
       </div>
@@ -61,7 +70,9 @@
         </div>
         <div class="attrs-attr">
           <p>Category</p>
-          <p class="text-info capitalize">{{ formatCategoryName(poke.category) }}</p>
+          <p class="text-info capitalize">
+            {{ formatCategoryName(poke.category) }}
+          </p>
         </div>
         <div class="attrs-attr">
           <p>Gender</p>

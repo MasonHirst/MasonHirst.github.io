@@ -11,6 +11,9 @@
 
 .poke-img {
   width: 100%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .poke-attrs-card {
@@ -48,8 +51,34 @@ p, h1, h2, h3, h4, h5, h6 {
   /* color: black; */
   text-align: center;
 }
+.stat-txt {
+  font-size: .99rem;
+}
 
-/* pokemon-types.css */
+@media (max-width: 870px) {
+  .stat-txt {
+    font-size: .7rem;
+  }
+  .bar-outline {
+    height: 160px;
+    width: 40px;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 750px) {
+  .poke-info-card {
+    max-width: 100%;
+  }
+  .poke-img {
+    width: min(100%, 180px);
+  }
+  .bar-graph {
+    max-width: 300px;
+    margin: auto;
+    margin-top: 50px;
+  }
+}
 
 .poke-type-badge {
   display: inline-block;
