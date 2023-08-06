@@ -32,22 +32,14 @@
   class="w-100 d-flex justify-content-between align-items-center mb-2"
   style="padding: 0 5px"
 >
-  <h5
+  <code
     class="mb-0"
+    style="color: white;"
     [ngStyle]="{ 'font-size': screen < 400 ? '1rem' : '1.4rem' }"
   >
     {{ getTimerValue(timer) }}
-  </h5>
-  <!-- <h4
-    *ngIf="gameState !== 'new' && screen >= 400"
-    class="mb-0"
-    [ngClass]="{
-      'text-primary': gameState === 'win',
-      'text-danger': gameState === 'loss'
-    }"
-  >
-  {{ gameState === "win" ? "You won!" : "Boom!" }}
-</h4> -->
+  </code>
+
   <div class="d-flex flex-col align-items-center">
     <p class="mb-0">Bombs</p>
     <h5 class="mb-0 text-danger">{{ getRemainingBombCount() }}</h5>
@@ -61,18 +53,6 @@
   </button>
 </div>
 
-<!-- <h4
-  *ngIf="gameState !== 'new' && screen < 400"
-  class="mb-0"
-  [ngClass]="{
-    'text-primary': gameState === 'win',
-    'text-danger': gameState === 'loss'
-  }"
-  style="text-align: center"
->
-  {{ gameState === "win" ? "You won!" : "Boom!" }}
-</h4> -->
-
 <div
   *ngIf="gameRows.length"
   class="d-flex justify-content-start align-items-center"
@@ -84,7 +64,7 @@
   "
 >
   <!-- start of minesweeper game -->
-  <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto">
+  <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto;">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
       <div
         *ngFor="let cell of row; let k = index"
@@ -145,7 +125,7 @@
   <div class="d-flex justify-content-between">
     <p class="mb-0">Easy:</p>
     <div class="filler-dotted-line"></div>
-    <p
+    <code
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('easy') !== 'Incomplete',
@@ -155,12 +135,12 @@
       }"
     >
       {{ getBestTime("easy") }}
-    </p>
+    </code>
   </div>
   <div class="d-flex justify-content-between">
     <p class="mb-0">Intermediate:</p>
     <div class="filler-dotted-line"></div>
-    <p
+    <code
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('intermediate') !== 'Incomplete',
@@ -170,12 +150,12 @@
       }"
     >
       {{ getBestTime("intermediate") }}
-    </p>
+    </code>
   </div>
   <div class="d-flex justify-content-between">
     <p class="mb-0">Hard:</p>
     <div class="filler-dotted-line"></div>
-    <p
+    <code
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('hard') !== 'Incomplete',
@@ -185,12 +165,12 @@
       }"
     >
       {{ getBestTime("hard") }}
-    </p>
+    </code>
   </div>
   <div class="d-flex justify-content-between">
     <p class="mb-0">Expert:</p>
     <div class="filler-dotted-line"></div>
-    <p
+    <code
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('expert') !== 'Incomplete',
@@ -200,7 +180,7 @@
       }"
     >
       {{ getBestTime("expert") }}
-    </p>
+    </code>
   </div>
 </div>
 
@@ -247,7 +227,7 @@
           </div>
 
           <div>
-            <p class="mb-1">Your time: <span class="text-primary">{{ getTimerValue(timer) }}</span></p>
+            <p class="mb-1">Your time: <code class="text-primary" style="font-size: 1rem;">{{ getTimerValue(timer) }}</code></p>
             <p class="capitalize">Difficulty: <span class="text-primary">{{ minesweeperDifficulty }}</span></p>
           </div>
         <!-- end of modal body content -->
@@ -399,8 +379,8 @@
             <h6>Bombs</h6>
             <p>12</p>
             <p>40</p>
-            <p>80</p>
-            <p>140</p>
+            <p>78</p>
+            <p>142</p>
             <div class="input-group input-group-sm mb-3">
               <input
                 class="form-control input-group-sm"

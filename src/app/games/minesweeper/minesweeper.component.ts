@@ -10,6 +10,7 @@ import { Modal } from 'bootstrap';
   styleUrls: ['./minesweeper.component.css'],
 })
 export class MinesweeperComponent implements OnInit {
+  // screen width in pixels
   screen: number;
 
   gameRows = [];
@@ -30,15 +31,29 @@ export class MinesweeperComponent implements OnInit {
   );
   lStorage: any = localStorage;
 
-  onNewGame() {
+  onNewGame(
+    gameSize: { width: number; height: number; bombs: number } = this.gameSize,
+    canChange: boolean = true
+  ) {
     this.pocketOpened = false;
     this.squaresRevealed = 0;
     this.gameState = 'new';
     this.gameStarted = false;
     this.toggleTimer(false);
     this.timer = 0;
+    const { width, height, bombs } = gameSize;
 
-    const { width, height, bombs } = this.gameSize;
+    if (this.screen < 900 && canChange) {
+      this.onNewGame(
+        {
+          width: height,
+          height: width,
+          bombs,
+        },
+        false
+      );
+      return;
+    }
 
     // Generate rows and columns based on height and width
     this.gameRows = [];
@@ -68,8 +83,8 @@ export class MinesweeperComponent implements OnInit {
     }
 
     // loop through every cell
-    for (let i = 0; i < this.gameSize.height; i++) {
-      for (let k = 0; k < this.gameSize.width; k++) {
+    for (let i = 0; i < height; i++) {
+      for (let k = 0; k < width; k++) {
         const cell = this.gameRows[i][k];
         if (cell.value !== 'bomb') {
           // if cell isn't a bomb, determine how many bombs are touching
@@ -386,10 +401,10 @@ export class MinesweeperComponent implements OnInit {
         size = new Minesweeper(16, 16, 40);
         break;
       case 'hard':
-        size = new Minesweeper(16, 24, 80);
+        size = new Minesweeper(16, 24, 78);
         break;
       case 'expert':
-        size = new Minesweeper(20, 35, 140);
+        size = new Minesweeper(20, 35, 142);
         break;
       case 'custom':
         if (!this.checkCustomSize()) return;
@@ -400,10 +415,10 @@ export class MinesweeperComponent implements OnInit {
         );
         break;
     }
-    if (this.screen < 600) {
-      const { height, width, bombs } = size;
-      size = new Minesweeper(width, height, bombs);
-    }
+    // if (this.screen < 800) {
+    //   const { height, width, bombs } = size;
+    //   size = new Minesweeper(width, height, bombs);
+    // }
     this.changeSizeError = '';
     this.mineService.updateGameSize(size);
   }

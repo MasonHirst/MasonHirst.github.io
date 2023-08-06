@@ -8,10 +8,10 @@ import axios from 'axios';
 })
 export class PokeSearchComponent implements OnInit {
   pokeSearchString: string = '';
-  allPokemon: { name: string; url: string }[] = [];
-  filteredPokemon: { name: string; url: string }[] = [];
+  allPokemon: { name: string; url: string; index: number }[] = [];
+  filteredPokemon: { name: string; url: string; index: number }[] = [];
   nextUrl: string | null = null;
-  focusedPoke: { name: string; url: string } | null = null;
+  focusedPoke: { name: string; url: string; index: number } | null = null;
   detailedPoke: any = null;
   allDetailedPokes: any[] = [];
   loading: boolean = false;
@@ -25,6 +25,9 @@ export class PokeSearchComponent implements OnInit {
       .then(({ data }) => {
         this.nextUrl = data.next;
         const pokemon = data.results.filter((poke) => !poke.name.includes('-'));
+        pokemon.forEach((poke, i) => {
+          poke.index = i;
+        });
         this.allPokemon = pokemon;
         this.filteredPokemon = pokemon;
 
@@ -37,7 +40,7 @@ export class PokeSearchComponent implements OnInit {
   // move focused poke up or down based on arrow key press
   @HostListener('document:keydown', ['$event'])
   handleArrowKey(e: KeyboardEvent) {
-    const index = this.filteredPokemon.indexOf(this.focusedPoke);
+    const { index } = this.focusedPoke;
 
     if (e.key === 'ArrowDown') {
       if (index === this.filteredPokemon.length - 1) return;
@@ -49,14 +52,23 @@ export class PokeSearchComponent implements OnInit {
     }
   }
 
-  getPokemonDetails(pokeParam: { name: string; url: string }) {
+  getPokemonDetails(
+    pokeParam: { name: string; url: string; index: number },
+    getNext: boolean = true
+  ) {
     this.focusedPoke = pokeParam;
-    const { url, name } = pokeParam;
+    const { url, name, index } = pokeParam;
     // check if we already have the data
     if (this.allDetailedPokes.find((poke) => poke.name === name)) {
       this.detailedPoke = this.allDetailedPokes.find(
         (poke) => poke.name === name
       );
+
+      if (getNext) {
+        if (index >= this.filteredPokemon.length - 1) return;
+        this.getPokemonDetails(this.filteredPokemon[index + 1], false);
+      }
+
       return;
     }
     this.imgLoading = true;
