@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Modal } from 'bootstrap';
 import { StateGuesserService } from './state-guesser.service';
+import { StylingService } from 'src/app/styling.service';
 
 @Component({
   selector: 'app-state-guesser',
@@ -14,9 +15,9 @@ import { StateGuesserService } from './state-guesser.service';
   styleUrls: ['./state-guesser.component.css'],
 })
 export class StateGuesserComponent implements OnChanges, OnInit {
+  screen: number;
+  
   @Input() ids: any;
-  @Input() enableTooltip: boolean;
-  @Input() toolTipObject: any;
   @Input() colors: any = {
     unfill: '#b6b6b6',
     fill: '#518a38',
@@ -35,8 +36,12 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   // summary variables
   summary: any;
 
-  constructor(private gameService: StateGuesserService) {}
+  constructor(private gameService: StateGuesserService, private styleService: StylingService) {}
+
   ngOnInit(): void {
+    this.styleService.screenSize$.subscribe((size) => {
+      this.screen = size;
+    });
     this.statelist = this.gameService.getStates();
     this.gameService.directedStateChange.subscribe((state) => {
       this.directedState = state;

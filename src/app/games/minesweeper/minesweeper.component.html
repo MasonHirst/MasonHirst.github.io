@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center justify-content-between mt-3 mb-3">
+<div class="d-flex align-items-center justify-content-between mt-3 mb-3" style="max-width: 600px; margin: 0 auto;">
   <!-- Triggers the modal in games.component.html -->
   <div class="d-flex align-items-center gap-2">
     <i
@@ -30,7 +30,7 @@
 
 <div
   class="w-100 d-flex justify-content-between align-items-center mb-2"
-  style="padding: 0 5px"
+  style="padding: 0 5px; max-width: 600px; margin: 0 auto;"
 >
   <code
     class="mb-0"
@@ -57,9 +57,9 @@
   *ngIf="gameRows.length"
   class="d-flex justify-content-start align-items-center"
   style="
-    min-width: min(500px, 100vw - 15px);
-    padding: 5px;
-    max-width: calc(100vw - 15px) !important;
+    min-width: min(500px, 100%);
+    padding: 5px 0;
+    max-width: 100% !important;
     overflow-x: auto;
   "
 >
