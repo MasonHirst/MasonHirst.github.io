@@ -254,15 +254,14 @@ export class MinesweeperComponent implements OnInit {
   }
 
   clickHoldTimeout: any;
-  clickHoldThreshold: number = 220;
   isLongClick: boolean;
 
-  onMouseDown(row: number, col: number) {
+  onMouseDown(row: number, col: number, holdTime: number = 220) {
     this.isLongClick = false;
     this.clickHoldTimeout = setTimeout(() => {
       this.onRightClick(row, col, 0);
       this.isLongClick = true;
-    }, this.clickHoldThreshold);
+    }, holdTime);
   }
 
   onMouseUp() {

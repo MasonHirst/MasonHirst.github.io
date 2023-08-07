@@ -80,6 +80,8 @@
         (click)="onClickCell(i, k)"
         (mousedown)="onMouseDown(i, k)"
         (mouseup)="onMouseUp()"
+        (touchstart)="onMouseDown(i, k, 190)"
+        (touchend)="onMouseUp()"
       >
         <img
           *ngIf="cell.revealed && cell.value === 'bomb' && !cell.flagged"
