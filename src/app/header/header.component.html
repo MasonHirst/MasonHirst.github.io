@@ -49,19 +49,24 @@
 <ng-template #drawerHeader>
   <div
     class="header-cont d-flex justify-content-between align-items-center"
-    style="border-bottom: 1px solid #0ae6b7; padding: 8px 15px"
+    style="border-bottom: 1px solid #0ae6b7;"
+    [ngStyle]="{
+      padding: screen < 600 ? '8px 7px' : '8px 14px',
+    }"
   >
     <a
-      class="navbar-toggler"
+      class="navbar-toggler d-flex align-items-center gap-1"
       data-bs-toggle="offcanvas"
-      href="#drawer"
+      data-bs-target="#drawer"
       role="button"
       aria-controls="drawer"
+      style="text-decoration: none !important;"
     >
       <span class="navbar-toggler-icon" style="font-size: 20px"></span>
+      <span style="opacity: .8;">Menu</span>
     </a>
 
-    <h5 class="mb-0" style="cursor: pointer" routerLink="/home">Mason Hirst</h5>
+    <h5 class="mb-0" style="cursor: pointer; font-size: 1.1rem;" routerLink="/home">Mason Hirst</h5>
   </div>
 
   <div
@@ -69,8 +74,7 @@
     tabindex="-1"
     id="drawer"
     aria-labelledby="drawer"
-    data-bs-dismiss="offcanvas"
-    data-bs-backdrop="true"
+    data-bs-dismiss="backdrop"
     style="width: 220px"
   >
     <div class="offcanvas-header">

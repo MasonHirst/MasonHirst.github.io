@@ -1,5 +1,5 @@
 <div
-  class="d-flex flex-col align-items-center"
+  class="d-flex flex-col align-items-center poke-detail-cont"
   [ngStyle]="{
     maxHeight: imgLoading ? 0 : 'fit-content',
     overflow: 'hidden',
@@ -14,8 +14,11 @@
   <div
     class="d-flex align-items-start poke-detail-hero"
     [ngClass]="{
-    'flex-col': screen < 750,
-  }"
+      'flex-col': screen < 750,
+    }"
+    [ngStyle]="{
+      'gap': screen < 750 ? '20px' : '12px'
+    }"
   >
     <div [ngStyle]="{ width: screen < 750 ? '100%' : '50%' }">
       <img
@@ -57,7 +60,7 @@
       </div>
     </div>
 
-    <div class="d-flex flex-col gap-3 p-3 poke-info-card">
+    <div class="d-flex flex-col gap-3 poke-info-card">
       <p>{{ poke.desc }}</p>
       <div class="d-flex justify-content-between poke-attrs-card">
         <div class="attrs-attr">

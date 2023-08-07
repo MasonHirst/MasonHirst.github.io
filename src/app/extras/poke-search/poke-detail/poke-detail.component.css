@@ -3,6 +3,9 @@
   max-width: 50%;
   /* border: 1px solid pink */
 }
+.poke-detail-cont {
+  padding: 5px 10px;
+}
 
 .poke-detail-hero {
   width: 100%;

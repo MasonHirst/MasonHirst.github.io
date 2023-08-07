@@ -1,19 +1,14 @@
 <h2 class="text-info" style="text-align: center; margin-top: 5px">Pokédex</h2>
-<div class="input-group mb-3">
-  <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
-  <input
-    type="text"
-    class="form-control"
-    aria-label="Pokémon search input"
-    [(ngModel)]="pokeSearchString"
-    (ngModelChange)="filterPokemon($event)"
-  />
+
+<div *ngIf="screen > 460">
+  <ng-template *ngTemplateOutlet="pokeSearchBar"></ng-template>
 </div>
-<div class="d-flex" style="width: min(1100px, 100vw - 25px)">
+
+<div class="d-flex poke-search-wrapper">
   <div
     style="
       width: clamp(140px, 15vw, 300px);
-      max-height: calc(100vh - 163px);
+      max-height: calc(100vh - 168px);
       overflow-y: auto;
     "
   >
@@ -32,9 +27,9 @@
   </div>
 
   <div
-    class="p-3 tab-content"
+    class="tab-content"
     id="nav-tabContent"
-    style="max-height: calc(100vh - 163px); overflow-y: auto; flex: 1"
+    style="max-height: calc(100vh - 168px); overflow-y: auto; flex: 1"
   >
     <div
       *ngIf="focusedPoke && !loading"
@@ -43,7 +38,11 @@
       role="tabpanel"
       aria-labelledby="{{ focusedPoke.name }}"
     >
-      <app-poke-detail [poke]="detailedPoke" [imgLoading]="imgLoading" (imgLoaded)="imgLoading = false"></app-poke-detail>
+      <app-poke-detail
+        [poke]="detailedPoke"
+        [imgLoading]="imgLoading"
+        (imgLoaded)="imgLoading = false"
+      ></app-poke-detail>
     </div>
 
     <div *ngIf="loading || imgLoading" class="d-flex justify-content-center">
@@ -54,6 +53,76 @@
       >
         <span class="visually-hidden">Loading...</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #pokeSearchBar>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+    <input
+      type="text"
+      class="form-control"
+      aria-label="Pokémon search input"
+      [(ngModel)]="pokeSearchString"
+      (ngModelChange)="filterPokemon($event)"
+    />
+  </div>
+</ng-template>
+
+<a
+  class="btn btn-primary"
+  data-bs-toggle="offcanvas"
+  href="#offcanvasExample"
+  role="button"
+  aria-controls="offcanvasExample"
+>
+  Link with href
+</a>
+<button
+  class="btn btn-primary"
+  type="button"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#offcanvasExample"
+  aria-controls="offcanvasExample"
+>
+  Button with data-bs-target
+</button>
+
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="offcanvasExample"
+  aria-labelledby="offcanvasExampleLabel"
+  style="max-width: 250px"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      Some text as placeholder. In real life you can have the elements you have
+      chosen. Like, text, images, lists, etc.
+    </div>
+    <div class="dropdown mt-3">
+      <button
+        class="btn btn-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+      >
+        Dropdown button
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
     </div>
   </div>
 </div>

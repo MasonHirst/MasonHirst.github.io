@@ -73,6 +73,7 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   }
 
   onStartGame() {
+    this.toggleTimer(false);
     this.summary = null;
     this.timer = 0;
     this.gameService.startNewGame();
@@ -97,30 +98,24 @@ export class StateGuesserComponent implements OnChanges, OnInit {
     summaryModal.show();
 
     // high scores logic
-    const { highScore, perfectTime } = JSON.parse(
+    let { highScore, perfectTime } = JSON.parse(
       localStorage.getItem('stateGuesserHighScores')
     );
+
     if (highScore === null || this.calculateScore() > highScore) {
-      localStorage.setItem(
-        'stateGuesserHighScores',
-        JSON.stringify({
-          highScore: this.calculateScore(),
-          perfectTime,
-        })
-      );
+      highScore = this.calculateScore();
     }
-    if (
-      this.summary.correct.length > 49 &&
-      (perfectTime === null || this.timer < perfectTime)
-    ) {
-      localStorage.setItem(
-        'stateGuesserHighScores',
-        JSON.stringify({
-          highScore,
-          perfectTime: this.timer,
-        })
-      );
+    if (perfectTime === null || this.timer < perfectTime) {
+      perfectTime = this.timer;
     }
+
+    localStorage.setItem(
+      'stateGuesserHighScores',
+      JSON.stringify({
+        highScore,
+        perfectTime,
+      })
+    );
   }
 
   calculateScore(): number {

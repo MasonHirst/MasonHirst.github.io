@@ -1,0 +1,11 @@
+.poke-search-wrapper {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 0 5px;
+}
+
+@media (max-width: 600px) {
+  .poke-search-wrapper {
+    padding: 0 2px;
+  }
+}

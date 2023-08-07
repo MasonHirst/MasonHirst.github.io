@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import axios from 'axios';
+import { StylingService } from 'src/app/styling.service';
 
 @Component({
   selector: 'app-poke-search',
@@ -7,6 +8,8 @@ import axios from 'axios';
   styleUrls: ['./poke-search.component.css'],
 })
 export class PokeSearchComponent implements OnInit {
+  screen: number
+  
   pokeSearchString: string = '';
   allPokemon: { name: string; url: string; index: number }[] = [];
   filteredPokemon: { name: string; url: string; index: number }[] = [];
@@ -17,9 +20,13 @@ export class PokeSearchComponent implements OnInit {
   loading: boolean = false;
   imgLoading: boolean = false;
 
-  constructor() {}
+  constructor(private styleService: StylingService) {}
 
   ngOnInit(): void {
+    this.styleService.screenSize$.subscribe((screen) => {
+      this.screen = screen
+    })
+    
     axios
       .get('https://pokeapi.co/api/v2/pokemon?limit=1500')
       .then(({ data }) => {
@@ -54,7 +61,6 @@ export class PokeSearchComponent implements OnInit {
 
   getPokemonDetails(
     pokeParam: { name: string; url: string; index: number },
-    getNext: boolean = true
   ) {
     this.focusedPoke = pokeParam;
     const { url, name, index } = pokeParam;
@@ -63,12 +69,6 @@ export class PokeSearchComponent implements OnInit {
       this.detailedPoke = this.allDetailedPokes.find(
         (poke) => poke.name === name
       );
-
-      if (getNext) {
-        if (index >= this.filteredPokemon.length - 1) return;
-        this.getPokemonDetails(this.filteredPokemon[index + 1], false);
-      }
-
       return;
     }
     this.imgLoading = true;

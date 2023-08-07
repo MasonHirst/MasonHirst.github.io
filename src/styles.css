@@ -18,18 +18,15 @@
   align-items: center;
   width: 100%;
   max-width: 900px;
-  /* border: 1px solid red; */
 }
 
 .nav-tabs .nav-item .nav-link.active {
   background-color: #11162b;
-  /* border-color: #73D9FF; */
   border-color: #0ae6b7;
   border-bottom-color: #11162b;
   color: #0ae6b7 !important;
 }
 .nav-tabs {
-  /* border-bottom-color: #73D9FF !important; */
   border-bottom-color: #0ae6b7 !important;
 }
 
