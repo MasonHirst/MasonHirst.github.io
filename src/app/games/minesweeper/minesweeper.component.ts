@@ -31,28 +31,37 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   lStorage: any = localStorage;
 
   onNewGame(
-    gameSize: { width: number; height: number; bombs: number } = this.gameSize,
-    canChange: boolean = true
   ) {
+    const { height, width, bombs } = this.gameSize;
+
+    // unless user is using custom sizes, switch between landscape and portrait depending on screen width
+    if (this.minesweeperDifficulty !== 'custom') {
+      if (this.screen < 900 && width > height) {
+        this.gameSize = new Minesweeper(
+          width,
+          height,
+          bombs,
+        );
+        this.onNewGame();
+        return;
+      } else if (this.screen >= 900 && width < height) {
+        this.gameSize = new Minesweeper(
+          width,
+          height,
+          bombs,
+        );
+        this.onNewGame();
+        return;
+      }
+    }
+
     this.pocketOpened = false;
     this.squaresRevealed = 0;
     this.gameState = 'new';
     this.gameStarted = false;
     this.toggleTimer(false);
     this.timer = 0;
-    const { width, height, bombs } = gameSize;
 
-    if (this.screen < 900 && canChange) {
-      this.onNewGame(
-        {
-          width: height,
-          height: width,
-          bombs,
-        },
-        false
-      );
-      return;
-    }
 
     // Generate rows and columns based on height and width
     this.gameRows = [];
@@ -85,6 +94,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < height; i++) {
       for (let k = 0; k < width; k++) {
         const cell = this.gameRows[i][k];
+        // console.log(i, k)
         if (cell.value !== 'bomb') {
           // if cell isn't a bomb, determine how many bombs are touching
           cell.value = this.getBombCount(i, k);
@@ -152,7 +162,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   onRightClick(row: number, col: number, event: any) {
-    // console.log('right click: ', event);
     if (this.isScrolling) return;
     if (event) {
       event.preventDefault();
@@ -262,12 +271,9 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   pressDown: number;
 // todo: 
   onMouseDown(row: number, col: number, event: any, holdTime: number = 230) {
-    // event.preventDefault();
-    console.log('on mouse down: ', event);
     if (event.type === 'touchstart') {
       holdTime = 380;
     }
-    console.log(holdTime)
     if (event.button === 2) {
       this.onRightClick(row, col, event);
       return;
@@ -282,7 +288,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   onMouseUp(row: number, col: number, event: any) {
-    // console.log('on mouse up: ', event);
     if (this.pressDown && Date.now() - this.pressDown < 230) {
       if (event.button === 0) {
         this.onClickCell(row, col);
@@ -292,8 +297,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   cancelContextMenu(event: any) {
-    // console.log('context menu event: ', event)
-    console.log('canceling context menu')
     event.preventDefault();
   }
 
