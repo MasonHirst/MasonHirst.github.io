@@ -54,6 +54,7 @@
 </div>
 
 <div
+  #minesweeperScrollCont
   *ngIf="gameRows.length"
   class="d-flex justify-content-start align-items-center"
   style="
@@ -63,6 +64,7 @@
     overflow-x: auto;
   "
 >
+
   <!-- start of minesweeper game -->
   <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto;">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
@@ -77,11 +79,8 @@
           backgroundColor: cell.destroyed ? 'red' : '#BDBDBD',
         }"
         (contextmenu)="onRightClick(i, k, $event)"
-        (click)="onClickCell(i, k)"
-        (mousedown)="onMouseDown(i, k)"
-        (mouseup)="onMouseUp()"
-        (touchstart)="onMouseDown(i, k, 190)"
-        (touchend)="onMouseUp()"
+        (mousedown)="onMouseDown(i, k, $event)"
+        (mouseup)="onMouseUp(i, k, $event)"
       >
         <img
           *ngIf="cell.revealed && cell.value === 'bomb' && !cell.flagged"
@@ -131,6 +130,7 @@
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('easy') !== 'Incomplete',
+        'text-white': getBestTime('easy') === 'Incomplete',
       }"
       [ngStyle]="{
         opacity: getBestTime('easy') === 'Incomplete' ? 0.8 : 1
@@ -146,6 +146,7 @@
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('intermediate') !== 'Incomplete',
+        'text-white': getBestTime('intermediate') === 'Incomplete'
       }"
       [ngStyle]="{
         opacity: getBestTime('intermediate') === 'Incomplete' ? 0.8 : 1
@@ -161,6 +162,7 @@
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('hard') !== 'Incomplete',
+        'text-white': getBestTime('hard') === 'Incomplete'
       }"
       [ngStyle]="{
         opacity: getBestTime('hard') === 'Incomplete' ? 0.8 : 1
@@ -176,6 +178,7 @@
       class="mb-0"
       [ngClass]="{
         'text-primary': getBestTime('expert') !== 'Incomplete',
+        'text-white': getBestTime('expert') === 'Incomplete'
       }"
       [ngStyle]="{
         opacity: getBestTime('expert') === 'Incomplete' ? 0.8 : 1

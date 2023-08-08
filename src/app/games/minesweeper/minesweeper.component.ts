@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Minesweeper } from './minesweeper.model';
 import { MinesweeperService } from '../minesweeper.service';
 import { StylingService } from 'src/app/styling.service';
@@ -9,9 +9,10 @@ import { Modal } from 'bootstrap';
   templateUrl: './minesweeper.component.html',
   styleUrls: ['./minesweeper.component.css'],
 })
-export class MinesweeperComponent implements OnInit {
+export class MinesweeperComponent implements OnInit, AfterViewInit {
   // screen width in pixels
   screen: number;
+  @ViewChild('minesweeperScrollCont') minesweeperScrollCont: any;
 
   gameRows = [];
   gameStarted: boolean = false;
@@ -23,12 +24,10 @@ export class MinesweeperComponent implements OnInit {
   gameSize: Minesweeper;
   pocketOpened: boolean = false;
   squaresRevealed: number = 0;
-  noPocketRestart: boolean = JSON.parse(
-    localStorage.getItem('minesweeperNoPocketRestart')
-  );
-  firstSquareRestart: boolean = JSON.parse(
-    localStorage.getItem('minesweeperFirstSquareRestart')
-  );
+  noPocketRestart: boolean =
+    JSON.parse(localStorage.getItem('minesweeperNoPocketRestart')) || true;
+  firstSquareRestart: boolean =
+    JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart')) || true;
   lStorage: any = localStorage;
 
   onNewGame(
@@ -153,7 +152,11 @@ export class MinesweeperComponent implements OnInit {
   }
 
   onRightClick(row: number, col: number, event: any) {
-    if (event) event.preventDefault();
+    console.log('right click: ', event)
+    if (this.isScrolling) return;
+    if (event) {
+      event.preventDefault();
+    }
     if (this.gameState !== 'new') return;
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
@@ -181,7 +184,7 @@ export class MinesweeperComponent implements OnInit {
   }
 
   onClickCell(row: number, col: number) {
-    if (this.isLongClick) return;
+    if (this.isLongClick || this.isScrolling) return;
     if (this.gameState !== 'new') return;
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
@@ -255,16 +258,31 @@ export class MinesweeperComponent implements OnInit {
 
   clickHoldTimeout: any;
   isLongClick: boolean;
+  isScrolling: boolean = false;
+  pressDown: number;
 
-  onMouseDown(row: number, col: number, holdTime: number = 220) {
+  onMouseDown(row: number, col: number, event: any, holdTime: number = 230) {
+    event.preventDefault();
+    console.log(event);
+    this.pressDown = Date.now();
+    this.isScrolling = false;
     this.isLongClick = false;
     this.clickHoldTimeout = setTimeout(() => {
-      this.onRightClick(row, col, 0);
-      this.isLongClick = true;
+      console.log(event);
+      if (event.button !== 2) {
+        console.log('long click');
+        this.onRightClick(row, col, event);
+        this.isLongClick = true;
+      }
     }, holdTime);
   }
 
-  onMouseUp() {
+  onMouseUp(row: number, col: number, event) {
+    // console.log(event.button);
+    if (this.pressDown && Date.now() - this.pressDown < 230) {
+      if (event.button === 2) return
+      this.onClickCell(row, col)
+    }
     clearTimeout(this.clickHoldTimeout);
   }
 
@@ -357,6 +375,12 @@ export class MinesweeperComponent implements OnInit {
     private mineService: MinesweeperService,
     private styleService: StylingService
   ) {}
+
+  ngAfterViewInit() {
+    this.minesweeperScrollCont.nativeElement.addEventListener('scroll', () => {
+      this.isScrolling = true;
+    });
+  }
 
   ngOnInit(): void {
     this.styleService.screenSize$.subscribe((size) => {

@@ -17,17 +17,18 @@ code {
 
 .drop-in {
   opacity: 0.5;
+  width: 55%;
   animation: dropInAnimation 0.15s linear forwards;
 }
 
 @keyframes dropInAnimation {
   0% {
-    width: 200%;
+    transform: scale(6.5);
     opacity: 0.5;
     position: absolute !important;
   }
   100% {
-    width: 55%;
+    transform: scale(1);
     opacity: 1;
   }
 }
@@ -57,8 +58,8 @@ img {
 
 @media (max-width: 1024px) {
   .minesweeper-cell {
-    width: 26px;
-    height: 26px;
+    width: 29px;
+    height: 29px;
   }
 }
 
