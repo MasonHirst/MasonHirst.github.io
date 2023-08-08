@@ -152,7 +152,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   onRightClick(row: number, col: number, event: any) {
-    console.log('right click: ', event)
+    // console.log('right click: ', event);
     if (this.isScrolling) return;
     if (event) {
       event.preventDefault();
@@ -260,30 +260,41 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   isLongClick: boolean;
   isScrolling: boolean = false;
   pressDown: number;
-
+// todo: 
   onMouseDown(row: number, col: number, event: any, holdTime: number = 230) {
-    event.preventDefault();
-    console.log(event);
+    // event.preventDefault();
+    console.log('on mouse down: ', event);
+    if (event.type === 'touchstart') {
+      holdTime = 380;
+    }
+    console.log(holdTime)
+    if (event.button === 2) {
+      this.onRightClick(row, col, event);
+      return;
+    }
     this.pressDown = Date.now();
     this.isScrolling = false;
     this.isLongClick = false;
     this.clickHoldTimeout = setTimeout(() => {
-      console.log(event);
-      if (event.button !== 2) {
-        console.log('long click');
-        this.onRightClick(row, col, event);
-        this.isLongClick = true;
-      }
+      this.onRightClick(row, col, event);
+      this.isLongClick = true;
     }, holdTime);
   }
 
-  onMouseUp(row: number, col: number, event) {
-    // console.log(event.button);
+  onMouseUp(row: number, col: number, event: any) {
+    // console.log('on mouse up: ', event);
     if (this.pressDown && Date.now() - this.pressDown < 230) {
-      if (event.button === 2) return
-      this.onClickCell(row, col)
+      if (event.button === 0) {
+        this.onClickCell(row, col);
+      }
     }
     clearTimeout(this.clickHoldTimeout);
+  }
+
+  cancelContextMenu(event: any) {
+    // console.log('context menu event: ', event)
+    console.log('canceling context menu')
+    event.preventDefault();
   }
 
   checkWin() {

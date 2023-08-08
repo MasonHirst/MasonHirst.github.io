@@ -78,9 +78,11 @@
         [ngStyle]="{
           backgroundColor: cell.destroyed ? 'red' : '#BDBDBD',
         }"
-        (contextmenu)="onRightClick(i, k, $event)"
+        (contextmenu)="cancelContextMenu($event)"
         (mousedown)="onMouseDown(i, k, $event)"
         (mouseup)="onMouseUp(i, k, $event)"
+        (touchstart)="onMouseDown(i, k, $event)"
+        (touchend)="onMouseUp(i, k, $event)"
       >
         <img
           *ngIf="cell.revealed && cell.value === 'bomb' && !cell.flagged"
