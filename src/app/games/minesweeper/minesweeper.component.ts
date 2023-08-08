@@ -260,10 +260,14 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   isLongClick: boolean;
   isScrolling: boolean = false;
   pressDown: number;
-
+// todo: 
   onMouseDown(row: number, col: number, event: any, holdTime: number = 230) {
-    event.preventDefault();
-    // console.log('on mouse down: ', event);
+    // event.preventDefault();
+    console.log('on mouse down: ', event);
+    if (event.type === 'touchstart') {
+      holdTime = 380;
+    }
+    console.log(holdTime)
     if (event.button === 2) {
       this.onRightClick(row, col, event);
       return;
@@ -288,9 +292,9 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   cancelContextMenu(event: any) {
-    console.log('context menu event: ', event)
-    // console.log('canceling context menu')
-    // event.preventDefault();
+    // console.log('context menu event: ', event)
+    console.log('canceling context menu')
+    event.preventDefault();
   }
 
   checkWin() {
