@@ -7,3 +7,9 @@
   background-position: center;
   background-size: cover;
 }
+
+@media (max-width: 450px) {
+  .extra-preview-card {
+    height: 130px;
+  }
+}

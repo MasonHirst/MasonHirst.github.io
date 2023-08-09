@@ -29,4 +29,18 @@ export class LandingPageComponent implements OnInit {
     this.projects = this.dataService.getProjects()
     this.experiences = this.dataService.getExperiences()
   }
+
+  calcWorkCardMargin(index: number) {
+    if (this.screen >= 700) {
+      return index * 25 + 'px'
+    } else if (this.screen >= 400) {
+      if (index % 2 !== 0) {
+        return '10px'
+      } else {
+        return '-10px'
+      }
+    } else {
+      return '0px'
+    }
+  }
 }

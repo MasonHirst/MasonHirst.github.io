@@ -21,6 +21,8 @@ import { ExtrasComponent } from './extras/extras.component';
 import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 import { PokeDetailComponent } from './extras/poke-search/poke-detail/poke-detail.component';
+import { PianoComponent } from './extras/piano/piano.component';
+import { WaveSurferComponent } from './extras/piano/wave-surfer/wave-surfer.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import { PokeDetailComponent } from './extras/poke-search/poke-detail/poke-detai
     PokeSearchComponent,
     SelectExtraComponent,
     PokeDetailComponent,
+    PianoComponent,
+    WaveSurferComponent,
   ],
   imports: [
     CommonModule,

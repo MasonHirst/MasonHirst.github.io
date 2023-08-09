@@ -1,29 +1,91 @@
 <div class="w-100">
-  <div class="mt-2 d-flex" style="margin-left: 20px">
+  <div
+    class="mt-2 d-flex"
+    [ngClass]="{
+      'flex-col': screen < 800,
+    }"
+    [ngStyle]="{
+    marginLeft: screen < 1000 ? '12px' : '18px',
+  }"
+  >
     <!-- Your content goes here -->
-    <div
-      class="nav flex-column nav-pills me-3"
-      style="margin: 0; height: 100%; padding-top: 50px"
-      id="v-pills-tab"
-      role="tablist"
-      aria-orientation="vertical"
-    >
-      <button
-        *ngFor="let proj of projects"
-        class="nav-link text-faded"
-        style="white-space: nowrap"
-        routerLinkActive="active"
-        [routerLink]="proj.path"
-      >
-        {{ proj.title }}
-      </button>
+    <div *ngIf="screen >= 800">
+      <ng-template *ngTemplateOutlet="projectsNav"></ng-template>
     </div>
 
-    <div class="v-line" style="margin-right: 20px;"></div>
+    <div
+      *ngIf="screen >= 800"
+      class="v-line"
+      [ngStyle]="{
+      marginRight: screen < 1000 ? '12px' : '18px',
+    }"
+    ></div>
 
-    <div style="overflow: auto; width: 100%;" class="d-flex justify-content-center">
+    <a
+      *ngIf="screen < 800"
+      class="navbar-toggler d-flex align-items-center gap-1"
+      style="text-decoration: none !important; margin-left: 15px;"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#projectsDrawer"
+      role="button"
+      aria-controls="projectsDrawer"
+    >
+      <span class="navbar-toggler-icon" style="font-size: 20px"></span>
+      <span style="opacity: 0.8">Projects</span>
+    </a>
+
+    <div
+      style="overflow: auto; width: 100%"
+      class="d-flex justify-content-center"
+    >
       <router-outlet></router-outlet>
     </div>
     <!-- End of page content -->
   </div>
 </div>
+
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="projectsDrawer"
+  aria-labelledby="projectsDrawer"
+  style="max-width: 250px"
+>
+  <div class="offcanvas-header" style="padding-bottom: 5px">
+    <h5 class="projects-drawer-title" id="projectsDrawerLabel">My projects</h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body" style="padding-bottom: 0">
+    <ng-template *ngTemplateOutlet="projectsNav"></ng-template>
+  </div>
+</div>
+
+<ng-template #projectsNav>
+  <div
+    class="nav flex-column nav-pills"
+    [ngStyle]="{
+        marginRight: screen < 1000 ? '12px' : '18px',
+        paddingTop: screen < 800 ? '20px' : '50px'
+      }"
+    style="margin: 0; height: 100%"
+    id="v-pills-tab"
+    role="tablist"
+    aria-orientation="vertical"
+  >
+    <button
+      *ngFor="let proj of projects"
+      class="nav-link text-faded"
+      style="white-space: nowrap; max-width: 210px"
+      routerLinkActive="active"
+      [routerLink]="proj.path"
+      data-bs-dismiss="offcanvas"
+    >
+      {{ proj.title }}
+    </button>
+  </div>
+</ng-template>

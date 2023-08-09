@@ -16,6 +16,7 @@ import { StylingService } from 'src/app/styling.service';
 })
 export class StateGuesserComponent implements OnChanges, OnInit {
   screen: number;
+  mapMinWidth: number = 900
   
   @Input() ids: any;
   @Input() colors: any = {
@@ -37,6 +38,14 @@ export class StateGuesserComponent implements OnChanges, OnInit {
   summary: any;
 
   constructor(private gameService: StateGuesserService, private styleService: StylingService) {}
+
+  incrementMinMapSize(bigger: boolean) {
+    if (bigger && this.mapMinWidth < 1300) {
+      this.mapMinWidth += 100
+    } else if (!bigger && this.mapMinWidth > 500) {
+      this.mapMinWidth -= 100
+    }
+  }
 
   ngOnInit(): void {
     this.styleService.screenSize$.subscribe((size) => {

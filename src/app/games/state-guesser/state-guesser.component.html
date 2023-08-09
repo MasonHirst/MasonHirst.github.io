@@ -19,9 +19,14 @@
         class="bi bi-chevron-left"
         routerLink="../"
       ></i>
-      <h4 class="text-info mb-0" [ngStyle]="{
+      <h4
+        class="text-info mb-0"
+        [ngStyle]="{
         fontSize: screen < 400 ? '1.2rem' : '1.5rem',
-      }">Guess the state</h4>
+      }"
+      >
+        Guess the state
+      </h4>
     </div>
     <div *ngIf="screen < 700">
       <ng-container *ngTemplateOutlet="newGameBtn"></ng-container>
@@ -44,7 +49,7 @@
       <h2
         class="mb-0 text-primary"
         *ngIf="directedState?.name"
-        style="text-align: center; font-weight: bold"
+        style="text-align: center; font-weight: bold; position: sticky; top: 80px"
       >
         <span
           style="
@@ -63,7 +68,9 @@
         class="d-flex flex-col align-items-center"
       >
         <p class="mb-0" style="opacity: 0.7">States:</p>
-        <h5 class="mb-0"><code class="text-white">{{ remainingStates }}</code> left</h5>
+        <h5 class="mb-0">
+          <code class="text-white">{{ remainingStates }}</code> left
+        </h5>
       </div>
       <div class="d-flex flex-col align-items-center">
         <p class="mb-0" style="opacity: 0.7">Timer:</p>
@@ -164,17 +171,16 @@
   class="w-100 d-flex"
   style="
     overflow-x: auto;
-    max-width: 1300px;
+    /* max-width: 1300px; */
     margin: 0 auto;
     justify-content: flex-start;
   "
 >
   <div
-    style="
-      width: min(1300px, 100%);
-      min-width: 900px;
-      transform: translateX(-7%);
-    "
+    style="width: min(1300px, 100%); transform: translateX(-7%)"
+    [ngStyle]="{
+      minWidth: mapMinWidth + 'px',
+    }"
   >
     <svg
       xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -810,8 +816,26 @@
   </div>
 </div>
 
+<div class="d-flex align-items-center justify-content-center gap-2 mt-3">
+  <button
+    class="btn btn-outline-info d-flex align-items-center justify-content-center"
+    style="font-size: 25px; width: 34px; height: 34px"
+    (click)="incrementMinMapSize(false)"
+  >
+    -
+  </button>
+  <p class="mb-0">Map minimum size</p>
+  <button
+    class="btn btn-outline-info d-flex align-items-center justify-content-center"
+    style="font-size: 25px; width: 34px; height: 34px"
+    (click)="incrementMinMapSize(true)"
+  >
+    +
+  </button>
+</div>
+
 <div
-  class="d-flex flex-col mt-5"
+  class="d-flex flex-col mt-4"
   style="
     max-width: min(360px, 100%);
     margin: 0 auto;
@@ -822,7 +846,15 @@
   <div class="d-flex justify-content-between">
     <p class="mb-0">High score:</p>
     <div class="filler-dotted-line"></div>
-    <p class="text-primary mb-0" style="margin: 0">
+    <p
+      class="text-primary mb-0"
+      [ngClass]="{
+      'text-primary': getBestTime('perfectTime') !== 'Incomplete',
+    }"
+      [ngStyle]="{
+        opacity: getBestTime('perfectTime') === 'Incomplete' ? 0.8 : 1
+      }"
+    >
       {{ getBestTime("highScore") }}
     </p>
   </div>

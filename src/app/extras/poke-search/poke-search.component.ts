@@ -8,8 +8,8 @@ import { StylingService } from 'src/app/styling.service';
   styleUrls: ['./poke-search.component.css'],
 })
 export class PokeSearchComponent implements OnInit {
-  screen: number
-  
+  screen: number;
+
   pokeSearchString: string = '';
   allPokemon: { name: string; url: string; index: number }[] = [];
   filteredPokemon: { name: string; url: string; index: number }[] = [];
@@ -24,9 +24,9 @@ export class PokeSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.styleService.screenSize$.subscribe((screen) => {
-      this.screen = screen
-    })
-    
+      this.screen = screen;
+    });
+
     axios
       .get('https://pokeapi.co/api/v2/pokemon?limit=1500')
       .then(({ data }) => {
@@ -59,9 +59,20 @@ export class PokeSearchComponent implements OnInit {
     }
   }
 
-  getPokemonDetails(
-    pokeParam: { name: string; url: string; index: number },
-  ) {
+  incrementPoke(next: boolean) {
+    // if next is true, increment the focused poke
+    // if next is false, decrement the focused poke
+    const { index } = this.focusedPoke;
+    if (next) {
+      if (index === this.filteredPokemon.length - 1) return;
+      this.getPokemonDetails(this.filteredPokemon[index + 1]);
+    } else {
+      if (index === 0) return;
+      this.getPokemonDetails(this.filteredPokemon[index - 1]);
+    }
+  }
+
+  getPokemonDetails(pokeParam: { name: string; url: string; index: number }) {
     this.focusedPoke = pokeParam;
     const { url, name, index } = pokeParam;
     // check if we already have the data
@@ -113,9 +124,9 @@ export class PokeSearchComponent implements OnInit {
             ).genus;
             this.detailedPoke.category = category;
 
-            // now get the weaknesses
+            // now get the weaknesses / strengths
             const weaknesses = await this.getPokeWeaknesses(this.detailedPoke);
-            this.detailedPoke.weaknesses = weaknesses;
+            this.detailedPoke.damage_relations = weaknesses;
           })
           .catch(console.error)
           .finally(() => {
@@ -135,16 +146,53 @@ export class PokeSearchComponent implements OnInit {
       );
 
       const weaknessesSet = new Set();
-      Promise.all(typePromises).then((typeResponses) => {
-        typeResponses.forEach((typeResponse) => {
-          const typeData = typeResponse.data;
-          const typeWeaknesses = typeData.damage_relations.double_damage_from;
-          typeWeaknesses.forEach((weakness) =>
-            weaknessesSet.add(weakness.name)
-          );
+      const typeResponses = await Promise.all(typePromises);
+      typeResponses.forEach((typeResponse) => {
+        const relations = typeResponse.data.damage_relations;
+        const typeWeaknesses = relations.double_damage_from;
+        typeWeaknesses.forEach((weakness) => weaknessesSet.add(weakness.name));
+      });
+
+      typeResponses.forEach((typeResponse) => {
+        const relations = typeResponse.data.damage_relations;
+        const typeResistance = relations.half_damage_from;
+        const typeImmunity = relations.no_damage_from;
+        typeResistance.forEach((resist) => {
+          if (weaknessesSet.has(resist.name)) {
+            weaknessesSet.delete(resist.name);
+          }
+        });
+        typeImmunity.forEach((immune) => {
+          if (weaknessesSet.has(immune.name)) {
+            weaknessesSet.delete(immune.name);
+          }
         });
       });
-      return weaknessesSet;
+
+      const strengthsSet = new Set();
+      typeResponses.forEach((typeResponse) => {
+        const relations = typeResponse.data.damage_relations;
+        const typeStrengths = relations.double_damage_to;
+        typeStrengths.forEach((strength) => strengthsSet.add(strength.name));
+      });
+
+      typeResponses.forEach((typeResponse) => {
+        const relations = typeResponse.data.damage_relations;
+        const typeResistance = relations.half_damage_to;
+        const typeImmunity = relations.no_damage_to;
+        typeResistance.forEach((resist) => {
+          if (strengthsSet.has(resist.name)) {
+            strengthsSet.delete(resist.name);
+          }
+        });
+        typeImmunity.forEach((immune) => {
+          if (strengthsSet.has(immune.name)) {
+            strengthsSet.delete(immune.name);
+          }
+        });
+      });
+
+      return { weaknesses: weaknessesSet, strengths: strengthsSet };
     } else {
       console.error('Types field not found in species data.');
     }

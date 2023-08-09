@@ -1,6 +1,6 @@
 <div
   class="fade-in mt-4"
-  style="max-height: calc(100vh - 85px); padding-right: 15px; max-width: 1240px"
+  style="max-height: calc(100vh - 85px); padding-right: 10px; max-width: 1240px"
 >
   <div class="proj-preview-card" style="margin: 0" *ngIf="proj.title">
     <section
@@ -13,7 +13,7 @@
           [ngStyle]="{ display: proj.liveLink ? 'block' : 'none' }"
           href="{{ proj.liveLink }}"
           target="_blank"
-          >Live site</a
+          >Live site<span class="bi bi-box-arrow-up-right" style="margin-left: 5px;"></span></a
         >
         <a class="btn btn-outline-info" href="{{ proj.github }}" target="_blank"
           >Github repo</a

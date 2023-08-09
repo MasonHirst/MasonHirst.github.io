@@ -12,6 +12,7 @@ export class PokeDetailComponent implements OnInit {
   @Input() imgLoading: boolean = false;
   // I need an event that will emit when the image is loaded
   @Output() imgLoaded: EventEmitter<void> = new EventEmitter();
+  @Output() increment: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private styleService: StylingService) {}
 
@@ -26,6 +27,12 @@ export class PokeDetailComponent implements OnInit {
   }
   formatId(id: number) {
     return '#' + id.toString().padStart(4, '0');
+  }
+
+  totalStats() {
+    return this.poke.stats.reduce((acc: number, stat: any) => {
+      return acc + stat.base_stat;
+    }, 0);
   }
 
   formatHeight(height: number) {

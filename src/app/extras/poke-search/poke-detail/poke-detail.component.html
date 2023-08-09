@@ -5,19 +5,46 @@
     overflow: 'hidden',
   }"
 >
-  <div class="d-flex gap-3 align-items-end mb-3">
-    <h2 class="mb-0 text-primary capitalize">
-      {{ poke.name }}
-    </h2>
-    <h4 class="text-faded mb-0">{{ formatId(poke.id) }}</h4>
+  <div
+    class="d-flex align-items-center justify-content-between mb-3 w-100"
+    style="padding: 0 5px"
+  >
+    <a
+      (click)="increment.emit(false)"
+      style="cursor: pointer"
+    >
+      <span class="bi bi-chevron-left" style="font-size: 20px"></span>
+    </a>
+    <div class="d-flex gap-3 align-items-end">
+      <h2
+        class="mb-0 text-primary capitalize"
+        [ngStyle]="{
+        fontSize: screen <= 460 ? '1.4rem' : '2rem',
+      }"
+      >
+        {{ poke.name }}
+      </h2>
+      <h4
+        class="text-faded mb-0"
+        [ngStyle]="{
+      fontSize: screen <= 460 ? '1.1rem' : '1.5rem',
+    }"
+      >
+        {{ formatId(poke.id) }}
+      </h4>
+    </div>
+    <a (click)="increment.emit(true)" style="cursor: pointer">
+      <span class="bi bi-chevron-right" style="font-size: 20px"></span>
+    </a>
   </div>
+
   <div
     class="d-flex align-items-start poke-detail-hero"
     [ngClass]="{
       'flex-col': screen < 750,
     }"
     [ngStyle]="{
-      'gap': screen < 750 ? '20px' : '12px'
+      gap: screen < 750 ? '20px' : '12px'
     }"
   >
     <div [ngStyle]="{ width: screen < 750 ? '100%' : '50%' }">
@@ -30,7 +57,7 @@
       />
 
       <div class="bar-graph-wrapper">
-        <h5 class="text-center">Stats</h5>
+        <h5 class="text-center">Stats total: {{ totalStats() }}</h5>
         <div class="bar-graph d-flex gap-1 mt-2 justify-content-center">
           <div
             *ngFor="let stat of poke.stats"
@@ -45,7 +72,9 @@
                 height: stat.base_stat / 1.8 + '%',
               }"
                 >
-                  <p class="capitalize">{{ stat.base_stat }}</p>
+                  <p style="font-size: 15px; margin-top: -2px">
+                    {{ stat.base_stat }}
+                  </p>
                 </div>
               </div>
               <p
@@ -104,9 +133,19 @@
           <h5>Weaknesses</h5>
           <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap">
             <span
-              *ngFor="let weak of poke.weaknesses"
+              *ngFor="let weak of poke.damage_relations.weaknesses"
               class="{{ 'poke-type-badge poke-type-badge-' + weak }}"
               >{{ weak }}</span
+            >
+          </div>
+        </div>
+        <div>
+          <h5>Extra damage to</h5>
+          <div class="d-flex gap-2 mt-2 mb-4" style="flex-wrap: wrap">
+            <span
+              *ngFor="let strength of poke.damage_relations.strengths"
+              class="{{ 'poke-type-badge poke-type-badge-' + strength }}"
+              >{{ strength }}</span
             >
           </div>
         </div>
