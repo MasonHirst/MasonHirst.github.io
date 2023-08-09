@@ -23,6 +23,7 @@ import { SelectExtraComponent } from './extras/select-extra/select-extra.compone
 import { PokeDetailComponent } from './extras/poke-search/poke-detail/poke-detail.component';
 import { PianoComponent } from './extras/piano/piano.component';
 import { WaveSurferComponent } from './extras/piano/wave-surfer/wave-surfer.component';
+import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { WaveSurferComponent } from './extras/piano/wave-surfer/wave-surfer.comp
     PokeDetailComponent,
     PianoComponent,
     WaveSurferComponent,
+    AudioLibraryComponent,
   ],
   imports: [
     CommonModule,

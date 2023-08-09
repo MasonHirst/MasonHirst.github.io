@@ -12,6 +12,7 @@ import { ExtrasComponent } from './extras/extras.component';
 import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 import { PianoComponent } from './extras/piano/piano.component';
+import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -37,7 +38,7 @@ const routes: Routes = [
   { path: 'extras', component: ExtrasComponent, children: [
     { path: '', component: SelectExtraComponent },
     { path: 'poké-search', component: PokeSearchComponent },
-    { path: 'piano', component: PianoComponent },
+    { path: 'audio-library', component: AudioLibraryComponent },
     { path: '**', redirectTo: '' },
   ] },
   { path: '**', redirectTo: 'home' },

@@ -14,9 +14,10 @@ export class SelectExtraComponent {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1691112498/charizard-bg_dirfra.jpg'
     ),
     new PreviewCard(
-      'Piano recordings',
-      'piano',
-      'https://images.unsplash.com/photo-1546058256-47154de4046c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHBpYW5vfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60'
+      'Audio Library',
+      'audio-library',
+      // 'https://images.unsplash.com/photo-1546058256-47154de4046c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fHBpYW5vfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60'
+      'https://images.unsplash.com/photo-1583267986680-b8baf7fa05e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJnYiUyMHBpYW5vfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60'
     ),
   ]
 }
