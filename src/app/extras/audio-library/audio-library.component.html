@@ -4,8 +4,52 @@
 
   <div class="d-flex gap-5">
     <app-song-list></app-song-list>
-    <div
-      #bigWavesurfer
-    ></div>
+
+    <div class="d-flex flex-col align-items-center">
+      <div #bigWavesurfer style="width: min(500px); position: relative">
+        <div
+          *ngIf="drawingSurfer"
+          style="
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+          "
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <h6 style="text-align: center">
+        {{ playlist[currentSongIndex]?.name }}
+      </h6>
+
+      <section class="d-flex align-items-center gap-3">
+        <a (click)="incrementSong(false)"
+          ><span
+            class="bi bi-skip-start-fill"
+            style="font-size: 2.2rem; cursor: pointer"
+          ></span
+        ></a>
+        <a (click)="playPauseSong()"
+          ><span
+            class="bi"
+            [ngClass]="{
+        'bi-play-fill': !isPlaying,
+        'bi-pause-fill': isPlaying,
+      }"
+            style="font-size: 3.5rem; cursor: pointer"
+          ></span
+        ></a>
+        <a (click)="incrementSong(true)"
+          ><span
+            class="bi bi-skip-end-fill"
+            style="font-size: 2.2rem; cursor: pointer"
+          ></span
+        ></a>
+      </section>
+    </div>
   </div>
 </div>

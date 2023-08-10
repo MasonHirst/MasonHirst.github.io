@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { AudioPlayerService } from 'src/app/audio-player.service';
 import { StylingService } from 'src/app/styling.service';
+import { playlist } from 'src/app/playlistData';
+import { Audio } from './audio.model';
 
 @Component({
   selector: 'app-audio-library',
@@ -15,8 +17,12 @@ import { StylingService } from 'src/app/styling.service';
 })
 export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
   screen: number;
+  playlist: Audio[] = playlist;
   hideWavesurfer: boolean = false;
   musicRendered: boolean = false;
+  currentSongIndex: number;
+  drawingSurfer: boolean = false;
+  isPlaying: boolean = false;
   @ViewChild('bigWavesurfer') bigWavesurferEl: any;
 
   constructor(
@@ -31,6 +37,15 @@ export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
     this.audioService.songRendered$.subscribe((rendered) => {
       this.musicRendered = rendered;
     });
+    this.audioService.drawingSurfer$.subscribe((drawing) => {
+      this.drawingSurfer = drawing;
+    });
+    this.audioService.isPlaying$.subscribe((playing) => {
+      this.isPlaying = playing;
+    });
+    this.audioService.currentSongIndex$.subscribe((index) => {
+      this.currentSongIndex = index;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -43,5 +58,13 @@ export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
     console.log('destroyed');
     this.audioService.toggleInLibrary(false);
     this.audioService.changeSurferCont(false);
+  }
+
+  incrementSong(next: boolean): void {
+    this.audioService.incrementSong(next);
+  }
+
+  playPauseSong(): void {
+    this.audioService.playPause();
   }
 }

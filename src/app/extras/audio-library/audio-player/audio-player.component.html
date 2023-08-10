@@ -1,7 +1,7 @@
 <div
   class="w-100 flex-col justify-content-center align-items-center audio-player-pullout p-2"
   [ngStyle]="{
-    transform: audioPullout ? 'translateX(-3%)' : 'translateX(100%)',
+    transform: audioPullout ? 'translateX(-2%)' : 'translateX(100%)',
     display: inLibrary ? 'none' : 'flex',
   }"
 >
@@ -10,26 +10,41 @@
     (click)="audioPullout = !audioPullout"
   >
     <span
-      *ngIf="!audioPullout"
-      class="bi bi-arrow-bar-left pullout-icon"
+      class="bi pullout-icon"
+      [ngClass]="{
+        'bi-arrow-left-short': !audioPullout,
+        'bi-arrow-right-short': audioPullout
+      }"
     ></span>
-    <span
-      *ngIf="audioPullout"
-      class="bi bi-arrow-bar-right pullout-icon"
-    ></span>
+
+    <app-sound-animation *ngIf="!audioPullout" [isPlaying]="isPlaying"></app-sound-animation>
   </a>
 
-  <div #waveformSmallCont class="w-100">
+  <div #waveformSmallCont class="w-100" style="position: relative">
     <div
       #waveform
-      style="width: 100%"
-      [ngStyle]="{
-        display: hideWavesurfer ? 'none' : 'block'
-      }"
+      style="width: 100%;"
     ></div>
+    <div
+      *ngIf="drawingSurfer"
+      style="
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1 !important;
+        /* z-index: 10000; */
+      "
+    >
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   </div>
 
-  <h6 *ngIf="currentSongIndex" style="text-align: center;">{{ playlist[currentSongIndex].name }}</h6>
+  <h6 style="text-align: center">
+    {{ playlist[currentSongIndex]?.name }}
+  </h6>
 
   <section class="d-flex align-items-center gap-3">
     <a (click)="incrementSong(false)"

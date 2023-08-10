@@ -22,18 +22,6 @@
       </li>
     </ng-template>
   </ul>
-  <!-- <a routerLink="/extras/audio-library">
-    <h6
-      style="cursor: pointer"
-      class="contact-btn text-info"
-      [ngClass]="{
-      'display-none': screen < 400,
-    }"
-    >
-      Contact {{ screen >= 600 ? "me" : "" }}
-      Music player
-    </h6>
-  </a> -->
   <h5
     class="contact-btn"
     style="left: 15px; width: fit-content; cursor: pointer"
@@ -50,7 +38,7 @@
 <ng-template #drawerHeader>
   <div
     class="header-cont d-flex justify-content-between align-items-center"
-    style="border-bottom: 1px solid #0ae6b7;"
+    style="border-bottom: 1px solid #0ae6b7; position: relative"
     [ngStyle]="{
       padding: screen < 600 ? '8px 7px' : '8px 14px',
     }"
@@ -61,13 +49,26 @@
       data-bs-target="#drawer"
       role="button"
       aria-controls="drawer"
-      style="text-decoration: none !important;"
+      style="text-decoration: none !important"
     >
       <span class="navbar-toggler-icon" style="font-size: 20px"></span>
-      <span style="opacity: .8;">Menu</span>
+      <span style="opacity: 0.8" *ngIf="screen > 320">Menu</span>
     </a>
 
-    <h5 class="mb-0" style="cursor: pointer; font-size: 1.1rem;" routerLink="/home">Mason Hirst</h5>
+    <h5
+      class="mb-0"
+      style="
+        cursor: pointer;
+        font-size: 1.1rem;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      "
+      routerLink="/home"
+    >
+      Mason Hirst
+    </h5>
   </div>
 
   <div
@@ -79,7 +80,9 @@
     style="width: 220px"
   >
     <div class="offcanvas-header">
-      <h5 class="mb-0" style="cursor: pointer" routerLink="/home">Mason Hirst</h5>
+      <h5 class="mb-0" style="cursor: pointer" routerLink="/home">
+        Mason Hirst
+      </h5>
       <button
         type="button"
         class="btn-close"
@@ -89,22 +92,22 @@
     </div>
     <div class="offcanvas-body">
       <div
-      class="nav flex-column nav-pills"
-      id="v-pills-tab"
-      role="tablist"
-      aria-orientation="vertical"
-    >
-      <button
-        *ngFor="let tab of tabs"
-        class="nav-link text-faded"
-        style="white-space: nowrap"
-        routerLinkActive="active"
-        [routerLink]="tab.route"
-        data-bs-dismiss="offcanvas"
+        class="nav flex-column nav-pills"
+        id="v-pills-tab"
+        role="tablist"
+        aria-orientation="vertical"
       >
-        {{ tab.name }}
-      </button>
-    </div>
+        <button
+          *ngFor="let tab of tabs"
+          class="nav-link text-faded"
+          style="white-space: nowrap"
+          routerLinkActive="active"
+          [routerLink]="tab.route"
+          data-bs-dismiss="offcanvas"
+        >
+          {{ tab.name }}
+        </button>
+      </div>
     </div>
   </div>
 </ng-template>

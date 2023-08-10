@@ -19,6 +19,8 @@ export class AudioPlayerService {
   @Output() isPlaying$: EventEmitter<boolean> = new EventEmitter();
   private songRendered: boolean = false;
   @Output() songRendered$: EventEmitter<boolean> = new EventEmitter();
+  private drawingSurfer: boolean = false;
+  @Output() drawingSurfer$: EventEmitter<boolean> = new EventEmitter();
   private inLibrary: boolean = false;
   @Output() inLibrary$: EventEmitter<boolean> = new EventEmitter();
 
@@ -30,13 +32,17 @@ export class AudioPlayerService {
       container: surferRef,
       waveColor: 'violet',
       progressColor: 'purple',
-      barHeight: 0.7,
+      height: 60,
+      barHeight: 1,
       barWidth: 1.5,
       barGap: 2,
       barRadius: 5,
     });
 
     this.wavesurfer.on('ready', () => {
+      this.wavesurfer.setOptions({
+        barHeight: playlist[this.currentSongIndex].barHeight,
+      })
       this.wavesurfer.play();
       if (!this.songRendered) {
         this.songRendered = true;
@@ -44,13 +50,26 @@ export class AudioPlayerService {
       }
     });
 
+    this.wavesurfer.on('redraw', () => {
+      this.wavesurferEl.style.opacity = 1;
+      this.drawingSurfer = false;
+      this.drawingSurfer$.emit(this.drawingSurfer);
+    });
+
     this.wavesurfer.on('loading', (progress: number) => {
       if (progress === 100) {
         this.songLoading = false;
         this.songLoading$.emit(this.songLoading);
       } else {
-        this.songLoading = true;
-        this.songLoading$.emit(this.songLoading);
+        this.wavesurferEl.style.opacity = 0
+        if (!this.drawingSurfer) {
+          this.drawingSurfer = true;
+          this.drawingSurfer$.emit(this.drawingSurfer);
+        }
+        if (!this.songLoading) {
+          this.songLoading = true;
+          this.songLoading$.emit(this.songLoading);
+        }
       }
     });
 
@@ -123,10 +142,10 @@ export class AudioPlayerService {
   }
 
   fillBigCont(containerRef: any): void {
-    this.bigContEl = containerRef
+    this.bigContEl = containerRef;
   }
   fillSmallCont(containerRef: any): void {
-    this.smallContEl = containerRef
+    this.smallContEl = containerRef;
   }
 
   changeSurferCont(inLibrary: boolean): void {

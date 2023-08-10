@@ -24,6 +24,7 @@ import { PokeDetailComponent } from './extras/poke-search/poke-detail/poke-detai
 import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
 import { AudioPlayerComponent } from './extras/audio-library/audio-player/audio-player.component';
 import { SongListComponent } from './extras/audio-library/song-list/song-list.component';
+import { SoundAnimationComponent } from './extras/audio-library/audio-player/sound-animation/sound-animation.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { SongListComponent } from './extras/audio-library/song-list/song-list.co
     AudioLibraryComponent,
     AudioPlayerComponent,
     SongListComponent,
+    SoundAnimationComponent,
   ],
   imports: [
     CommonModule,

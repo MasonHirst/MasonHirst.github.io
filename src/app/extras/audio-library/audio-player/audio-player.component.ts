@@ -15,6 +15,7 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   currentSongIndex: number;
   playlist: Audio[] = playlist;
   songRendered: boolean = false;
+  drawingSurfer: boolean = false;
   hideWavesurfer: boolean = false;
   audioPullout: boolean = false;
   inLibrary: boolean = false;
@@ -33,6 +34,9 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     })
     this.audioService.currentSongIndex$.subscribe((index) => {
       this.currentSongIndex = index;
+    })
+    this.audioService.drawingSurfer$.subscribe((drawing) => {
+      this.drawingSurfer = drawing;
     })
   }
 
