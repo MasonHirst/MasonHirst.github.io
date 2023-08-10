@@ -1,0 +1,23 @@
+<div class="d-flex flex-col gap-3">
+  <div
+    *ngFor="let song of playList; let i = index"
+    class="d-flex align-items-center justify-content-between gap-5 2-100"
+  >
+    <div class="d-flex align-items-center gap-2">
+      <a
+        class="p-1 text-primary"
+        (click)="onNewSong(i)"
+        style="border-radius: 50%; font-size: 1.8rem; cursor: pointer"
+      >
+        <span class="bi bi-play-fill"></span>
+      </a>
+      <div>
+        <p class="mb-0" [ngClass]="{
+          'text-primary': i === audioService.getCurrentSongIndex()
+        }">{{ song.name }}</p>
+        <p class="text-muted mb-0">{{ song.artist }}</p>
+      </div>
+    </div>
+    <p class="mb-0">{{ song.durationStr }}</p>
+  </div>
+</div>

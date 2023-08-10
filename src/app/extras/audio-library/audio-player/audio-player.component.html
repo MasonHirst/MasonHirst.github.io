@@ -1,0 +1,73 @@
+<div
+  class="w-100 flex-col justify-content-center align-items-center audio-player-pullout p-2"
+  [ngStyle]="{
+    transform: audioPullout ? 'translateX(-2%)' : 'translateX(100%)',
+    display: inLibrary ? 'none' : 'flex',
+  }"
+>
+  <a
+    class="audio-player-pullout-tag d-flex justify-content-center align-items-center"
+    (click)="audioPullout = !audioPullout"
+  >
+    <span
+      class="bi pullout-icon"
+      [ngClass]="{
+        'bi-arrow-left-short': !audioPullout,
+        'bi-arrow-right-short': audioPullout
+      }"
+    ></span>
+
+    <app-sound-animation *ngIf="!audioPullout" [isPlaying]="isPlaying"></app-sound-animation>
+  </a>
+
+  <div #waveformSmallCont class="w-100" style="position: relative">
+    <div
+      #waveform
+      style="width: 100%;"
+    ></div>
+    <div
+      *ngIf="drawingSurfer"
+      style="
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1 !important;
+        /* z-index: 10000; */
+      "
+    >
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <h6 style="text-align: center">
+    {{ playlist[currentSongIndex]?.name }}
+  </h6>
+
+  <section class="d-flex align-items-center gap-3">
+    <a (click)="incrementSong(false)"
+      ><span
+        class="bi bi-skip-start-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+      ></span
+    ></a>
+    <a (click)="playPauseSong()"
+      ><span
+        class="bi"
+        [ngClass]="{
+          'bi-play-fill': !isPlaying,
+          'bi-pause-fill': isPlaying,
+        }"
+        style="font-size: 3.5rem; cursor: pointer"
+      ></span
+    ></a>
+    <a (click)="incrementSong(true)"
+      ><span
+        class="bi bi-skip-end-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+      ></span
+    ></a>
+  </section>
+</div>

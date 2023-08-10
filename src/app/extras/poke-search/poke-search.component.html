@@ -113,7 +113,7 @@
         role="tab"
         style="cursor: pointer"
         (click)="getPokemonDetails(poke)"
-        data-bs-dismiss="offcanvas"
+        [data-bs-dismiss]="screen <= 460 ? 'offcanvas' : ''"
         >{{ poke.name }}</a
       >
     </div>
