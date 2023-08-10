@@ -21,9 +21,9 @@ import { ExtrasComponent } from './extras/extras.component';
 import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 import { PokeDetailComponent } from './extras/poke-search/poke-detail/poke-detail.component';
-import { PianoComponent } from './extras/piano/piano.component';
-import { WaveSurferComponent } from './extras/piano/wave-surfer/wave-surfer.component';
 import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
+import { AudioPlayerComponent } from './extras/audio-library/audio-player/audio-player.component';
+import { SongListComponent } from './extras/audio-library/song-list/song-list.component';
 
 @NgModule({
   declarations: [
@@ -42,9 +42,9 @@ import { AudioLibraryComponent } from './extras/audio-library/audio-library.comp
     PokeSearchComponent,
     SelectExtraComponent,
     PokeDetailComponent,
-    PianoComponent,
-    WaveSurferComponent,
     AudioLibraryComponent,
+    AudioPlayerComponent,
+    SongListComponent,
   ],
   imports: [
     CommonModule,

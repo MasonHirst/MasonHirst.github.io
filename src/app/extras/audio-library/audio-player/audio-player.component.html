@@ -1,0 +1,41 @@
+<div
+  class="w-100 d-flex flex-col justify-content-center align-items-center"
+  style="position: fixed; bottom: 0; border: 1px solid red"
+>
+  <div #waveformSmallCont>
+    <div
+      #waveform
+      style="margin: 0 10px; width: 500px"
+      [ngStyle]="{
+        display: hideWavesurfer ? 'none' : 'block'
+      }"
+    ></div>
+  </div>
+
+  <section class="d-flex align-items-center gap-3">
+    <a (click)="incrementSong(false)"
+      ><span
+        class="bi bi-skip-start-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+      ></span
+    ></a>
+    <a *ngIf="!isPlaying" (click)="playPauseSong()"
+      ><span
+        class="bi bi-play-fill"
+        style="font-size: 3.5rem; cursor: pointer"
+      ></span
+    ></a>
+    <a *ngIf="isPlaying" (click)="playPauseSong()"
+      ><span
+        class="bi bi-pause-fill"
+        style="font-size: 3.5rem; cursor: pointer"
+      ></span
+    ></a>
+    <a (click)="incrementSong(true)"
+      ><span
+        class="bi bi-skip-end-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+      ></span
+    ></a>
+  </section>
+</div>

@@ -1,1 +1,14 @@
-<p>audio-library works!</p>
+<div class="d-flex flex-col w-100 align-items-center mt-3">
+  <h2>Music playlist</h2>
+  <p>Music I have recorded or been involved in making</p>
+
+  <div class="d-flex gap-5">
+    <app-song-list></app-song-list>
+    <div
+      #bigWavesurfer
+      [ngStyle]="{
+        display: hideWavesurfer || !musicRendered ? 'none' : 'block'
+      }"
+    ></div>
+  </div>
+</div>

@@ -11,7 +11,6 @@ import { StateGuesserComponent } from './games/state-guesser/state-guesser.compo
 import { ExtrasComponent } from './extras/extras.component';
 import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
-import { PianoComponent } from './extras/piano/piano.component';
 import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
 
 const routes: Routes = [
