@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AudioPlayerService } from 'src/app/audio-player.service';
-import { playList } from 'src/app/playlistData';
+import { playlist } from 'src/app/playlistData';
+import { Audio } from '../audio.model';
 
 @Component({
   selector: 'app-song-list',
@@ -8,7 +9,7 @@ import { playList } from 'src/app/playlistData';
   styleUrls: ['./song-list.component.css']
 })
 export class SongListComponent implements OnInit {
-  playList = playList;
+  playList: Audio[] = playlist;
 
   constructor(private audioService: AudioPlayerService) {}
 

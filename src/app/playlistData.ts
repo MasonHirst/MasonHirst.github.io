@@ -1,5 +1,5 @@
 import { Audio } from './extras/audio-library/audio.model';
-export const playList: Audio[] = [
+export const playlist: Audio[] = [
   new Audio(
     'https://res.cloudinary.com/dk9vsivmu/video/upload/v1691555468/Softer_Christofori_s_Dream_-_cover_by_Mason_Hirst_lvnr7g.mp3',
     "Christofori's Dream - piano cover",

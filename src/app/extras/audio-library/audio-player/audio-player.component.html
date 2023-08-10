@@ -1,16 +1,35 @@
 <div
-  class="w-100 d-flex flex-col justify-content-center align-items-center"
-  style="position: fixed; bottom: 0; border: 1px solid red"
+  class="w-100 flex-col justify-content-center align-items-center audio-player-pullout p-2"
+  [ngStyle]="{
+    transform: audioPullout ? 'translateX(-3%)' : 'translateX(100%)',
+    display: inLibrary ? 'none' : 'flex',
+  }"
 >
-  <div #waveformSmallCont>
+  <a
+    class="audio-player-pullout-tag d-flex justify-content-center align-items-center"
+    (click)="audioPullout = !audioPullout"
+  >
+    <span
+      *ngIf="!audioPullout"
+      class="bi bi-arrow-bar-left pullout-icon"
+    ></span>
+    <span
+      *ngIf="audioPullout"
+      class="bi bi-arrow-bar-right pullout-icon"
+    ></span>
+  </a>
+
+  <div #waveformSmallCont class="w-100">
     <div
       #waveform
-      style="margin: 0 10px; width: 500px"
+      style="width: 100%"
       [ngStyle]="{
         display: hideWavesurfer ? 'none' : 'block'
       }"
     ></div>
   </div>
+
+  <h6 *ngIf="currentSongIndex" style="text-align: center;">{{ playlist[currentSongIndex].name }}</h6>
 
   <section class="d-flex align-items-center gap-3">
     <a (click)="incrementSong(false)"
@@ -19,15 +38,13 @@
         style="font-size: 2.2rem; cursor: pointer"
       ></span
     ></a>
-    <a *ngIf="!isPlaying" (click)="playPauseSong()"
+    <a (click)="playPauseSong()"
       ><span
-        class="bi bi-play-fill"
-        style="font-size: 3.5rem; cursor: pointer"
-      ></span
-    ></a>
-    <a *ngIf="isPlaying" (click)="playPauseSong()"
-      ><span
-        class="bi bi-pause-fill"
+        class="bi"
+        [ngClass]="{
+          'bi-play-fill': !isPlaying,
+          'bi-pause-fill': isPlaying,
+        }"
         style="font-size: 3.5rem; cursor: pointer"
       ></span
     ></a>

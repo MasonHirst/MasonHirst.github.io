@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import WaveSurfer from 'wavesurfer.js';
-import { playList } from './playlistData';
+import { playlist } from './playlistData';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +11,7 @@ export class AudioPlayerService {
   private wavesurferEl: any;
   private wavesurfer: WaveSurfer;
   private currentSongIndex: number;
+  @Output() currentSongIndex$: EventEmitter<number> = new EventEmitter();
   private autoRestartPlaylist: boolean = false;
   private songLoading: boolean = false;
   @Output() songLoading$: EventEmitter<boolean> = new EventEmitter();
@@ -70,7 +71,7 @@ export class AudioPlayerService {
   incrementSong(next: boolean, manual: boolean = true): void {
     if (!this.wavesurfer.getDecodedData()) return;
     if (next) {
-      if (this.currentSongIndex === playList.length - 1) {
+      if (this.currentSongIndex === playlist.length - 1) {
         if (manual) {
           this.newSong(0);
         } else if (!manual && this.autoRestartPlaylist) {
@@ -84,7 +85,7 @@ export class AudioPlayerService {
         this.wavesurfer.seekTo(0);
       } else {
         if (this.currentSongIndex === 0) {
-          this.newSong(playList.length - 1);
+          this.newSong(playlist.length - 1);
         } else {
           this.newSong(this.currentSongIndex - 1);
         }
@@ -98,9 +99,10 @@ export class AudioPlayerService {
 
   newSong(index: number): void {
     this.wavesurfer.stop();
-    this.wavesurfer.load(playList[index].url);
-    this.wavesurfer.setVolume(playList[index].volumeFactor);
+    this.wavesurfer.load(playlist[index].url);
+    this.wavesurfer.setVolume(playlist[index].volumeFactor);
     this.currentSongIndex = index;
+    this.currentSongIndex$.emit(this.currentSongIndex);
   }
 
   getWaveSurferInstance(): WaveSurfer {
@@ -110,7 +112,7 @@ export class AudioPlayerService {
   playPause(): void {
     if (!this.wavesurfer.getDecodedData()) {
       // play a random song from the array
-      const randomIndex = Math.floor(Math.random() * playList.length);
+      const randomIndex = Math.floor(Math.random() * playlist.length);
       if (this.inLibrary) {
         this.bigContEl.appendChild(this.wavesurferEl);
       }
