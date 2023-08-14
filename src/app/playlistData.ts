@@ -3,7 +3,7 @@ export const playlist: Audio[] = [
   new Audio(
     'https://res.cloudinary.com/dk9vsivmu/video/upload/v1691555468/Softer_Christofori_s_Dream_-_cover_by_Mason_Hirst_lvnr7g.mp3',
     "Christofori's Dream - piano cover",
-    'A piano cover of Christofori\'s Dream by Mason Hirst. This song was was composed by David Lanz, who after reading about the inventor of the piano: Bartolomeo Christofori.',
+    'A piano cover of Christofori\'s Dream by Mason Hirst. This song was was composed by David Lanz, who was inspired after reading about the inventor of the piano - Bartolomeo Christofori.',
     1,
     1.5,
     '5:39',
