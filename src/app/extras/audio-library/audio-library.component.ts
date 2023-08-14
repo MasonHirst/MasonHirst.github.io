@@ -18,11 +18,9 @@ import { Audio } from './audio.model';
 export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
   screen: number;
   playlist: Audio[] = playlist;
-  hideWavesurfer: boolean = false;
-  musicRendered: boolean = false;
-  currentSongIndex: number;
   drawingSurfer: boolean = false;
-  isPlaying: boolean = false;
+  audioPullup: boolean = false;
+  currentSong: Audio = null;
   @ViewChild('bigWavesurfer') bigWavesurferEl: any;
 
   constructor(
@@ -34,18 +32,13 @@ export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
     this.styleService.screenSize$.subscribe((screen) => {
       this.screen = screen;
     });
-    this.audioService.songRendered$.subscribe((rendered) => {
-      this.musicRendered = rendered;
-    });
     this.audioService.drawingSurfer$.subscribe((drawing) => {
       this.drawingSurfer = drawing;
     });
-    this.audioService.isPlaying$.subscribe((playing) => {
-      this.isPlaying = playing;
+    this.audioService.currentSong$.subscribe((song) => {
+      this.currentSong = song;
     });
-    this.audioService.currentSongIndex$.subscribe((index) => {
-      this.currentSongIndex = index;
-    });
+    this.currentSong = this.audioService.getSurferStatuses().currentSong
   }
 
   ngAfterViewInit(): void {
@@ -55,7 +48,6 @@ export class AudioLibraryComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    console.log('destroyed');
     this.audioService.toggleInLibrary(false);
     this.audioService.changeSurferCont(false);
   }

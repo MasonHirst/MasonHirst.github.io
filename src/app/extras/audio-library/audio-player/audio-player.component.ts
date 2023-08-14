@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AudioPlayerService } from 'src/app/audio-player.service';
-import { playlist } from 'src/app/playlistData';
 import { Audio } from '../audio.model';
 
 @Component({
@@ -12,11 +11,9 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   @ViewChild('waveform') waveformEl: any;
   @ViewChild('waveformSmallCont') waveFormCont: any
   isPlaying: boolean = false;
-  currentSongIndex: number;
-  playlist: Audio[] = playlist;
+  currentSong: Audio;
   songRendered: boolean = false;
   drawingSurfer: boolean = false;
-  hideWavesurfer: boolean = false;
   audioPullout: boolean = false;
   inLibrary: boolean = false;
 
@@ -32,8 +29,8 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
     this.audioService.inLibrary$.subscribe((inLibrary) => {
       this.inLibrary = inLibrary;
     })
-    this.audioService.currentSongIndex$.subscribe((index) => {
-      this.currentSongIndex = index;
+    this.audioService.currentSong$.subscribe((song) => {
+      this.currentSong = song;
     })
     this.audioService.drawingSurfer$.subscribe((drawing) => {
       this.drawingSurfer = drawing;
@@ -43,13 +40,5 @@ export class AudioPlayerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.audioService.fillSmallCont(this.waveFormCont.nativeElement);
     this.audioService.initWaveSurfer(this.waveformEl.nativeElement);
-  }
-
-  incrementSong(next: boolean) {
-    this.audioService.incrementSong(next, true);
-  }
-
-  playPauseSong() {
-    this.audioService.playPause();
   }
 }

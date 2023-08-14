@@ -1,0 +1,50 @@
+.library-audio-player {
+  border: 1px solid #0ae6b7;
+  border-radius: 10px;
+  width: 50%;
+  padding: 15px 15px;
+  height: fit-content;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  padding-top: 30px;
+}
+
+.hide-audio-player {
+  display: none !important;
+}
+
+.song-list-cont {
+  width: (50%, 600px);
+}
+
+.library-cont {
+  width: min(850px, 100%);
+}
+
+
+@media (max-width: 800px) {
+  .library-audio-player {
+    padding-top: 40px;
+    width: min(100% - 20px, 500px);
+    background-color: #202847;
+    box-shadow: 0 4px 10px 2px rgba(32, 40, 71, 0.7);
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    transform: translateX(-50%);
+  }
+  .library-audio-player-full {
+    padding-top: 10px;
+    padding-bottom: 30px;
+    transform: translateX(-50%) translateY(calc(100% - 50px));
+  }
+  .song-list-cont {
+    width: 100%;
+  }
+  .library-cont {
+    width: min(600px, 100%);
+  }
+}

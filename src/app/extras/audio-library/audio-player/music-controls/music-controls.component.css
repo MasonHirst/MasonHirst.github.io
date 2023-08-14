@@ -1,0 +1,11 @@
+.collapsed-controls-wrapper {
+  width: 480px;
+  margin-top: -10px;
+  /* border: 1px solid red; */
+}
+
+@media (max-width: 520px) {
+  .collapsed-controls-wrapper {
+    width: calc(100vw - 40px);
+  }
+}

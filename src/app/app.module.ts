@@ -25,6 +25,7 @@ import { AudioLibraryComponent } from './extras/audio-library/audio-library.comp
 import { AudioPlayerComponent } from './extras/audio-library/audio-player/audio-player.component';
 import { SongListComponent } from './extras/audio-library/song-list/song-list.component';
 import { SoundAnimationComponent } from './extras/audio-library/audio-player/sound-animation/sound-animation.component';
+import { MusicControlsComponent } from './extras/audio-library/audio-player/music-controls/music-controls.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { SoundAnimationComponent } from './extras/audio-library/audio-player/sou
     AudioPlayerComponent,
     SongListComponent,
     SoundAnimationComponent,
+    MusicControlsComponent,
   ],
   imports: [
     CommonModule,

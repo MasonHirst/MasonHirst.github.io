@@ -1,0 +1,85 @@
+<div *ngIf="!collapsed" class="d-flex flex-col align-items-center mt-3">
+  <div style="max-width: 100%">
+    <h6 class="mb-1" style="text-align: center">
+      {{ currentSong?.name }}
+    </h6>
+  </div>
+  <p class="mb-0" style="text-align: center; opacity: 0.7">
+    {{ currentSong?.artist }}
+  </p>
+
+  <section class="d-flex align-items-center gap-3">
+    <a (click)="incrementSong(false)"
+      ><span
+        class="bi bi-skip-start-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+        [ngStyle]="{
+          opacity: isDrawing ? .5 : 1,
+        }"
+      ></span
+    ></a>
+    <a (click)="playPauseSong()"
+      ><span
+        class="bi"
+        [ngClass]="{
+          'bi-play-fill': !isPlaying,
+          'bi-pause-fill': isPlaying,
+        }"
+        style="font-size: 3.5rem; cursor: pointer"
+      ></span
+    ></a>
+    <a (click)="incrementSong(true)"
+      ><span
+        class="bi bi-skip-end-fill"
+        style="font-size: 2.2rem; cursor: pointer"
+        [ngStyle]="{
+          opacity: isDrawing ? 0.5 : 1,
+        }"
+      ></span
+    ></a>
+  </section>
+  <p
+    style="text-align: center"
+    style="font-size: 0.9rem; opacity: 0.9; text-align: center"
+  >
+    {{ currentSong?.desc }}
+  </p>
+</div>
+
+<div
+  *ngIf="collapsed"
+  class="d-flex gap-2 align-items-center mb-5 justify-content-between collapsed-controls-wrapper"
+>
+  <a (click)="toggleCollapse.emit()" style="cursor: pointer"
+    ><span
+      class="bi"
+      [ngClass]="{
+            'bi-arrow-down-short': audioPullup,
+            'bi-arrow-up-short': !audioPullup,
+          }"
+      style="font-size: 2rem"
+    ></span
+  ></a>
+  <div class="d-flex flex-col align-items-center">
+    <div style="max-width: calc(100vw - 120px)">
+      <p class="mb-0 truncate" style="font-size: 0.9rem">
+        {{ currentSong?.name }}
+      </p>
+    </div>
+    <div style="max-width: calc(100vw - 120px)">
+      <p class="mb-0 truncate" style="font-size: 0.85rem; opacity: 0.7">
+        {{ currentSong?.artist }}
+      </p>
+    </div>
+  </div>
+  <a (click)="playPauseSong()"
+    ><span
+      class="bi"
+      [ngClass]="{
+        'bi-play-fill': !isPlaying,
+        'bi-pause-fill': isPlaying,
+      }"
+      style="font-size: 2rem; cursor: pointer"
+    ></span
+  ></a>
+</div>

@@ -1,12 +1,66 @@
-<div class="d-flex flex-col w-100 align-items-center mt-3">
-  <h2>Music playlist</h2>
-  <p>Music I have recorded or been involved in making</p>
+<div
+  class="d-flex flex-col w-100 align-items-center mt-3"
+  style="padding: 0 10px"
+>
+  <div class="d-flex align-items-center gap-2">
+    <i
+      style="font-size: 22px; cursor: pointer"
+      class="bi bi-chevron-left"
+      routerLink="../"
+    ></i>
+    <h2
+      class="text-info mb-0"
+      [ngStyle]="{
+        fontSize: screen < 400 ? '1.6rem' : '2rem',
+      }"
+    >
+      Music library
+    </h2>
+  </div>
+  <p class="mb-4" style="text-align: center">
+    Music I have recorded or been involved in making
+  </p>
 
-  <div class="d-flex gap-5">
-    <app-song-list></app-song-list>
+  <div
+    class="d-flex gap-4 library-cont"
+    [ngClass]="{
+    'library-cont-full': screen < 800,
+  }"
+  >
+    <div class="song-list-cont" [ngStyle]="{
+      
+    }">
+      <app-song-list></app-song-list>
+    </div>
 
-    <div class="d-flex flex-col align-items-center">
-      <div #bigWavesurfer style="width: min(500px); position: relative">
+    <div
+      class="d-flex flex-col align-items-center library-audio-player"
+      [ngClass]="{
+        'library-audio-player-full': screen < 800 && !audioPullup,
+        'hide-audio-player': !currentSong?.name,
+      }"
+    >
+      <a
+        *ngIf="screen < 800 && audioPullup"
+        (click)="audioPullup = !audioPullup"
+        style="position: absolute; top: 0; left: 5px; cursor: pointer"
+        ><span
+          class="bi"
+          [ngClass]="{
+            'bi-arrow-down-short': audioPullup,
+            'bi-arrow-up-short': !audioPullup,
+          }"
+          style="font-size: 2rem"
+        ></span
+      ></a>
+
+      <app-music-controls
+        *ngIf="screen < 800 && !audioPullup"
+        [collapsed]="true"
+        (toggleCollapse)="audioPullup = !audioPullup"
+      ></app-music-controls>
+
+      <div #bigWavesurfer style="width: min(100%, 500px); position: relative">
         <div
           *ngIf="drawingSurfer"
           style="
@@ -22,34 +76,10 @@
         </div>
       </div>
 
-      <h6 style="text-align: center">
-        {{ playlist[currentSongIndex]?.name }}
-      </h6>
-
-      <section class="d-flex align-items-center gap-3">
-        <a (click)="incrementSong(false)"
-          ><span
-            class="bi bi-skip-start-fill"
-            style="font-size: 2.2rem; cursor: pointer"
-          ></span
-        ></a>
-        <a (click)="playPauseSong()"
-          ><span
-            class="bi"
-            [ngClass]="{
-        'bi-play-fill': !isPlaying,
-        'bi-pause-fill': isPlaying,
-      }"
-            style="font-size: 3.5rem; cursor: pointer"
-          ></span
-        ></a>
-        <a (click)="incrementSong(true)"
-          ><span
-            class="bi bi-skip-end-fill"
-            style="font-size: 2.2rem; cursor: pointer"
-          ></span
-        ></a>
-      </section>
+      <app-music-controls
+        [collapsed]="false"
+        (toggleCollapse)="audioPullup = !audioPullup"
+      ></app-music-controls>
     </div>
   </div>
 </div>

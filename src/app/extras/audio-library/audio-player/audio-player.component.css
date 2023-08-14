@@ -3,7 +3,7 @@
   top: 5px;
   right: 0;
   max-width: 300px;
-  height: 300px;
+  /* height: 300px; */
   background-color: #202847;
   transition: 0.4s ease-in-out;
   z-index: 120;
@@ -11,6 +11,7 @@
   border-top-left-radius: 0;
   border: 1px solid #0AE6B7;
   box-shadow: 0 4px 10px 2px rgba(32, 40, 71, 0.7);
+  padding-top: 15px !important;
 }
 
 .audio-player-pullout-tag {
@@ -21,12 +22,12 @@
   padding-left: 5px;
   padding-right: 12px;
   height: 37px;
-  background-color: #202847;
   cursor: pointer;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border: 1px solid #0AE6B7;
   border-right: none;
+  background-color: #202847;
   box-shadow: 0 4px 10px 2px rgba(32, 40, 71, 0.7);
 }
 

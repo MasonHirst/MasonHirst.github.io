@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import WaveSurfer from 'wavesurfer.js';
 import { playlist } from './playlistData';
+import { Audio } from './extras/audio-library/audio.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,8 @@ export class AudioPlayerService {
   private wavesurfer: WaveSurfer;
   private currentSongIndex: number;
   @Output() currentSongIndex$: EventEmitter<number> = new EventEmitter();
+  private currentSong: Audio = null;
+  @Output() currentSong$: EventEmitter<Audio> = new EventEmitter();
   private autoRestartPlaylist: boolean = false;
   private songLoading: boolean = false;
   @Output() songLoading$: EventEmitter<boolean> = new EventEmitter();
@@ -116,12 +119,26 @@ export class AudioPlayerService {
     return this.currentSongIndex;
   }
 
+  getSurferStatuses(): any {
+    return {
+      isPlaying: this.isPlaying,
+      songRendered: this.songRendered,
+      drawingSurfer: this.drawingSurfer,
+      songLoading: this.songLoading,
+      currentSongIndex: this.currentSongIndex,
+      currentSong: this.currentSong,
+      autoRestartPlaylist: this.autoRestartPlaylist,
+    };
+  }
+
   newSong(index: number): void {
     this.wavesurfer.stop();
     this.wavesurfer.load(playlist[index].url);
     this.wavesurfer.setVolume(playlist[index].volumeFactor);
     this.currentSongIndex = index;
     this.currentSongIndex$.emit(this.currentSongIndex);
+    this.currentSong = playlist[index];
+    this.currentSong$.emit(this.currentSong);
   }
 
   getWaveSurferInstance(): WaveSurfer {

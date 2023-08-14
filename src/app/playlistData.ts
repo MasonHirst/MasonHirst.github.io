@@ -3,7 +3,7 @@ export const playlist: Audio[] = [
   new Audio(
     'https://res.cloudinary.com/dk9vsivmu/video/upload/v1691555468/Softer_Christofori_s_Dream_-_cover_by_Mason_Hirst_lvnr7g.mp3',
     "Christofori's Dream - piano cover",
-    'description',
+    'A piano cover of Christofori\'s Dream by Mason Hirst. This song was was composed by David Lanz, who after reading about the inventor of the piano: Bartolomeo Christofori.',
     1,
     1.5,
     '5:39',
@@ -14,7 +14,7 @@ export const playlist: Audio[] = [
   new Audio(
     'https://res.cloudinary.com/dk9vsivmu/video/upload/v1691562079/Leave_before_you_love_me_mixed_with_recreation_sgntcr.mp3',
     'Leave Before You Love Me - remix',
-    'description',
+    'A rendition of the original song by Marshmello and Jonas Brothers, with added elements by Mason Hirst',
     1,
     1.4,
     '2:34',
@@ -24,8 +24,8 @@ export const playlist: Audio[] = [
   ),
   new Audio(
     'https://res.cloudinary.com/dk9vsivmu/video/upload/v1691598962/Dona_Nobis_Pachem_Max_and_Mason_ua0hlu.wav',
-    'Dona Nobis Pachem',
-    'description',
+    'Dona Nobis Pacem',
+    'Dona nobis pacem is a song with Latin text, often sung as a canon. The words, which mean "Grant us peace", come from the Latin Mass. The first 3 verses are sung my Max Hirst, the 4th by Mason Hirst.',
     1,
     2.2,
     '1:05',
