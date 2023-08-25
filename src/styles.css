@@ -1,3 +1,5 @@
+/* @import url("https://fonts.googleapis.com/css?family=Lato:300,300italic,400,700,700italic"); */
+
 .index-body {
   background-color: #11162b;
   color: rgba(256, 256, 256, 0.9);
@@ -5,6 +7,23 @@
 .text-faded {
   color: rgba(255, 255, 255, 0.8);
 }
+
+/* body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+div,
+span,
+a,
+button {
+  font-family: Lato, "Open Sans", "Helvetica Neue", "Segoe UI", Helvetica, Arial,
+    sans-serif !important;
+  line-height: 1.5 !important;
+} */
 
 .page-cont {
   width: 100%;
