@@ -18,5 +18,10 @@ export class GameSelectComponent {
       'state-guesser',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1691083736/Screenshot_2023-08-03_at_11.27.58_AM_cnprva.png'
     ),
+    new PreviewCard(
+      '6 Nimmt! (Take 5!)',
+      '6-nimmt!',
+      'https://www.ultraboardgames.com/img/slideshow/6-nimmt.jpg'
+    ),
   ];
 }

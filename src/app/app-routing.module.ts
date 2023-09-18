@@ -12,6 +12,7 @@ import { ExtrasComponent } from './extras/extras.component';
 import { PokeSearchComponent } from './extras/poke-search/poke-search.component';
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
+import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: '', component: GameSelectComponent },
       { path: 'minesweeper', component: MinesweeperComponent },
       { path: 'state-guesser', component: StateGuesserComponent },
+      { path: '6-nimmt!', component: SixNimmtComponent },
       { path: '**', redirectTo: '' },
     ],
   },

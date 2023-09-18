@@ -26,6 +26,9 @@ import { AudioPlayerComponent } from './extras/audio-library/audio-player/audio-
 import { SongListComponent } from './extras/audio-library/song-list/song-list.component';
 import { SoundAnimationComponent } from './extras/audio-library/audio-player/sound-animation/sound-animation.component';
 import { MusicControlsComponent } from './extras/audio-library/audio-player/music-controls/music-controls.component';
+import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
+import { GameRoomHandlerComponent } from './games/game-room-handler/game-room-handler.component';
+import { NimmtCardComponent } from './games/six-nimmt/nimmt-card/nimmt-card.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { MusicControlsComponent } from './extras/audio-library/audio-player/musi
     SongListComponent,
     SoundAnimationComponent,
     MusicControlsComponent,
+    SixNimmtComponent,
+    GameRoomHandlerComponent,
+    NimmtCardComponent,
   ],
   imports: [
     CommonModule,
