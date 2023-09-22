@@ -1,20 +1,28 @@
 // ! IMPORTS
-const express = require('express')
-const app = express()
-const cors = require('cors')
-require('dotenv').config()
-const path = require('path')
+const express = require("express");
+const app = express();
+const http = require("http");
+const cors = require("cors");
+require("dotenv").config();
+const path = require("path");
+// const socketio = require("socket.io");
 
 //! Middleware
-const join = path.join(__dirname, '.', 'build')
-app.use(express.static(join))
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use(cors());
+const server = http.createServer(app);
 
 //! Endpoints
+const {
+  attachSocketServer,
+  createNimmtRoom,
+} = require("./controllers/gameSocketController");
 
+app.post("/api/nimmt/create", createNimmtRoom);
 
+//! Socket.io
+attachSocketServer(server);
 
 //! Server listen
-const PORT = process.env.PORT || 8080
-startSocketServer(app, PORT)
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

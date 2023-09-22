@@ -13,6 +13,8 @@ import { PokeSearchComponent } from './extras/poke-search/poke-search.component'
 import { SelectExtraComponent } from './extras/select-extra/select-extra.component';
 import { AudioLibraryComponent } from './extras/audio-library/audio-library.component';
 import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
+import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.component';
+import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -21,7 +23,7 @@ const routes: Routes = [
     component: ProjectsPageComponent,
     children: [
       { path: ':name', component: ProjectComponent },
-      { path: '**', redirectTo: 'pokerface' },
+      { path: '**', redirectTo: 'pokerface' }
     ],
   },
   { path: 'resume', component: WorkHistoryComponent },
@@ -32,16 +34,33 @@ const routes: Routes = [
       { path: '', component: GameSelectComponent },
       { path: 'minesweeper', component: MinesweeperComponent },
       { path: 'state-guesser', component: StateGuesserComponent },
-      { path: '6-nimmt!', component: SixNimmtComponent },
+      {
+        path: '6-nimmt!',
+        children: [
+          { path: '', component: SixNimmtComponent },
+          {
+            path: 'host/:gameId',
+            component: HostScreenComponent,
+          },
+          {
+            path: 'client/:gameId',
+            component: ClientScreenComponent,
+          },
+        ],
+      },
       { path: '**', redirectTo: '' },
     ],
   },
-  { path: 'extras', component: ExtrasComponent, children: [
-    { path: '', component: SelectExtraComponent },
-    { path: 'poké-search', component: PokeSearchComponent },
-    { path: 'audio-library', component: AudioLibraryComponent },
-    { path: '**', redirectTo: '' },
-  ] },
+  {
+    path: 'extras',
+    component: ExtrasComponent,
+    children: [
+      { path: '', component: SelectExtraComponent },
+      { path: 'poké-search', component: PokeSearchComponent },
+      { path: 'audio-library', component: AudioLibraryComponent },
+      { path: '**', redirectTo: '' },
+    ],
+  },
   { path: '**', redirectTo: 'home' },
 ];
 

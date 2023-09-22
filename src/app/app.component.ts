@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import axios from 'axios';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,6 @@ export class AppComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    axios.defaults.baseURL = 'http://localhost:8080';
   }
 }

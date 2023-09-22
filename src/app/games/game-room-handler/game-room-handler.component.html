@@ -1,4 +1,17 @@
-
 <h3>{{ gameData.gameName }}</h3>
-<button class="btn btn-primary" [routerLink]="gameData.gameHref">Be a host screen</button>
-<button class="btn btn-primary" [routerLink]="gameData.gameHref">Join a game</button>
+<button class="btn btn-primary" (click)="handleHostGame()">
+  Be a host screen
+</button>
+
+<form (submit)="handleSubmitForm()">
+  <p>Enter the game code</p>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter game code"
+    name="gameCodeInput"
+    aria-label="Pokémon search input"
+    [(ngModel)]="gameCodeInput"
+  />
+  <button class="btn btn-primary" type="submit">Join game</button>
+</form>

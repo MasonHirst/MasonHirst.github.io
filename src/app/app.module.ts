@@ -29,6 +29,10 @@ import { MusicControlsComponent } from './extras/audio-library/audio-player/musi
 import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
 import { GameRoomHandlerComponent } from './games/game-room-handler/game-room-handler.component';
 import { NimmtCardComponent } from './games/six-nimmt/nimmt-card/nimmt-card.component';
+import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.component';
+import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
+import { JoinPageComponent } from './games/six-nimmt/host-screen/join-page/join-page.component';
+import { GameTableComponent } from './games/six-nimmt/host-screen/game-table/game-table.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +59,10 @@ import { NimmtCardComponent } from './games/six-nimmt/nimmt-card/nimmt-card.comp
     SixNimmtComponent,
     GameRoomHandlerComponent,
     NimmtCardComponent,
+    HostScreenComponent,
+    ClientScreenComponent,
+    JoinPageComponent,
+    GameTableComponent,
   ],
   imports: [
     CommonModule,
