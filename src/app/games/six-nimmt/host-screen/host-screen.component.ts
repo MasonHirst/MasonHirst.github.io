@@ -7,13 +7,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./host-screen.component.css'],
 })
 export class HostScreenComponent implements OnInit {
-  routeGameId: string = '';
+  routeGameCode: string = '';
   
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.routeGameId = params['gameId'];
+      this.routeGameCode = params['gameCode'];
     });
   }
 }

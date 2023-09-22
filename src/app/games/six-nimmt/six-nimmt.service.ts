@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,8 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class SixNimmtService {
   private socket: any;
+  private gameData: any;
+  private urlGameCode: string = '';
+  public gameDataEmit: EventEmitter<any> = new EventEmitter();
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
+    this.route.params.subscribe((params) => {
+      this.urlGameCode = params['gameCode'];
+    });
     if (!localStorage.getItem('userToken')) {
       localStorage.setItem('userToken', uuidv4());
     }
@@ -24,14 +31,12 @@ export class SixNimmtService {
       console.log('------- DISCONNECTED FROM SOCKET SERVER');
     });
     socket.on('message', (message: any) => {
-      console.log(message)
-
-    })
-
-    // setTimeout(() => {
-    //   console.log('disconnecting');
-    //   this.disconnectSocket();
-    // }, 2000);
+      console.log('NEW MESSAGE FROM SERVER: ', message);
+    });
+    socket.on('host-joined-game', (data: any) => {
+      console.log('host-joined-game: ', data);
+      this.updateGameData(data);
+    });
   }
 
   connect() {
@@ -41,11 +46,16 @@ export class SixNimmtService {
     this.socket.disconnect();
   }
 
-  on(event: string, callback: (data: any) => void) {
-    this.socket.on(event, callback);
+  sendSocketMessage(type: string, body: any = {}) {
+    body.userToken = localStorage.getItem('userToken');
+    if (!body?.gameCode) {
+      body.gameCode = this?.urlGameCode || location.href.split('/').pop();
+    }
+    this.socket.emit(type, body);
   }
 
-  emit(event: string, data: any) {
-    this.socket.emit(event, data);
+  updateGameData(data: any) {
+    this.gameData = data;
+    this.gameDataEmit.emit(data);
   }
 }

@@ -11,17 +11,19 @@ import { Router } from '@angular/router';
 export class SixNimmtComponent {
   constructor(private nimmtService: SixNimmtService, private router: Router) {}
 
-  handleCodeSubmit(code: string) {
-    console.log('gamecode: ', code);
+  handleCodeSubmit(data: { code: string; isHost: boolean }) {
+    const { code, isHost } = data;
+    this.nimmtService.sendSocketMessage('join-game', { gameCode: code, isHost });
   }
 
   handleHostGame() {
-    axios.post('/api/nimmt/create', {}).then(({ data }) => {
-      console.log('data: ', data);
-      if (data.length === 4) {
-        this.router.navigate([`/games/6-nimmt!/host/${data}`]);
-      }
-    });
-    console.log('host game');
+    axios
+      .post('/api/nimmt/create', {})
+      .then(({ data }) => {
+        if (data.length === 4) {
+          this.router.navigate([`/games/6-nimmt!/host/${data}`]);
+        } else alert('Something went wrong with the game code.')
+      })
+      .catch(console.error);
   }
 }

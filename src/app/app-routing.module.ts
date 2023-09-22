@@ -39,11 +39,11 @@ const routes: Routes = [
         children: [
           { path: '', component: SixNimmtComponent },
           {
-            path: 'host/:gameId',
+            path: 'host/:gameCode',
             component: HostScreenComponent,
           },
           {
-            path: 'client/:gameId',
+            path: 'client/:gameCode',
             component: ClientScreenComponent,
           },
         ],

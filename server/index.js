@@ -16,9 +16,11 @@ const server = http.createServer(app);
 const {
   attachSocketServer,
   createNimmtRoom,
+  checkNimmtGameCode,
 } = require("./controllers/gameSocketController");
 
 app.post("/api/nimmt/create", createNimmtRoom);
+app.get("/api/nimmt/check-game-code/:gameCode", checkNimmtGameCode);
 
 //! Socket.io
 attachSocketServer(server);

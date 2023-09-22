@@ -1,17 +1,42 @@
-<h3>{{ gameData.gameName }}</h3>
-<button class="btn btn-primary" (click)="handleHostGame()">
-  Be a host screen
-</button>
+<div class="page-wrapper">
+  <h3>{{ gameData.gameName }}</h3>
 
-<form (submit)="handleSubmitForm()">
-  <p>Enter the game code</p>
-  <input
-    type="text"
-    class="form-control"
-    placeholder="Enter game code"
-    name="gameCodeInput"
-    aria-label="Pokémon search input"
-    [(ngModel)]="gameCodeInput"
-  />
-  <button class="btn btn-primary" type="submit">Join game</button>
-</form>
+  <h2>Join an existing game</h2>
+  <form (submit)="handleSubmitForm(false)">
+    <input type="text"
+      class="form-control"
+      aria-label="player-name-input"
+      placeholder="Enter your name"
+      name="playerNameInput"
+      [(ngModel)]="playerNameInput"
+     />
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Enter game code"
+      name="gameCodeInput"
+      aria-label="join-game-code-input"
+      [(ngModel)]="gameCodeInput"
+    />
+    <button class="btn btn-primary" type="submit">Join game</button>
+  </form>
+
+  <br />
+  <br />
+
+  <h2>Be a game host</h2>
+  <button class="btn btn-primary mb-3" (click)="handleHostGame()">
+    Be a host screen
+  </button>
+  <form (submit)="handleSubmitForm(true)">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Enter game code"
+      name="gameCodeHostInput"
+      aria-label="join-game-code-input"
+      [(ngModel)]="gameCodeInput"
+    />
+    <button class="btn btn-primary" type="submit">Join game as host</button>
+  </form>
+</div>
