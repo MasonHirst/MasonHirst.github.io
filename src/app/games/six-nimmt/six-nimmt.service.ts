@@ -1,7 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { io } from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid';
+import shortId from 'shortid';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -12,15 +14,15 @@ export class SixNimmtService {
   private urlGameCode: string = '';
   public gameDataEmit: EventEmitter<any> = new EventEmitter();
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     this.route.params.subscribe((params) => {
       this.urlGameCode = params['gameCode'];
     });
     if (!localStorage.getItem('userToken')) {
-      localStorage.setItem('userToken', uuidv4());
+      localStorage.setItem('userToken', shortId());
     }
     const token = localStorage.getItem('userToken');
-    console.log('token: ', token);
+    // console.log('token: ', token);
 
     this.socket = io('ws://localhost:8080?token=' + token);
     const { socket } = this;
@@ -33,7 +35,7 @@ export class SixNimmtService {
     socket.on('message', (message: any) => {
       console.log('NEW MESSAGE FROM SERVER: ', message);
     });
-    socket.on('host-joined-game', (data: any) => {
+    socket.on('someone-joined-game', (data: any) => {
       console.log('host-joined-game: ', data);
       this.updateGameData(data);
     });
@@ -57,5 +59,41 @@ export class SixNimmtService {
   updateGameData(data: any) {
     this.gameData = data;
     this.gameDataEmit.emit(data);
+  }
+
+  async checkGameExists(gameCode: string = null) {
+    try {
+      const response = await axios.get(
+        '/api/nimmt/check-game-code/' + gameCode ||
+          this.urlGameCode ||
+          location.href.split('/').pop()
+      );
+      const { status, data } = response;
+      if (status !== 200 || !data.code) {
+        Swal.fire({
+          title: 'This game was not found',
+          confirmButtonText: 'Back to 6 Nimmt! home page',
+          confirmButtonColor: '#9c4fd7',
+          allowOutsideClick: false,
+          customClass: {
+            popup: '', // Add the custom CSS class to the 'popup' element
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/games/6-nimmt!']);
+          }
+        });
+
+        // return { status: 'ERROR', data: null };
+        return false;
+      } else {
+        // return { status, data };
+        this.gameData = data;
+        this.gameDataEmit.emit(data);
+        return true;
+      }
+    } catch (err) {
+      throw new Error(`Failed to fetch data: ${err.message}`);
+    }
   }
 }

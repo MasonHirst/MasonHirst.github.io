@@ -14,20 +14,25 @@ async function attachSocketServer(server) {
     if (!token) console.error("----- NO TOKEN PROVIDED BY CLIENT");
     else socket.userToken = token;
 
-    console.log(
-      "bro someone connected, client count is ",
-      io.engine.clientsCount
-    );
-
     socket.on("join-game", (data) => {
-      console.log(data)
-      const { gameCode, userToken, isHost } = data;
-      // socket.currentGameCode = gameCode;
-      // socket.join(gameCode);
-      // nimmtRooms[gameCode].hosts.push(userToken);
-      // io.to(gameCode).emit("host-joined-game", nimmtRooms[gameCode]);
+      console.log(data);
+      const { gameCode, userToken, isHost, playerName } = data;
+      socket.currentGameCode = gameCode;
+      socket.join(gameCode);
+      if (isHost) {
+        nimmtRooms[gameCode].hosts.push(userToken);
+      } else {
+        const playerObj = {
+          userToken,
+          playerName,
+          selectedCard: null,
+          score: 0,
+          isReady: false,
+        };
+        nimmtRooms[gameCode].players.push(playerObj);
+      }
+      io.to(gameCode).emit("someone-joined-game", nimmtRooms[gameCode]);
     });
-
 
     // socket.join("roomNumber 3");
     // io.to("roomNumber 3").emit("message", "hello from roomNumber 3");
@@ -36,18 +41,25 @@ async function attachSocketServer(server) {
       const { currentGameCode } = socket;
       if (currentGameCode) {
         socket.leave(currentGameCode);
-        const { hosts } = nimmtRooms[currentGameCode];
+        const { hosts, players } = nimmtRooms[currentGameCode];
         const hostIndex = hosts.indexOf(socket.userToken);
         if (hostIndex > -1) {
           hosts.splice(hostIndex, 1);
           // todo this emit is broken, client is not getting it
-          io.to(currentGameCode).emit("host-left-game", nimmtRooms[currentGameCode]);
+          io.to(currentGameCode).emit(
+            "host-left-game",
+            nimmtRooms[currentGameCode]
+          );
+        }
+        const playerIndex = players.indexOf(socket.userToken);
+        if (playerIndex > -1) {
+          players.splice(playerIndex, 1);
+          io.to(currentGameCode).emit(
+            "player-left-game",
+            nimmtRooms[currentGameCode]
+          );
         }
       }
-      console.log(
-        "bro someone disconnected, client count is ",
-        io.engine.clientsCount
-      );
     });
   });
 }
@@ -65,16 +77,16 @@ module.exports = {
       }
 
       const newRoom = {
-        id,
+        code: id,
         players: [],
         hosts: [],
-        gameState: "joining",
+        gameState: "WAITING-FOR-PLAYERS",
         roundNumber: 0,
         lastAction: Date.now(),
       };
 
       nimmtRooms[id] = newRoom;
-      res.status(200).send(id);
+      res.status(200).send(nimmtRooms[id]);
     } catch (err) {
       console.error(err);
       res.status(503).send(err);

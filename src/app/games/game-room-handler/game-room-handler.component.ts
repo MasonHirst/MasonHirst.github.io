@@ -15,6 +15,8 @@ export class GameRoomHandlerComponent {
   constructor() {}
 
   handleSubmitForm(isHost: boolean = false) {
+    if (!this.gameCodeInput) return alert('Please enter a game code');
+    if (!this.playerNameInput) return alert('Please enter a player name');
     this.submitGameCode.emit({ code: this.gameCodeInput, isHost, playerName: this.playerNameInput });
   }
 

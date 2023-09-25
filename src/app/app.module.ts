@@ -33,6 +33,7 @@ import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.c
 import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
 import { JoinPageComponent } from './games/six-nimmt/host-screen/join-page/join-page.component';
 import { GameTableComponent } from './games/six-nimmt/host-screen/game-table/game-table.component';
+import { JoinedPageComponent } from './games/six-nimmt/client-screen/joined-page/joined-page.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { GameTableComponent } from './games/six-nimmt/host-screen/game-table/gam
     ClientScreenComponent,
     JoinPageComponent,
     GameTableComponent,
+    JoinedPageComponent,
   ],
   imports: [
     CommonModule,
