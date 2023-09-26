@@ -3,20 +3,25 @@
 
   <h2>Join an existing game</h2>
   <form (submit)="handleSubmitForm(false)">
-    <input type="text"
+    <input
+      type="text"
       class="form-control"
       aria-label="player-name-input"
       placeholder="Enter your name"
       name="playerNameInput"
       [(ngModel)]="playerNameInput"
-     />
+      maxlength="20"
+    />
     <input
       type="text"
       class="form-control"
       placeholder="Enter game code"
       name="gameCodeInput"
+      autofocus
       aria-label="join-game-code-input"
       [(ngModel)]="gameCodeInput"
+      (ngModelChange)="handleGameCodeChange($event)"
+      maxlength="4"
     />
     <button class="btn btn-primary" type="submit">Join game</button>
   </form>
@@ -26,7 +31,7 @@
 
   <h2>Be a game host</h2>
   <button class="btn btn-primary mb-3" (click)="handleHostGame()">
-    Be a host screen
+    Host a new game
   </button>
   <form (submit)="handleSubmitForm(true)">
     <input
@@ -36,6 +41,8 @@
       name="gameCodeHostInput"
       aria-label="join-game-code-input"
       [(ngModel)]="gameCodeInput"
+      (ngModelChange)="handleGameCodeChange($event)"
+      maxlength="4"
     />
     <button class="btn btn-primary" type="submit">Join game as host</button>
   </form>

@@ -1,15 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { SixNimmtService } from '../six-nimmt.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-client-screen',
   templateUrl: './client-screen.component.html',
   styleUrls: ['./client-screen.component.css']
 })
-export class ClientScreenComponent implements OnInit {
+export class ClientScreenComponent implements OnInit, OnDestroy {
+  gameData: any;
+  gameCode: string = '';
 
-  constructor() { }
+  constructor(private nimmtService: SixNimmtService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.nimmtService.checkGameExists(location.href.split('/').pop())
     
+    this.nimmtService.gameDataEmit.subscribe((data) => {
+      this.gameData = data;
+    });
+    this.route.params.subscribe((params) => {
+      this.gameCode = params['gameCode'];
+    });
+  }
+
+  ngOnDestroy(): void {
+
   }
 }

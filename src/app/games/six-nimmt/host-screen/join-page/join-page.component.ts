@@ -1,8 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-join-page',
@@ -11,19 +8,17 @@ import { Router } from '@angular/router';
 })
 export class JoinPageComponent implements OnInit {
   @Input() gameCode: string;
-  gameData: any;
+  @Input() gameData: any;
 
-  constructor(private nimmtService: SixNimmtService, private router: Router) {}
+  constructor(private nimmtService: SixNimmtService) {}
 
   ngOnInit() {
-    this.nimmtService.checkGameExists(this.gameCode).then((res) => {
-      if (res) {
-        this.nimmtService.sendSocketMessage('join-game', { isHost: true });
-      }
-    });
-
-    this.nimmtService.gameDataEmit.subscribe((data) => {
-      this.gameData = data;
+    
+  }
+  
+  updateGameState(state: string = null) {
+    this.nimmtService.sendSocketMessage('update-game-state', {
+      state,
     });
   }
 }

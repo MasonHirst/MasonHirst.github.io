@@ -10,17 +10,31 @@ export class GameRoomHandlerComponent {
   @Output() submitGameCode: EventEmitter<any> = new EventEmitter();
   @Output() submitHostGame: EventEmitter<void> = new EventEmitter();
   gameCodeInput: string = '';
-  playerNameInput: string = '';
+  playerNameInput: string = localStorage.getItem('playerName') || '';
 
   constructor() {}
 
   handleSubmitForm(isHost: boolean = false) {
+    if (this.playerNameInput !== localStorage.getItem('playerName')) {
+      localStorage.setItem('playerName', this.playerNameInput);
+    }
     if (!this.gameCodeInput) return alert('Please enter a game code');
-    if (!this.playerNameInput) return alert('Please enter a player name');
-    this.submitGameCode.emit({ code: this.gameCodeInput, isHost, playerName: this.playerNameInput });
+    if (!this.playerNameInput && !isHost)
+      return alert('Please enter a player name');
+    if (this.playerNameInput.length > 20)
+      return alert('Player name must be less than 20 characters');
+    this.submitGameCode.emit({
+      code: this.gameCodeInput,
+      isHost,
+      playerName: this.playerNameInput,
+    });
   }
 
   handleHostGame() {
     this.submitHostGame.emit();
+  }
+
+  handleGameCodeChange(input: string) {
+    this.gameCodeInput = input.toUpperCase();
   }
 }

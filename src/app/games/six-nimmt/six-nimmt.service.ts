@@ -22,7 +22,6 @@ export class SixNimmtService {
       localStorage.setItem('userToken', shortId());
     }
     const token = localStorage.getItem('userToken');
-    // console.log('token: ', token);
 
     this.socket = io('ws://localhost:8080?token=' + token);
     const { socket } = this;
@@ -36,7 +35,14 @@ export class SixNimmtService {
       console.log('NEW MESSAGE FROM SERVER: ', message);
     });
     socket.on('someone-joined-game', (data: any) => {
-      console.log('host-joined-game: ', data);
+      console.log('someone-joined-game: ', data);
+      this.updateGameData(data);
+    });
+    socket.on('someone-left-game', (data: any) => {
+      console.log('someone left game: ', data);
+    });
+    socket.on('game-state-updated', (data: any) => {
+      console.log('game-state-updated: ', data);
       this.updateGameData(data);
     });
   }
@@ -83,11 +89,8 @@ export class SixNimmtService {
             this.router.navigate(['/games/6-nimmt!']);
           }
         });
-
-        // return { status: 'ERROR', data: null };
         return false;
       } else {
-        // return { status, data };
         this.gameData = data;
         this.gameDataEmit.emit(data);
         return true;

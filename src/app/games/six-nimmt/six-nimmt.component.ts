@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import axios from 'axios';
 import { SixNimmtService } from './six-nimmt.service';
 import { Router } from '@angular/router';
@@ -8,8 +8,12 @@ import { Router } from '@angular/router';
   templateUrl: './six-nimmt.component.html',
   styleUrls: ['./six-nimmt.component.css'],
 })
-export class SixNimmtComponent {
+export class SixNimmtComponent implements OnInit, OnDestroy {
   constructor(private nimmtService: SixNimmtService, private router: Router) {}
+
+  ngOnInit(): void {
+
+  }
 
   handleCodeSubmit(data: {
     code: string;
@@ -18,22 +22,16 @@ export class SixNimmtComponent {
   }) {
     const { code, isHost, playerName } = data;
 
-    axios
-      .get(`/api/nimmt/check-game-code/${code}`)
-      .then((res) => {
-        console.log('res: ', res);
-        const { status, data } = res;
-        if (status !== 200 || !data.code) {
-          return alert('This game was not found');
-        }
-        this.router.navigate([`/games/6-nimmt!/client/${data.code}`]);
+    this.nimmtService.checkGameExists(code).then((res) => {
+      if (res) {
+        this.router.navigate([`/games/6-nimmt!/${isHost ? 'host' : 'client'}/${data.code}`]);
         this.nimmtService.sendSocketMessage('join-game', {
           gameCode: code,
           isHost,
           playerName,
         });
-      })
-      .catch(console.error);
+      }
+    });
   }
 
   handleHostGame() {
@@ -43,10 +41,14 @@ export class SixNimmtComponent {
         if (status !== 200 || !data.code) {
           return alert('Something went wrong, please try again');
         }
-        if (data?.gameState === 'WAITING-FOR-PLAYERS') {
+        if (data?.gameState === 'WAITING_FOR_PLAYERS') {
           this.router.navigate([`/games/6-nimmt!/host/${data.code}`]);
         }
       })
       .catch(console.error);
+  }
+
+
+  ngOnDestroy(): void {
   }
 }

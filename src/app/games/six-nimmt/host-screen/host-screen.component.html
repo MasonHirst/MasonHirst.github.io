@@ -1,1 +1,3 @@
-<app-join-page [gameCode]="routeGameCode"></app-join-page>
+<app-join-page *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'" [gameCode]="routeGameCode" [gameData]="gameData"></app-join-page>
+
+<app-game-table *ngIf="gameData?.gameState === 'PICKING_CARDS'" [gameCode]="routeGameCode" [gameData]="gameData"></app-game-table>

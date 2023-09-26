@@ -3,11 +3,16 @@
   <h3>Waiting for players</h3>
   <h4>hosts: {{ gameData?.hosts.length }}</h4>
 
+  <h4>players:</h4>
   <ul>
-    <li *ngFor="let player of gameData?.players">{{ player.name }}</li>
+    <li *ngFor="let player of gameData?.players">{{ player.playerName }}</li>
   </ul>
 
   <h3>
     game id: <span style="color: aqua">{{ gameCode }}</span>
   </h3>
+
+  <button class="btn btn-primary" color="primary" (click)="updateGameState('PICKING_CARDS')">
+    Start Game
+  </button>
 </div>

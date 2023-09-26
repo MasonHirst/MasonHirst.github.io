@@ -1,1 +1,16 @@
 <p>game-table works!</p>
+
+<section
+  *ngFor="let stack of gameData?.tableStacks; let index"
+  key="{{ index }}"
+>
+  <div>
+    <app-nimmt-card
+      *ngFor="let card of stack"
+      key="{{ index }}"
+      [card]="card"
+    ></app-nimmt-card>
+  </div>
+</section>
+
+<button class="btn btn-primary" (click)="handleGoBack()">back</button>

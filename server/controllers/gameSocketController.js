@@ -1,5 +1,5 @@
 const socketio = require("socket.io");
-const { new4LetterId } = require("../utility/helperFunctions");
+const { new4LetterId, dealNimmtHands } = require("../utility/helperFunctions");
 
 const nimmtRooms = {};
 const clients = {};
@@ -17,21 +17,57 @@ async function attachSocketServer(server) {
     socket.on("join-game", (data) => {
       console.log(data);
       const { gameCode, userToken, isHost, playerName } = data;
+      if (nimmtRooms[gameCode].gamestate !== "WAITING_FOR_PLAYERS") {
+        return console.error("game already started");
+      }
       socket.currentGameCode = gameCode;
       socket.join(gameCode);
-      if (isHost) {
+      if (isHost && !nimmtRooms[gameCode].hosts.includes(userToken)) {
         nimmtRooms[gameCode].hosts.push(userToken);
-      } else {
+      } else if (!isHost) {
+        // if the players array already includes an object with the same userToken, purge the first one
+        const playerIndex = nimmtRooms[gameCode].players.findIndex(
+          (player) => player.userToken === userToken
+        );
+        if (playerIndex > -1) {
+          nimmtRooms[gameCode].players.splice(playerIndex, 1);
+        }
         const playerObj = {
           userToken,
           playerName,
           selectedCard: null,
-          score: 0,
+          cards: [],
+          pointCards: [],
+          totalScore: 0,
           isReady: false,
         };
         nimmtRooms[gameCode].players.push(playerObj);
       }
       io.to(gameCode).emit("someone-joined-game", nimmtRooms[gameCode]);
+    });
+
+    socket.on("update-game-state", (data) => {
+      // console.log(dealNimmtHands(
+      //   {
+      //     players: [
+      //       {
+      //         cards: [],
+      //       },
+      //     ],
+      //     tableStacks: [],
+      //   }
+      // ))
+
+      const { gameCode, state } = data;
+      if (!nimmtRooms[gameCode]) return console.error("game not found");
+      if (nimmtRooms[gameCode].gameState === state) return console.error("game state already updated")
+      if (state === 'PICKING_CARDS' && nimmtRooms[gameCode].gameState === 'WAITING_FOR_PLAYERS') {
+        nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode], nimmtRooms[gameCode].players.length)
+      }
+
+      console.log("updating game state: ", state);
+      nimmtRooms[gameCode].gameState = state;
+      io.to(gameCode).emit("game-state-updated", nimmtRooms[gameCode]);
     });
 
     // socket.join("roomNumber 3");
@@ -47,7 +83,7 @@ async function attachSocketServer(server) {
           hosts.splice(hostIndex, 1);
           // todo this emit is broken, client is not getting it
           io.to(currentGameCode).emit(
-            "host-left-game",
+            "someone-left-game",
             nimmtRooms[currentGameCode]
           );
         }
@@ -55,7 +91,7 @@ async function attachSocketServer(server) {
         if (playerIndex > -1) {
           players.splice(playerIndex, 1);
           io.to(currentGameCode).emit(
-            "player-left-game",
+            "someone-left-game",
             nimmtRooms[currentGameCode]
           );
         }
@@ -80,7 +116,8 @@ module.exports = {
         code: id,
         players: [],
         hosts: [],
-        gameState: "WAITING-FOR-PLAYERS",
+        tableStacks: [],
+        gameState: "WAITING_FOR_PLAYERS",
         roundNumber: 0,
         lastAction: Date.now(),
       };
