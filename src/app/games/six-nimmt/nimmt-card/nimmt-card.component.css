@@ -1,6 +1,33 @@
 .nimmt-card {
-  border: 2px solid white;
   border-radius: 8px;
-  height: 200px;
-  width: 120px;
+  position: relative;
+}
+.nimmt-card > p {
+  margin: 0;
+  color: black;
+  position: absolute;
+}
+
+.top-left {
+  top: 0;
+  left: 0;
+  transform: translateX(15%);
+}
+
+.top-right {
+  top: 0;
+  right: 0;
+  transform: translateX(-15%);
+}
+
+.bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: translateX(15%);
+}
+
+.bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: translateX(-15%);
 }

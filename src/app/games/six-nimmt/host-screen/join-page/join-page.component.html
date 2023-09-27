@@ -5,14 +5,14 @@
 
   <h4>players:</h4>
   <ul>
-    <li *ngFor="let player of gameData?.players">{{ player.playerName }}</li>
+    <li *ngFor="let player of getPlayersList(); let i = index" key="{{ index }}">{{ player.playerName }}</li>
   </ul>
 
   <h3>
-    game id: <span style="color: aqua">{{ gameCode }}</span>
+    game id: <span style="color: aqua" (click)="copyGameCode()">{{ gameCode }}</span>
   </h3>
 
-  <button class="btn btn-primary" color="primary" (click)="updateGameState('PICKING_CARDS')">
+  <button class="btn btn-primary" color="primary" (click)="updateGameState()">
     Start Game
   </button>
 </div>

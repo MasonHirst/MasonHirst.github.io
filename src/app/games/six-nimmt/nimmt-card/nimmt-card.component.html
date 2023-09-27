@@ -1,3 +1,40 @@
-<div class="nimmt-card" >
-  
+<div
+  class="nimmt-card"
+  (click)="handleCardClick()"
+  [ngStyle]="{
+    height: height + 'px',
+    width: .6 * height + 'px',
+    border: borderWidth + 'px solid ' + borderColor,
+    cursor: selectable ? 'pointer' : 'default',
+    marginLeft: cardIndex > 0 ? -.3 * height + 'px' : '',
+    backgroundColor: 'white',
+  }"
+>
+  <p
+    *ngFor="let index of [0, 1, 2, 3]"
+    class="card-number"
+    [ngClass]="{
+      'top-left': index === 0,
+      'top-right': index === 1,
+      'bottom-left': index === 2,
+      'bottom-right': index === 3,
+    }"
+    [ngStyle]="{
+      fontSize: .11 * height + 'px',
+    }"
+  >
+    {{ card.number }}
+  </p>
+
+  <p
+    [ngStyle]="{
+      fontSize: .23 * height + 'px',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    }"
+  >
+    {{ card.number }}
+  </p>
+  <!-- <p>{{ card.bullHeads }}</p> -->
 </div>

@@ -5,17 +5,26 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-client-screen',
   templateUrl: './client-screen.component.html',
-  styleUrls: ['./client-screen.component.css']
+  styleUrls: ['./client-screen.component.css'],
 })
 export class ClientScreenComponent implements OnInit, OnDestroy {
   gameData: any;
   gameCode: string = '';
 
-  constructor(private nimmtService: SixNimmtService, private route: ActivatedRoute) { }
+  constructor(
+    private nimmtService: SixNimmtService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.nimmtService.checkGameExists(location.href.split('/').pop())
-    
+    this.nimmtService
+      .checkGameExists(location.href.split('/').pop())
+      .then((res) => {
+        if (res) {
+          this.nimmtService.sendSocketMessage('join-game', { isHost: false });
+        }
+      });
+
     this.nimmtService.gameDataEmit.subscribe((data) => {
       this.gameData = data;
     });
@@ -24,7 +33,5 @@ export class ClientScreenComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-
-  }
+  ngOnDestroy(): void {}
 }

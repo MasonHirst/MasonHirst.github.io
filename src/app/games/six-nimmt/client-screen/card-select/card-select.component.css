@@ -1,0 +1,4 @@
+.player-cards-wrapper {
+  display: flex;
+  /* gap: max(1rem, 5px); */
+}

@@ -21,6 +21,7 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
     playerName: string;
   }) {
     const { code, isHost, playerName } = data;
+    console.log(data)
 
     this.nimmtService.checkGameExists(code).then((res) => {
       if (res) {

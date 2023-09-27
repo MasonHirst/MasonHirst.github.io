@@ -15,10 +15,16 @@ export class JoinPageComponent implements OnInit {
   ngOnInit() {
     
   }
-  
+
   updateGameState(state: string = null) {
-    this.nimmtService.sendSocketMessage('update-game-state', {
-      state,
-    });
+    this.nimmtService.sendSocketMessage('update-game-state');
+  }
+
+  getPlayersList() {
+    return Object.values(this.gameData.players);
+  }
+
+  copyGameCode() {
+    navigator.clipboard.writeText(this.gameCode);
   }
 }

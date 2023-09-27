@@ -1,14 +1,15 @@
 <p>game-table works!</p>
 
 <section
-  *ngFor="let stack of gameData?.tableStacks; let index"
+  *ngFor="let stack of gameData?.tableStacks; let i = index"
   key="{{ index }}"
 >
   <div>
     <app-nimmt-card
-      *ngFor="let card of stack"
+      *ngFor="let card of stack; let i = index"
       key="{{ index }}"
       [card]="card"
+      [selectable]="false"
     ></app-nimmt-card>
   </div>
 </section>

@@ -1,5 +1,9 @@
 const socketio = require("socket.io");
-const { new4LetterId, dealNimmtHands } = require("../utility/helperFunctions");
+const {
+  new4LetterId,
+  dealNimmtHands,
+  nimmtAllowJoin,
+} = require("../utility/helperFunctions");
 
 const nimmtRooms = {};
 const clients = {};
@@ -15,63 +19,77 @@ async function attachSocketServer(server) {
     else socket.userToken = token;
 
     socket.on("join-game", (data) => {
-      console.log(data);
       const { gameCode, userToken, isHost, playerName } = data;
-      if (nimmtRooms[gameCode].gamestate !== "WAITING_FOR_PLAYERS") {
-        return console.error("game already started");
+      if (!nimmtAllowJoin(nimmtRooms[gameCode], isHost, userToken)) {
+        socket.send("not-allowing-join");
+        return console.error("not allowing join");
       }
       socket.currentGameCode = gameCode;
       socket.join(gameCode);
       if (isHost && !nimmtRooms[gameCode].hosts.includes(userToken)) {
         nimmtRooms[gameCode].hosts.push(userToken);
       } else if (!isHost) {
-        // if the players array already includes an object with the same userToken, purge the first one
-        const playerIndex = nimmtRooms[gameCode].players.findIndex(
-          (player) => player.userToken === userToken
-        );
-        if (playerIndex > -1) {
-          nimmtRooms[gameCode].players.splice(playerIndex, 1);
+        // if the players object already includes an object with the same userToken, purge the first one
+
+        if (!nimmtRooms[gameCode].players[userToken]) {
+          const playerObj = {
+            userToken,
+            playerName,
+            selectedCard: null,
+            cards: [],
+            pointCards: [],
+            totalScore: 0,
+            isReady: false,
+          };
+          nimmtRooms[gameCode].players[userToken] = playerObj;
         }
-        const playerObj = {
-          userToken,
-          playerName,
-          selectedCard: null,
-          cards: [],
-          pointCards: [],
-          totalScore: 0,
-          isReady: false,
-        };
-        nimmtRooms[gameCode].players.push(playerObj);
       }
       io.to(gameCode).emit("someone-joined-game", nimmtRooms[gameCode]);
     });
 
     socket.on("update-game-state", (data) => {
-      // console.log(dealNimmtHands(
-      //   {
-      //     players: [
-      //       {
-      //         cards: [],
-      //       },
-      //     ],
-      //     tableStacks: [],
-      //   }
-      // ))
-
-      const { gameCode, state } = data;
+      const { gameCode } = data;
+      const { gameState } = nimmtRooms[gameCode];
       if (!nimmtRooms[gameCode]) return console.error("game not found");
-      if (nimmtRooms[gameCode].gameState === state) return console.error("game state already updated")
-      if (state === 'PICKING_CARDS' && nimmtRooms[gameCode].gameState === 'WAITING_FOR_PLAYERS') {
-        nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode], nimmtRooms[gameCode].players.length)
+      if (gameState === "WAITING_FOR_PLAYERS") {
+        nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode]);
+        nimmtRooms[gameCode].gameState = "PICKING_CARDS";
+      } else if (gameState === "PICKING_CARDS") {
+        nimmtRooms[gameCode].gameState = "STACKING_CARDS";
       }
 
-      console.log("updating game state: ", state);
-      nimmtRooms[gameCode].gameState = state;
-      io.to(gameCode).emit("game-state-updated", nimmtRooms[gameCode]);
+      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    });
+
+    socket.on("select-card", (data) => {
+      const { gameCode, userToken, card } = data;
+      if (!nimmtRooms[gameCode]) return console.error("game not found");
+      if (nimmtRooms[gameCode].gameState !== "PICKING_CARDS") {
+        return console.error("game state not correct");
+      }
+      const player = nimmtRooms[gameCode].players[userToken];
+      if (!player) return console.error("player not found");
+      const hasCard = player.cards.some(
+        (handCard) => handCard.number === card.number
+      );
+      if (!hasCard) {
+        return console.error("player does not have that card");
+      }
+      if (player.selectedCard && player.selectedCard.number === card.number) {
+        player.selectedCard = null;
+      } else {
+        player.selectedCard = card;
+      }
+      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
     });
 
     // socket.join("roomNumber 3");
-    // io.to("roomNumber 3").emit("message", "hello from roomNumber 3");
+    // io.to("roomNumber 3").emit("message", "hello from roomNumber 3");\
+
+    socket.on("get-game", (data) => {
+      console.log("get-game---------------------", data);
+      socket.send(nimmtRooms[data.gameCode]);
+    });
 
     socket.on("disconnect", () => {
       const { currentGameCode } = socket;
@@ -87,9 +105,7 @@ async function attachSocketServer(server) {
             nimmtRooms[currentGameCode]
           );
         }
-        const playerIndex = players.indexOf(socket.userToken);
-        if (playerIndex > -1) {
-          players.splice(playerIndex, 1);
+        if (players[socket.userToken]) {
           io.to(currentGameCode).emit(
             "someone-left-game",
             nimmtRooms[currentGameCode]
@@ -104,7 +120,6 @@ module.exports = {
   attachSocketServer,
   createNimmtRoom: async (req, res) => {
     try {
-      console.log("creating new room");
       const existingRooms = Array.from(io.sockets.adapter.rooms.keys());
       let id = new4LetterId();
       // if id already exists, generate a new one
@@ -114,7 +129,7 @@ module.exports = {
 
       const newRoom = {
         code: id,
-        players: [],
+        players: {},
         hosts: [],
         tableStacks: [],
         gameState: "WAITING_FOR_PLAYERS",
@@ -133,8 +148,8 @@ module.exports = {
   checkNimmtGameCode: async (req, res) => {
     try {
       const { gameCode } = req.params;
-      console.log("checking game code: ", gameCode);
       if (!nimmtRooms[gameCode]) {
+        console.error("game not found");
         return res.status(202).send("Game not found");
       }
 

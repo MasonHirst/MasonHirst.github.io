@@ -33,6 +33,22 @@ export class SixNimmtService {
     });
     socket.on('message', (message: any) => {
       console.log('NEW MESSAGE FROM SERVER: ', message);
+      if (message === 'not-allowing-join') {
+        Swal.fire({
+          title: 'Unable to join this game',
+          text: 'This game is full or has already started.',
+          confirmButtonText: 'Back to 6 Nimmt!',
+          confirmButtonColor: '#9c4fd7',
+          allowOutsideClick: false,
+          customClass: {
+            popup: '', // Add the custom CSS class to the 'popup' element
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/games/6-nimmt!']);
+          }
+        });
+      }
     });
     socket.on('someone-joined-game', (data: any) => {
       console.log('someone-joined-game: ', data);
@@ -41,9 +57,12 @@ export class SixNimmtService {
     socket.on('someone-left-game', (data: any) => {
       console.log('someone left game: ', data);
     });
-    socket.on('game-state-updated', (data: any) => {
-      console.log('game-state-updated: ', data);
+    socket.on('game-updated', (data: any) => {
+      console.log('game-updated: ', data);
       this.updateGameData(data);
+    });
+    socket.on('not-allowing-join', () => {
+      console.log("server says I can't join");
     });
   }
 
@@ -76,19 +95,20 @@ export class SixNimmtService {
       );
       const { status, data } = response;
       if (status !== 200 || !data.code) {
-        Swal.fire({
-          title: 'This game was not found',
-          confirmButtonText: 'Back to 6 Nimmt! home page',
-          confirmButtonColor: '#9c4fd7',
-          allowOutsideClick: false,
-          customClass: {
-            popup: '', // Add the custom CSS class to the 'popup' element
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/games/6-nimmt!']);
-          }
-        });
+        // Swal.fire({
+        //   title: 'This game was not found',
+        //   confirmButtonText: 'Back to 6 Nimmt! home page',
+        //   confirmButtonColor: '#9c4fd7',
+        //   allowOutsideClick: false,
+        //   customClass: {
+        //     popup: '', // Add the custom CSS class to the 'popup' element
+        //   },
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     this.router.navigate(['/games/6-nimmt!']);
+        //   }
+        // });
+        this.router.navigate(['/games/6-nimmt!']);
         return false;
       } else {
         this.gameData = data;
