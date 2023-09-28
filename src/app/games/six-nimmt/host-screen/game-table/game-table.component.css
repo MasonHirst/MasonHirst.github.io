@@ -1,0 +1,10 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-row {
+  display: flex;
+  gap: 5px
+}

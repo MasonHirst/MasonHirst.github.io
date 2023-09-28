@@ -1,17 +1,25 @@
+<h4 style="color: aqua">{{ gameData?.gameState }}</h4>
 <p>game-table works!</p>
 
-<section
-  *ngFor="let stack of gameData?.tableStacks; let i = index"
-  key="{{ index }}"
->
-  <div>
+<section class="stack">
+  <div
+    class="card-row"
+    *ngFor="let stack of gameData?.tableStacks; let i = index"
+    [key]="i"
+  >
     <app-nimmt-card
-      *ngFor="let card of stack; let i = index"
-      key="{{ index }}"
+      *ngFor="let card of stack.reverse(); let i = index"
+      [key]="i"
+      height="130"
       [card]="card"
       [selectable]="false"
     ></app-nimmt-card>
   </div>
 </section>
 
-<button class="btn btn-primary" (click)="handleGoBack()">back</button>
+<button
+  *ngIf="gameData?.gameState == 'STACKING_CARDS'"
+  (click)="nextGameState()"
+>
+  next
+</button>

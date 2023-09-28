@@ -1,9 +1,18 @@
 <h3 *ngIf="countingDown">{{ countdown }}</h3>
 
-<app-join-page *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'" [gameCode]="routeGameCode" [gameData]="gameData"></app-join-page>
+<app-join-page
+  *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
+  [gameCode]="routeGameCode"
+  [gameData]="gameData"
+/>
 
-<app-game-table *ngIf="gameData?.gameState === 'PICKING_CARDS'" [gameCode]="routeGameCode" [gameData]="gameData"></app-game-table>
+<app-game-table
+  *ngIf="
+    gameData?.gameState === 'PICKING_CARDS' ||
+    gameData?.gameState === 'STACKING_CARDS'
+  "
+  [gameCode]="routeGameCode"
+  [gameData]="gameData"
+/>
 
-<button class="btn btn-primary" (click)="getData()">
-  get data
-</button>
+<button class="btn btn-primary" (click)="getData()">get data</button>

@@ -33,5 +33,9 @@ export class ClientScreenComponent implements OnInit, OnDestroy {
     });
   }
 
+  needToPick() {
+    return this.gameData?.players[localStorage.getItem('userToken')]?.needsToPickRow;
+  }
+
   ngOnDestroy(): void {}
 }

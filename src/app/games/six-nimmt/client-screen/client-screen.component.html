@@ -2,4 +2,16 @@
   *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
 ></app-joined-page>
 
-<app-card-select *ngIf="gameData?.gameState === 'PICKING_CARDS'" [gameCode]="gameCode" [gameData]="gameData"></app-card-select>
+
+<!-- <h4>Need to pick row: {{ needToPick() }}</h4> -->
+
+
+
+<app-card-select
+  *ngIf="
+    gameData?.gameState === 'PICKING_CARDS' ||
+    gameData?.gameState === 'STACKING_CARDS'
+  "
+  [gameCode]="gameCode"
+  [gameData]="gameData"
+></app-card-select>

@@ -34,41 +34,23 @@ export class HostScreenComponent implements OnInit, OnDestroy {
 
     this.nimmtService.gameDataEmit.subscribe((data) => {
       this.gameData = data;
-      if (
-        Object.values(data.players).every(
-          (player: any) => player.selectedCard
-        ) &&
-        data.gameState === 'PICKING_CARDS'
-      ) {
-        if (this.countdownInterval) {
-          clearInterval(this.countdownInterval);
-        }
-        this.startCountdown();
+    });
+
+    this.nimmtService.countdownEmit.subscribe((counting: boolean) => {
+      this.countingDown = counting;
+      if (counting) {
+        this.countdown = 5;
+        this.countdownInterval = setInterval(() => {
+          this.countdown--;
+          if (this.countdown === 0) {
+            this.countingDown = false;
+            clearInterval(this.countdownInterval);
+          }
+        }, 1000);
       } else {
         clearInterval(this.countdownInterval);
-        this.countdown = 5;
-        this.countingDown = false;
       }
-    });
-  }
-
-  startCountdown(): void {
-    this.countdown = 5;
-    this.countingDown = true;
-    this.countdownInterval = setInterval(() => {
-      this.countdown--;
-
-      if (this.countdown === 0) {
-        // The countdown has reached 0, execute your code here
-        this.executeOnCountdownEnd();
-        this.countingDown = false;
-        clearInterval(this.countdownInterval); // Stop the countdown
-      }
-    }, 1000); // Decrease the countdown every 1 second
-  }
-
-  executeOnCountdownEnd(): void {
-    console.log('Countdown has ended. Performing some action.');
+    })
   }
 
   getData() {

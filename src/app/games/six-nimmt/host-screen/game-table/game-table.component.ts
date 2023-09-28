@@ -1,25 +1,34 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
 
 @Component({
   selector: 'app-game-table',
   templateUrl: './game-table.component.html',
-  styleUrls: ['./game-table.component.css']
+  styleUrls: ['./game-table.component.css'],
 })
-export class GameTableComponent implements OnInit, OnDestroy {
+export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
   @Input() gameCode: string;
   @Input() gameData: any;
 
   constructor(private nimmtService: SixNimmtService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.gameData) {
+    }
   }
 
-  handleGoBack() {
-    this.nimmtService.sendSocketMessage('update-game-state', {
-      state: 'WAITING_FOR_PLAYERS',
-    });
+  nextGameState():void {
+    this.nimmtService.sendSocketMessage('update-game-state');
   }
-
+  
   ngOnDestroy(): void {}
-} 
+}

@@ -1,0 +1,11 @@
+<p>Pick a row to take</p>
+
+<div class="pick-row-btns-wrapper">
+  <button
+    class="btn btn-info"
+    *ngFor="let row of gameData?.tableStacks; let i = index"
+    (click)="handleSelectRow(i)"
+  >
+    {{ i + 1 }}
+  </button>
+</div>

@@ -13,6 +13,7 @@ export class SixNimmtService {
   private gameData: any;
   private urlGameCode: string = '';
   public gameDataEmit: EventEmitter<any> = new EventEmitter();
+  public countdownEmit: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private route: ActivatedRoute, private router: Router) {
     this.route.params.subscribe((params) => {
@@ -51,18 +52,22 @@ export class SixNimmtService {
       }
     });
     socket.on('someone-joined-game', (data: any) => {
-      console.log('someone-joined-game: ', data);
+      // console.log('someone-joined-game: ', data);
       this.updateGameData(data);
     });
     socket.on('someone-left-game', (data: any) => {
-      console.log('someone left game: ', data);
+      // console.log('someone left game: ', data);
     });
     socket.on('game-updated', (data: any) => {
       console.log('game-updated: ', data);
       this.updateGameData(data);
     });
+    socket.on('counting-down', (data: boolean) => {
+      console.log('counting down: ', data);
+      this.countdownEmit.emit(data);
+    });
     socket.on('not-allowing-join', () => {
-      console.log("server says I can't join");
+      console.error("server says you can't join!");
     });
   }
 

@@ -1,4 +1,5 @@
 .player-cards-wrapper {
   display: flex;
+  align-items: flex-end;
   /* gap: max(1rem, 5px); */
 }

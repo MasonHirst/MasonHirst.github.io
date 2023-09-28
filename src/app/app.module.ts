@@ -35,6 +35,7 @@ import { JoinPageComponent } from './games/six-nimmt/host-screen/join-page/join-
 import { GameTableComponent } from './games/six-nimmt/host-screen/game-table/game-table.component';
 import { JoinedPageComponent } from './games/six-nimmt/client-screen/joined-page/joined-page.component';
 import { CardSelectComponent } from './games/six-nimmt/client-screen/card-select/card-select.component';
+import { PickARowComponent } from './games/six-nimmt/client-screen/card-select/pick-a-row/pick-a-row.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { CardSelectComponent } from './games/six-nimmt/client-screen/card-select
     GameTableComponent,
     JoinedPageComponent,
     CardSelectComponent,
+    PickARowComponent,
   ],
   imports: [
     CommonModule,

@@ -9,12 +9,11 @@ function new4LetterId() {
     id += characters.charAt(randomIndex);
   }
   if (swearWords.includes(id)) {
-    console.log("swear word detected, trying again");
+    console.error("swear word detected, trying again");
     return new4LetterId();
   }
   return id;
 }
-
 
 function dealNimmtHands(gameData) {
   // deal 10 cards at random to each player in the list of players
@@ -37,6 +36,8 @@ function dealNimmtHands(gameData) {
     const card = deck.splice(randomIndex, 1)[0];
     gameData.tableStacks.push([card]);
   }
+  // sort the cards in ascending order. each card has a property called number. sort by that number
+  gameData.tableStacks.sort((a, b) => a[0].number - b[0].number);
   return gameData;
 }
 
@@ -46,6 +47,54 @@ function playerHasCard(hand, card) {
   }
   return false;
 }
+
+
+
+
+function nimmtStackCards(gameData, playerObj) {
+  const { tableStacks } = gameData;
+  const player = gameData.players[playerObj.userToken];
+  if (player.cardIsStacked) {
+    return;
+  }
+  // find where their card should go
+  let stackIndex = -1;
+  for (let i = 0; i < tableStacks.length; i++) {
+    if (tableStacks[i][0].number < player.selectedCard.number) {
+      if (stackIndex < 0) {
+        stackIndex = i;
+      } else if (tableStacks[i][0].number > tableStacks[stackIndex][0].number) {
+        stackIndex = i;
+      }
+    }
+  }
+  // handle the card stacking accordingly
+  if (stackIndex === -1) {
+    if (player.needsToPickRow && player.pickedRow !== null) {
+      player.pointCards.push(...tableStacks[player.pickedRow]);
+      tableStacks[player.pickedRow] = [player.selectedCard];
+      console.log("table stacks==========: ", tableStacks);
+    } else {
+      player.needsToPickRow = true;
+      return "pick-row";
+    }
+  } else if (tableStacks[stackIndex].length >= 5) {
+    player.pointCards.push(...tableStacks[stackIndex]);
+    tableStacks[stackIndex] = [player.selectedCard];
+  } else {
+    tableStacks[stackIndex].unshift(player.selectedCard);
+  }
+  const filteredCards = player.cards.filter(
+    (card) => card.number !== player.selectedCard.number
+  );
+  player.cards = filteredCards;
+  player.cardIsStacked = true;
+  player.needsToPickRow = false;
+  player.pickedRow = null;
+}
+
+
+
 
 
 function nimmtAllowJoin(gameData, isHost, userToken) {
@@ -65,4 +114,5 @@ module.exports = {
   dealNimmtHands,
   nimmtAllowJoin,
   playerHasCard,
+  nimmtStackCards,
 };
