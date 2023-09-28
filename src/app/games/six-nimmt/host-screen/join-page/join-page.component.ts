@@ -12,12 +12,10 @@ export class JoinPageComponent implements OnInit {
 
   constructor(private nimmtService: SixNimmtService) {}
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
 
-  updateGameState(state: string = null) {
-    this.nimmtService.sendSocketMessage('update-game-state');
+  startFreshGame() {
+    this.nimmtService.sendSocketMessage('start-fresh-game')
   }
 
   getPlayersList() {

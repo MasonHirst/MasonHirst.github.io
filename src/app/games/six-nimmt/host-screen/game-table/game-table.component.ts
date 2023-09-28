@@ -25,10 +25,6 @@ export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.gameData) {
     }
   }
-
-  nextGameState():void {
-    this.nimmtService.sendSocketMessage('update-game-state');
-  }
   
   ngOnDestroy(): void {}
 }
