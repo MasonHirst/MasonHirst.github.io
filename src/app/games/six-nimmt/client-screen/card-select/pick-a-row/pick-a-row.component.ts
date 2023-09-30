@@ -14,18 +14,19 @@ export class PickARowComponent {
   constructor(private nimmtService: SixNimmtService) {}
 
   handleSelectRow(rowIndex: number) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: `You will be selecting row ${rowIndex + 1} and will be unable to change your selection.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.nimmtService.sendSocketMessage('player-select-row', { rowIndex });
-      }
-    })
+    this.nimmtService.sendSocketMessage('player-select-row', { rowIndex });
+    // Swal.fire({
+    //   title: 'Are you sure?',
+    //   text: `You will be selecting row ${rowIndex + 1} and will be unable to change your selection.`,
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Yes',
+    //   cancelButtonText: 'Cancel',
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.nimmtService.sendSocketMessage('player-select-row', { rowIndex });
+    //   }
+    // })
   }
   
   

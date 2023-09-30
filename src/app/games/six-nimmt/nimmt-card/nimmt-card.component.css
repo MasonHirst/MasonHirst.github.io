@@ -33,3 +33,14 @@
   right: 0;
   transform: translateX(-15%);
 }
+
+.bullheads-wrapper {
+  width: 72%;
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}

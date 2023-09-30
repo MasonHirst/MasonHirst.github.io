@@ -1,0 +1,25 @@
+<div
+  class="review-table-container"
+>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th
+          scope="col"
+          *ngFor="let _ of [].constructor(gameData?.gameNumber); let i = index"
+        >
+          {{ i + 1 }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of getPlayers()">
+        <th scope="row">{{ player.playerName }}</th>
+        <td *ngFor="let score of player.roundScores">
+          {{ getRoundScores(score) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -159,3 +159,16 @@ button {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+
+
+
+.nimmt-game-float-wrapper {
+  position: fixed;
+  background-color: #11162B;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: calc(100vh - 60px);
+  z-index: 100;
+}

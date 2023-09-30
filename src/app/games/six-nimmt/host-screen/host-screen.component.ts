@@ -10,7 +10,7 @@ import { SixNimmtService } from '../six-nimmt.service';
 export class HostScreenComponent implements OnInit, OnDestroy {
   routeGameCode: string = '';
   gameData: any;
-  countdown: number = 5;
+  countdown: number = 3;
   countingDown: boolean = false;
   countdownInterval: any;
 
@@ -24,7 +24,7 @@ export class HostScreenComponent implements OnInit, OnDestroy {
       .checkGameExists(this.routeGameCode || location.href.split('/').pop())
       .then((res) => {
         if (res) {
-          this.nimmtService.sendSocketMessage('join-game', { isHost: true });
+          this.nimmtService.sendSocketMessage('join-game', { isHost: true })
         }
       });
 
@@ -39,7 +39,7 @@ export class HostScreenComponent implements OnInit, OnDestroy {
     this.nimmtService.countdownEmit.subscribe((counting: boolean) => {
       this.countingDown = counting;
       if (counting) {
-        this.countdown = 5;
+        this.countdown = 3;
         this.countdownInterval = setInterval(() => {
           this.countdown--;
           if (this.countdown === 0) {

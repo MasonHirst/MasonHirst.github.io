@@ -15,13 +15,26 @@ function new4LetterId() {
   return id;
 }
 
-function dealNimmtHands(gameData) {
+function dealNimmtHands(gameData, isFreshGame) {
+  // reset each player's point cards array to empty
+  Object.values(gameData.players).forEach((player) => {
+    player.pointCards = [];
+    player.cardIsStacked = false;
+    player.selectedCard = null;
+    player.needsToPickRow = false;
+    player.pickedRow = null;
+  });
+  if (isFreshGame) {
+    Object.values(gameData.players).forEach((player) => {
+      player.roundScores = [];
+    });
+  }
   // deal 10 cards at random to each player in the list of players
   const deck = nimmtCards;
   const playerKeys = Object.keys(gameData.players);
   for (let i = 0; i < playerKeys.length; i++) {
     gameData.players[playerKeys[i]].cards = [];
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 4; j++) {
       const randomIndex = Math.floor(Math.random() * deck.length);
       const card = deck.splice(randomIndex, 1)[0];
       gameData.players[playerKeys[i]].cards.push(card);
@@ -40,6 +53,7 @@ function dealNimmtHands(gameData) {
   gameData.tableStacks.sort((a, b) => a[0].number - b[0].number);
   return gameData;
 }
+
 
 function playerHasCard(hand, card) {
   for (let i = 0; i < hand.length; i++) {
@@ -60,6 +74,7 @@ function nimmtStackCards(gameData, playerObj) {
   // find where their card should go
   let stackIndex = -1;
   for (let i = 0; i < tableStacks.length; i++) {
+    console.log(player.selectedCard)
     if (tableStacks[i][0].number < player.selectedCard.number) {
       if (stackIndex < 0) {
         stackIndex = i;
@@ -73,7 +88,6 @@ function nimmtStackCards(gameData, playerObj) {
     if (player.needsToPickRow && player.pickedRow !== null) {
       player.pointCards.push(...tableStacks[player.pickedRow]);
       tableStacks[player.pickedRow] = [player.selectedCard];
-      console.log("table stacks==========: ", tableStacks);
     } else {
       player.needsToPickRow = true;
       return "pick-row";

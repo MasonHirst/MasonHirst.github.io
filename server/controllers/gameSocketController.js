@@ -31,7 +31,6 @@ async function attachSocketServer(server) {
         nimmtRooms[gameCode].hosts.push(userToken);
       } else if (!isHost) {
         // if the players object already includes an object with the same userToken, purge the first one
-
         if (!nimmtRooms[gameCode].players[userToken]) {
           const playerObj = {
             userToken,
@@ -53,10 +52,10 @@ async function attachSocketServer(server) {
     socket.on("start-fresh-game", (data) => {
       const { gameCode } = data;
       if (!nimmtRooms[gameCode]) return console.error("game not found");
-      nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode]);
+      nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode], true);
       nimmtRooms[gameCode].gameState = "PICKING_CARDS";
       io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    })
+    });
 
     socket.on("player-select-row", async (data) => {
       const { gameCode, userToken, rowIndex } = data;
@@ -65,13 +64,11 @@ async function attachSocketServer(server) {
     });
 
     async function tryStackingCards(gameCode) {
-      console.log("stacking cards --------------");
       const filteredPlayers = Object.values(nimmtRooms[gameCode].players)
         .filter((player) => player.cardIsStacked === false)
         .sort((a, b) => a.selectedCard.number - b.selectedCard.number);
-
       for (const player of filteredPlayers) {
-        await sleep();
+        await sleep(500);
         const result = nimmtStackCards(nimmtRooms[gameCode], player);
         if (result) {
           io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
@@ -80,15 +77,12 @@ async function attachSocketServer(server) {
           io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
         }
       }
-
       // if all players have stacked their cards, move to next round
       const allPlayersHaveStackedCards = Object.values(
         nimmtRooms[gameCode].players
       ).every((player) => player.cardIsStacked);
       if (allPlayersHaveStackedCards) {
-        nimmtRooms[gameCode].roundNumber++;
-        nimmtRooms[gameCode].gameState = "PICKING_CARDS";
-        io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+        handleMoveNextRound(gameCode);
       }
     }
 
@@ -96,11 +90,43 @@ async function attachSocketServer(server) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    // when a player picks a card, validate their choice. then if all players have a card picked, 
+    function handleMoveNextRound(gameCode) {
+      playerCardCount = Object.values(nimmtRooms[gameCode].players)[0].cards
+        .length;
+      if (playerCardCount === 0) {
+        // TODO: calculate round scores
+        Object.values(nimmtRooms[gameCode].players).forEach((player) => {
+          console.log('==================')
+          console.log(player.pointCards)
+          player.roundScores.push([...player.pointCards]);
+          console.log('-----------------after---------------')
+          console.log(player.roundScores)
+        });
+        nimmtRooms[gameCode].gameState = "GAME_REVIEW";
+        setTimeout(() => {
+          console.log('happening now-------------')
+          Object.values(nimmtRooms[gameCode].players).forEach(player => {
+            console.log(player.roundScores)
+          })
+          return io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+        }, 3000);
+      } else {
+        nimmtRooms[gameCode].roundNumber++;
+        nimmtRooms[gameCode].gameState = "PICKING_CARDS";
+        // reset all players' cardIsStacked to false
+        Object.values(nimmtRooms[gameCode].players).forEach((player) => {
+          player.cardIsStacked = false;
+          player.selectedCard = null;
+        });
+        io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+      }
+    }
+
+    // when a player picks a card, validate their choice. then if all players have a card picked,
     // start a countdown. If a player changes their card, reset the countdown. If the countdown
     // reaches 0, move to the next game state
     let interval;
-    let countdown = 5;
+    let countdown = 3;
     socket.on("select-card", (data) => {
       const { gameCode, userToken, card } = data;
       if (!nimmtRooms[gameCode]) return console.error("game not found");
@@ -123,7 +149,13 @@ async function attachSocketServer(server) {
       const allPlayersHaveSelectedCard = Object.values(
         nimmtRooms[gameCode].players
       ).every((player) => player.selectedCard);
-      if (allPlayersHaveSelectedCard) {
+      startCountdown(gameCode, allPlayersHaveSelectedCard);
+      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    });
+
+    function startCountdown(gameCode, start) {
+      io.to(gameCode).emit("counting-down", start);
+      if (start) {
         interval = setInterval(() => {
           countdown--;
           if (countdown <= 0) {
@@ -131,23 +163,25 @@ async function attachSocketServer(server) {
             io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
             tryStackingCards(gameCode);
             clearInterval(interval);
-            countdown = 5;
+            countdown = 3;
           }
         }, 1000);
       } else {
         if (interval) {
           clearInterval(interval);
-          countdown = 5;
+          countdown = 3;
         }
       }
-      io.to(gameCode).emit("counting-down", allPlayersHaveSelectedCard);
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    });
+    }
 
     // socket.join("roomNumber 3");
     // io.to("roomNumber 3").emit("message", "hello from roomNumber 3");
 
     socket.on("get-game", (data) => {
+      console.log('++++++++++++++++++++++++')
+      Object.values(nimmtRooms[data.gameCode].players).forEach((player) => {
+        console.log(player.roundScores)
+      })
       socket.send(nimmtRooms[data.gameCode]);
     });
 
@@ -193,8 +227,8 @@ module.exports = {
         hosts: [],
         tableStacks: [],
         gameState: "WAITING_FOR_PLAYERS",
-        roundNumber: 0,
-        gameNumber: 0,
+        roundNumber: 1,
+        gameNumber: 1,
         lastAction: Date.now(),
       };
 

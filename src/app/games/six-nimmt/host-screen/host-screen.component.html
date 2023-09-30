@@ -1,18 +1,26 @@
-<h3 *ngIf="countingDown">{{ countdown }}</h3>
+<div class="nimmt-game-float-wrapper">
+  <h3 *ngIf="countingDown">{{ countdown }}</h3>
 
-<app-join-page
-  *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
-  [gameCode]="routeGameCode"
-  [gameData]="gameData"
-/>
+  <app-join-page
+    *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
+    [gameCode]="routeGameCode"
+    [gameData]="gameData"
+  />
 
-<app-game-table
-  *ngIf="
-    gameData?.gameState === 'PICKING_CARDS' ||
-    gameData?.gameState === 'STACKING_CARDS'
-  "
-  [gameCode]="routeGameCode"
-  [gameData]="gameData"
-/>
+  <app-game-table
+    *ngIf="
+      gameData?.gameState === 'PICKING_CARDS' ||
+      gameData?.gameState === 'STACKING_CARDS'
+    "
+    [gameCode]="routeGameCode"
+    [gameData]="gameData"
+  />
 
-<button class="btn btn-primary" (click)="getData()">get data</button>
+  <app-game-review-page
+    *ngIf="gameData?.gameState === 'GAME_REVIEW'"
+    [gameCode]="routeGameCode"
+    [gameData]="gameData"
+  />
+
+  <!-- <button class="btn btn-primary" (click)="getData()">get data</button> -->
+</div>

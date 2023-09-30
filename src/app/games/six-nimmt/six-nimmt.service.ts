@@ -30,7 +30,7 @@ export class SixNimmtService {
       console.log('------- CONNECTED TO SOCKET SERVER');
     });
     socket.on('disconnect', () => {
-      console.log('------- DISCONNECTED FROM SOCKET SERVER');
+      console.log('------- DISCONNECTED FROM SOCKET SERVER')
     });
     socket.on('message', (message: any) => {
       console.log('NEW MESSAGE FROM SERVER: ', message);
@@ -59,11 +59,11 @@ export class SixNimmtService {
       // console.log('someone left game: ', data);
     });
     socket.on('game-updated', (data: any) => {
-      console.log('game-updated: ', data);
+      // console.log('game-updated: ', data);
       this.updateGameData(data);
     });
     socket.on('counting-down', (data: boolean) => {
-      console.log('counting down: ', data);
+      // console.log('counting down: ', data);
       this.countdownEmit.emit(data);
     });
     socket.on('not-allowing-join', () => {

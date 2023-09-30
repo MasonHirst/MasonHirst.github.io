@@ -16,7 +16,7 @@
       *ngFor="let card of getMyCards(); let i = index"
       key="{{ i }}"
       [card]="card"
-      [height]="120"
+      [height]="determineCardHeight(110)"
       [cardIndex]="i"
       (cardClick)="handleCardClick(card)"
       [selected]="isSelected(card)"

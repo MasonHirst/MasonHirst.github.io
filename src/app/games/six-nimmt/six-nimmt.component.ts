@@ -21,8 +21,6 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
     playerName: string;
   }) {
     const { code, isHost, playerName } = data;
-    console.log(data)
-
     this.nimmtService.checkGameExists(code).then((res) => {
       if (res) {
         this.router.navigate([`/games/6-nimmt!/${isHost ? 'host' : 'client'}/${data.code}`]);
