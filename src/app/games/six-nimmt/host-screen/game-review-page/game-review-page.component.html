@@ -9,17 +9,23 @@
           scope="col"
           *ngFor="let _ of [].constructor(gameData?.gameNumber); let i = index"
         >
-          {{ i + 1 }}
+          round {{ i + 1 }}
         </th>
+        <th scope="col">Total</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let player of getPlayers()">
+      <tr *ngFor="let player of getPlayers(true)">
         <th scope="row">{{ player.playerName }}</th>
         <td *ngFor="let score of player.roundScores">
           {{ getRoundScores(score) }}
         </td>
+        <td>{{ getTotalScore(player) }}</td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<button class="btn btn-info" (click)="sendMessage('start-next-round')">Another round</button>
+
+<button class="btn btn-info" (click)="navigateToGames()">Back to games home</button>

@@ -1,1 +1,5 @@
 <p>game-review-client works!</p>
+
+
+<button *ngIf="isFirstPlayer()" class="btn btn-info" (click)="sendMessage('start-next-round')">Another round</button>
+<button class="btn btn-info" (click)="navigateToGames()">Back to games home</button>

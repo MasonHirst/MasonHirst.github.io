@@ -24,17 +24,36 @@ export class SixNimmtService {
     }
     const token = localStorage.getItem('userToken');
 
-    this.socket = io('ws://localhost:8080?token=' + token);
+    let serverUrl: string;
+    let scheme = 'ws';
+    let location = document.location;
+    if (location.protocol === 'https:') {
+      scheme += 's';
+    }
+    serverUrl = `${scheme}://${location.hostname}:${location.port}`;
+    // if the code is running in development mode, use the development server 8080
+    if (location.hostname === 'localhost') {
+      serverUrl = `${scheme}://${location.hostname}:8080`;
+    }
+
+    serverUrl = 'ws://192.168.1.196:8080';
+    // serverUrl = 'ws://192.168.12.196:8080'
+
+    this.socket = io(serverUrl + '?token=' + token);
     const { socket } = this;
     socket.on('connect', () => {
       console.log('------- CONNECTED TO SOCKET SERVER');
+      this.checkGameExists();
     });
     socket.on('disconnect', () => {
-      console.log('------- DISCONNECTED FROM SOCKET SERVER')
+      console.log('------- DISCONNECTED FROM SOCKET SERVER');
     });
     socket.on('message', (message: any) => {
       console.log('NEW MESSAGE FROM SERVER: ', message);
-      if (message === 'not-allowing-join') {
+      if (message.type === 'not-allowing-join') {
+        if (message.message === 'no-player-name') {
+          return this.router.navigate(['/games/6-nimmt!']);
+        }
         Swal.fire({
           title: 'Unable to join this game',
           text: 'This game is full or has already started.',
@@ -54,6 +73,13 @@ export class SixNimmtService {
     socket.on('someone-joined-game', (data: any) => {
       // console.log('someone-joined-game: ', data);
       this.updateGameData(data);
+      if (location.href.split('/').pop() === '6-nimmt!') {
+        if (data?.players[localStorage.getItem('userToken')]) {
+          this.router.navigate([`/games/6-nimmt!/client/${data?.code}`]);
+        } else if (data?.hosts.includes(localStorage.getItem('userToken'))) {
+          this.router.navigate([`/games/6-nimmt!/host/${data?.code}`]);
+        }
+      }
     });
     socket.on('someone-left-game', (data: any) => {
       // console.log('someone left game: ', data);
@@ -93,10 +119,13 @@ export class SixNimmtService {
 
   async checkGameExists(gameCode: string = null) {
     try {
+      const codeToCheck =
+        gameCode || this.urlGameCode || location.href.split('/').pop();
+      if (codeToCheck.length !== 4) {
+        return false;
+      }
       const response = await axios.get(
-        '/api/nimmt/check-game-code/' + gameCode ||
-          this.urlGameCode ||
-          location.href.split('/').pop()
+        '/api/nimmt/check-game-code/' + codeToCheck
       );
       const { status, data } = response;
       if (status !== 200 || !data.code) {
@@ -123,5 +152,14 @@ export class SixNimmtService {
     } catch (err) {
       throw new Error(`Failed to fetch data: ${err.message}`);
     }
+  }
+
+  isFirstPlayer() {
+    if (this.gameData?.players) {
+      const firstPlayerToken = Object.values(
+        this.gameData?.players as Record<string, { userToken: string }>
+      )[0]?.userToken;
+      return firstPlayerToken === localStorage.getItem('userToken');
+    } else return false;
   }
 }

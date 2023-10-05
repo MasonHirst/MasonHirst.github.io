@@ -30,11 +30,11 @@ function dealNimmtHands(gameData, isFreshGame) {
     });
   }
   // deal 10 cards at random to each player in the list of players
-  const deck = nimmtCards;
+  const deck = [...nimmtCards];
   const playerKeys = Object.keys(gameData.players);
   for (let i = 0; i < playerKeys.length; i++) {
     gameData.players[playerKeys[i]].cards = [];
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < 10; j++) {
       const randomIndex = Math.floor(Math.random() * deck.length);
       const card = deck.splice(randomIndex, 1)[0];
       gameData.players[playerKeys[i]].cards.push(card);
@@ -54,7 +54,6 @@ function dealNimmtHands(gameData, isFreshGame) {
   return gameData;
 }
 
-
 function playerHasCard(hand, card) {
   for (let i = 0; i < hand.length; i++) {
     if (hand[i].number === card.number) return true;
@@ -62,19 +61,14 @@ function playerHasCard(hand, card) {
   return false;
 }
 
-
-
-
 function nimmtStackCards(gameData, playerObj) {
   const { tableStacks } = gameData;
   const player = gameData.players[playerObj.userToken];
-  if (player.cardIsStacked) {
-    return;
-  }
+  if (player.cardIsStacked) return;
+  if (!player.selectedCard) return;
   // find where their card should go
   let stackIndex = -1;
   for (let i = 0; i < tableStacks.length; i++) {
-    console.log(player.selectedCard)
     if (tableStacks[i][0].number < player.selectedCard.number) {
       if (stackIndex < 0) {
         stackIndex = i;
@@ -107,20 +101,17 @@ function nimmtStackCards(gameData, playerObj) {
   player.pickedRow = null;
 }
 
-
-
-
-
-function nimmtAllowJoin(gameData, isHost, userToken) {
-  if (isHost) return true;
-  if (gameData.players[userToken]) return true;
+function nimmtAllowJoin(gameData, isHost, userToken, playerName) {
+  if (isHost) return { canJoin: true };
+  if (gameData.players[userToken]) return { canJoin: true };
+  if (!playerName) return { canJoin: false, error: "no-player-name" };
   if (
     gameData.gameState === "WAITING_FOR_PLAYERS" &&
     Object.values(gameData.players).length < 10
   ) {
-    return true;
+    return { canJoin: true };
   }
-  return false;
+  return { canJoin: false, error: "cannot-join" };
 }
 
 module.exports = {

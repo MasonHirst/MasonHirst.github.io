@@ -1,1 +1,15 @@
-<p>You have joined game {{ urlGameCode }}. Waiting for game to start</p>
+<section class="w-100 d-flex flex-col align-items-center p-1 mt-5">
+  <p
+    *ngIf="!isFirstPlayer(); else startGameBtn"
+    style="text-align: center"
+  >
+    Sit back and relax! The game should start soon.
+  </p>
+
+  <ng-template #startGameBtn>
+    <p>You're the first one in! Start the game once everyone has joined.</p>
+    <button class="btn btn-primary mt-4" (click)="startFreshGame()">
+      Everyone's in, let's go!
+    </button>
+  </ng-template>
+</section>

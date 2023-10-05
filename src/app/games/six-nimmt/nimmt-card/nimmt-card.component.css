@@ -1,7 +1,7 @@
 .nimmt-card {
   border-radius: 8px;
   position: relative;
-  transition: all .3s ease-in-out !important;
+  /* transition: all .3s ease-in-out !important; */
   user-select: none;
 }
 .nimmt-card > p {

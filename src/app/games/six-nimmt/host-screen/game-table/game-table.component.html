@@ -1,17 +1,86 @@
-<h4 style="color: aqua">{{ gameData?.gameState }}</h4>
-
-<section class="stack">
-  <div
-    class="card-row"
-    *ngFor="let stack of gameData?.tableStacks; let i = index"
-    [key]="i"
-  >
-    <app-nimmt-card
-      *ngFor="let card of stack.reverse(); let i = index"
-      [key]="i"
-      height="130"
-      [card]="card"
-      [selectable]="false"
-    ></app-nimmt-card>
-  </div>
+<section>
+  <h4 style="color: aqua; margin-bottom: 15px">{{ showGameState() }}</h4>
 </section>
+
+<div
+  style="
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    width: 100%;
+    padding-right: 15px;
+  "
+>
+  <section class="stack">
+    <div
+      class="card-row"
+      *ngFor="let stack of gameData?.tableStacks; let i = index"
+      [key]="i"
+    >
+      <app-nimmt-card
+        *ngFor="let card of stack.reverse(); let i = index"
+        [key]="i"
+        height="130"
+        [card]="card"
+        [selectable]="false"
+      ></app-nimmt-card>
+    </div>
+  </section>
+
+  <section
+    style="
+      display: flex;
+      /* justify-content: space-evenly; */
+      align-items: flex-end;
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 5px;
+      width: 100%;
+      max-height: 100vh;
+      /* margin-top: 50px; */
+    "
+  >
+    <div *ngFor="let player of getPlayers()" class="name-card-duo">
+      <div>
+        <div style="display: flex; gap: 10px; align-items: center">
+          <div
+            *ngIf="showPlayerNeedsToPick(player)"
+            class="spinner-border spinner-border-md"
+            style="color: yellow !important"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h4
+            [ngClass]="{
+              'text-primary': player.selectedCard
+            }"
+          >
+            {{ player.playerName }} <span style="color: white;">(<span
+              [ngStyle]="{
+                color: getRoundScores(player) > 0 ? 'yellow' : 'white'
+              }"
+              >{{ getRoundScores(player) }}</span
+            >)</span>
+          </h4>
+        </div>
+        <div>
+          <p style="font-size: 12px">
+            Total Score: {{ getScoreboardScore(player) }}
+          </p>
+          <!-- <p style="font-size: 12px;">Round points: {{ getRoundScores(player) }}</p> -->
+        </div>
+      </div>
+      <app-nimmt-card
+        *ngIf="showPlayerCard(player); else NoCard"
+        [key]="i"
+        height="60"
+        [card]="player?.selectedCard"
+        [selectable]="false"
+      />
+      <!-- <ng-template #NoCard>
+    <h4 style="color: aqua">No Card</h4>
+  </ng-template> -->
+    </div>
+  </section>
+</div>

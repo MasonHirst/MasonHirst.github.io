@@ -1,18 +1,27 @@
 <div class="join-page-wrapper">
-  <h2 style="color: orange">{{ "6 Nimmt!" }}</h2>
-  <h3>Waiting for players</h3>
-  <h4>hosts: {{ gameData?.hosts.length }}</h4>
+  <h2 style="color: orange">6 Nimmt!</h2>
+  <!-- <h3 style="opacity: 0.8">Waiting for players</h3> -->
+  <section class="game-code-wrapper">
+    <p>Game code:</p>
+    <h2 class="" style="color: aqua; font-size: 4rem" (click)="copyGameCode()">
+      {{ gameCode }}
+    </h2>
+  </section>
+  <h4 class="mb-3">Hosts: {{ gameData?.hosts.length }}</h4>
 
-  <h4>players:</h4>
-  <ul>
-    <li *ngFor="let player of getPlayersList(); let i = index" key="{{ index }}">{{ player.playerName }}</li>
+  <h4>Players:</h4>
+  <ul class="mb-4">
+    <p *ngFor="let player of getPlayersList(); let i = index" [key]="i" style="color: orange;">
+      {{ player.playerName }}
+    </p>
   </ul>
 
-  <h3>
-    game id: <span style="color: aqua" (click)="copyGameCode()">{{ gameCode }}</span>
-  </h3>
 
-  <button class="btn btn-primary" color="primary" (click)="startFreshGame()">
+  <button
+    class="btn btn-lg btn-primary"
+    color="primary"
+    (click)="startFreshGame()"
+  >
     Start Game
   </button>
 </div>

@@ -11,9 +11,7 @@ import { Router } from '@angular/router';
 export class SixNimmtComponent implements OnInit, OnDestroy {
   constructor(private nimmtService: SixNimmtService, private router: Router) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   handleCodeSubmit(data: {
     code: string;
@@ -23,7 +21,23 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
     const { code, isHost, playerName } = data;
     this.nimmtService.checkGameExists(code).then((res) => {
       if (res) {
-        this.router.navigate([`/games/6-nimmt!/${isHost ? 'host' : 'client'}/${data.code}`]);
+        // axios.post('/api/games/join', {
+        //   gameCode: code,
+        //   isHost,
+        //   playerName,
+        // })
+        // .then(({data}) => {
+        //   console.log({data})
+        // })
+        // .catch(console.error);
+
+        // console.log('data to send: ', {
+        //   gameCode: code,
+        //   isHost,
+        //   playerName,
+        // });
+
+        // this.router.navigate([`/games/6-nimmt!/${isHost ? 'host' : 'client'}/${data.code}`]);
         this.nimmtService.sendSocketMessage('join-game', {
           gameCode: code,
           isHost,
@@ -47,7 +61,5 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
       .catch(console.error);
   }
 
-
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 }

@@ -1,5 +1,17 @@
-<div class="nimmt-game-float-wrapper">
-  <h3 *ngIf="countingDown">{{ countdown }}</h3>
+<div style="padding-left: 15px">
+  <h3
+    *ngIf="countingDown"
+    style="
+      position: fixed;
+      font-size: 25vw;
+      font-weight: bold;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    "
+  >
+    {{ countdown }}
+  </h3>
 
   <app-join-page
     *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"

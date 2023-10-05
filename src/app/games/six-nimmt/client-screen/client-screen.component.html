@@ -1,20 +1,29 @@
-<div class="nimmt-game-float-wrapper">
-  <app-joined-page
-    *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
-  ></app-joined-page>
+<!-- <div class="nimmt-game-float-wrapper"> -->
+<section class="client-header">
+  <span class="bigger-txt">{{ getMyPlayer().playerName }}</span>
+  <p class="mb-0">
+    Game: <span class="bigger-txt">{{ gameCode }}</span>
+  </p>
+</section>
 
-  <app-card-select
-    *ngIf="
-      gameData?.gameState === 'PICKING_CARDS' ||
-      gameData?.gameState === 'STACKING_CARDS'
-    "
-    [gameCode]="gameCode"
-    [gameData]="gameData"
-  />
+<app-joined-page
+  *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
+  [gameCode]="gameCode"
+  [gameData]="gameData"
+/>
 
-  <app-game-review-client
-    *ngIf="gameData?.gameState === 'GAME_REVIEW'"
-    [gameCode]="gameCode"
-    [gameData]="gameData"
-  />
-</div>
+<app-card-select
+  *ngIf="
+    gameData?.gameState === 'PICKING_CARDS' ||
+    gameData?.gameState === 'STACKING_CARDS'
+  "
+  [gameCode]="gameCode"
+  [gameData]="gameData"
+/>
+
+<app-game-review-client
+  *ngIf="gameData?.gameState === 'GAME_REVIEW'"
+  [gameCode]="gameCode"
+  [gameData]="gameData"
+/>
+<!-- </div> -->

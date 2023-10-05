@@ -30,7 +30,7 @@
 
   <p
     [ngStyle]="{
-      fontSize: .24 * height + 'px',
+      fontSize: .33 * height + 'px',
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
@@ -38,6 +38,8 @@
   >
     {{ card.number }}
   </p>
+
+  <p *ngIf="showPlayerName()">{{ showPlayerName() }}</p>
 
   <p>{{card.bullheads}}</p>
   <section

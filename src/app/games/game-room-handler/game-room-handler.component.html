@@ -1,49 +1,88 @@
 <div class="page-wrapper">
-  <h3>{{ gameData.gameName }}</h3>
+  <h1 style="color: orange">{{ gameInfo.gameName }}</h1>
 
-  <h2>Join an existing game</h2>
-  <form (submit)="handleSubmitForm(false)">
-    <input
-      type="text"
-      class="form-control"
-      aria-label="player-name-input"
-      placeholder="Enter your name"
-      name="playerNameInput"
-      [(ngModel)]="playerNameInput"
-      maxlength="20"
-    />
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Enter game code"
-      name="gameCodeInput"
-      autofocus
-      aria-label="join-game-code-input"
-      [(ngModel)]="gameCodeInput"
-      (ngModelChange)="handleGameCodeChange($event)"
-      maxlength="4"
-    />
-    <button class="btn btn-primary" type="submit">Join game</button>
+  <!-- <h4>Join an existing game</h4> -->
+  <form (submit)="handleSubmitForm(false)" class="player-join-form">
+    <div>
+      <label for="exampleInputEmail1" class="form-label mb-0"
+        >Player name</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        aria-label="player-name-input"
+        name="playerNameInput"
+        [(ngModel)]="playerNameInput"
+        maxlength="20"
+      />
+    </div>
+
+    <div>
+      <label for="exampleInputEmail1" class="form-label mb-0">Game code</label>
+      <input
+        type="text"
+        class="form-control"
+        name="gameCodeInput"
+        autofocus
+        aria-label="join-game-code-input"
+        [(ngModel)]="gameCodeInput"
+        (ngModelChange)="handleGameCodeChange($event)"
+        maxlength="4"
+      />
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="!enableJoinBtn">
+      Join game
+    </button>
   </form>
 
-  <br />
-  <br />
-
-  <h2>Be a game host</h2>
-  <button class="btn btn-primary mb-3" (click)="handleHostGame()">
-    Host a new game
-  </button>
-  <form (submit)="handleSubmitForm(true)">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Enter game code"
-      name="gameCodeHostInput"
-      aria-label="join-game-code-input"
-      [(ngModel)]="gameCodeInput"
-      (ngModelChange)="handleGameCodeChange($event)"
-      maxlength="4"
-    />
-    <button class="btn btn-primary" type="submit">Join game as host</button>
-  </form>
+  <a
+    class="collapse-link mt-2 mb-3"
+    style="text-align: center"
+    data-bs-toggle="collapse"
+    href="#hostingOptions"
+    role="button"
+    aria-expanded="false"
+    aria-controls="hostingOptions"
+    (click)="hostingOptionsOpen = !hostingOptionsOpen"
+  >
+    <span
+      class="bi"
+      [ngClass]="{
+        'bi-chevron-down': !hostingOptionsOpen,
+        'bi-chevron-up': hostingOptionsOpen
+      }"
+    ></span>
+    Hosting options
+  </a>
+  <div class="collapse" id="hostingOptions">
+    <div class="d-flex flex-col">
+      <button class="btn btn-info mb-4" (click)="handleHostGame()">
+        Host a new game room
+      </button>
+      <form (submit)="handleSubmitForm(true)" class="player-join-form">
+        <div>
+          <label for="exampleInputEmail1" class="form-label mb-0"
+            >Game code</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="gameCodeHostInput"
+            aria-label="join-game-code-input"
+            [(ngModel)]="gameCodeInput"
+            (ngModelChange)="handleGameCodeChange($event)"
+            maxlength="4"
+          />
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!enableJoinBtn"
+        >
+          Join game as host
+        </button>
+      </form>
+    </div>
+  </div>
 </div>

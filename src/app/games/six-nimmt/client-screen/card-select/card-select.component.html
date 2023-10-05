@@ -9,7 +9,11 @@
   "
 >
   <p>Total points this round: {{ totalCardPoints() }}</p>
-  <app-pick-a-row *ngIf="showPickRowComponent()" [gameData]="gameData" />
+  <app-pick-a-row
+    *ngIf="showPickRowComponent()"
+    [gameData]="gameData"
+    [gameCode]="gameCode"
+  />
 
   <div class="player-cards-wrapper">
     <app-nimmt-card

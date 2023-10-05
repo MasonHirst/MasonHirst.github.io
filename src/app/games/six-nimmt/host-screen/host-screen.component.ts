@@ -38,6 +38,8 @@ export class HostScreenComponent implements OnInit, OnDestroy {
 
     this.nimmtService.countdownEmit.subscribe((counting: boolean) => {
       this.countingDown = counting;
+      clearInterval(this.countdownInterval);
+      this.countdown = 3;
       if (counting) {
         this.countdown = 3;
         this.countdownInterval = setInterval(() => {
@@ -47,8 +49,6 @@ export class HostScreenComponent implements OnInit, OnDestroy {
             clearInterval(this.countdownInterval);
           }
         }, 1000);
-      } else {
-        clearInterval(this.countdownInterval);
       }
     })
   }

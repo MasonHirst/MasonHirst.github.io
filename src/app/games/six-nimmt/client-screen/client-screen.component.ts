@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ClientScreenComponent implements OnInit, OnDestroy {
   gameData: any;
   gameCode: string = '';
+  myToken: string = localStorage.getItem('userToken');
 
   constructor(
     private nimmtService: SixNimmtService,
@@ -21,7 +22,10 @@ export class ClientScreenComponent implements OnInit, OnDestroy {
       .checkGameExists(location.href.split('/').pop())
       .then((res) => {
         if (res) {
-          this.nimmtService.sendSocketMessage('join-game', { isHost: false });
+          this.nimmtService.sendSocketMessage('join-game', {
+            isHost: false,
+            playerName: localStorage.getItem('playerName'),
+          });
         }
       });
 
@@ -34,7 +38,13 @@ export class ClientScreenComponent implements OnInit, OnDestroy {
   }
 
   needToPick() {
-    return this.gameData?.players[localStorage.getItem('userToken')]?.needsToPickRow;
+    return this.gameData?.players[localStorage.getItem('userToken')]
+      ?.needsToPickRow;
+  }
+
+  getMyPlayer() {
+    const me = this.gameData?.players[this.myToken];
+    return me || 'Error getting player name';
   }
 
   ngOnDestroy(): void {}

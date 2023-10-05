@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import axios from 'axios';
 
 @Component({
   selector: 'app-game-room-handler',
@@ -6,11 +7,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./game-room-handler.component.css'],
 })
 export class GameRoomHandlerComponent {
-  @Input() gameData: any;
+  @Input() gameInfo: any;
   @Output() submitGameCode: EventEmitter<any> = new EventEmitter();
   @Output() submitHostGame: EventEmitter<void> = new EventEmitter();
   gameCodeInput: string = '';
   playerNameInput: string = localStorage.getItem('playerName') || '';
+  enableJoinBtn: boolean = false;
+  hostingOptionsOpen: boolean = false;
 
   constructor() {}
 
@@ -36,5 +39,15 @@ export class GameRoomHandlerComponent {
 
   handleGameCodeChange(input: string) {
     this.gameCodeInput = input.toUpperCase();
+    if (this.gameCodeInput.length === 4) {
+      axios
+        .get(`/api/games/${this.gameCodeInput}`)
+        .then(({ data }) => {
+          this.enableJoinBtn = data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else this.enableJoinBtn = false;
   }
 }

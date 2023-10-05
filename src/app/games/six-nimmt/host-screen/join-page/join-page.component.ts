@@ -22,7 +22,11 @@ export class JoinPageComponent implements OnInit {
     return Object.values(this.gameData.players);
   }
 
-  copyGameCode() {
-    navigator.clipboard.writeText(this.gameCode);
+  async copyGameCode() {
+    try {
+      await navigator.clipboard.writeText(this.gameCode);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
   }
 }
