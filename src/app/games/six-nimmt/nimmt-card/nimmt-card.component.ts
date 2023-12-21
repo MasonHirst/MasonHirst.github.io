@@ -12,6 +12,7 @@ export class NimmtCardComponent implements OnInit {
   @Input() height: number = 200;
   @Input() borderColor: string = 'black';
   @Input() borderWidth: number = 2;
+  @Input() backgroundColor: string = 'white';
   @Input() selectable: boolean = true;
   @Input() selected: boolean = false;
   @Output() cardClick: EventEmitter<void> = new EventEmitter();

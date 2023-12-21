@@ -1,5 +1,13 @@
 .player-cards-wrapper {
   display: flex;
   align-items: flex-end;
-  /* gap: max(1rem, 5px); */
+}
+
+.card-select-wrapper {
+  /* min-height: calc(100vh - 200px); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
 }

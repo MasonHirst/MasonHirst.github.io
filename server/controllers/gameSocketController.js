@@ -21,9 +21,14 @@ async function attachSocketServer(server) {
 
     socket.on("join-game", (data) => {
       const { gameCode, userToken, isHost, playerName } = data;
-      const allowJoin = nimmtAllowJoin(nimmtRooms[gameCode], isHost, userToken, playerName)
+      const allowJoin = nimmtAllowJoin(
+        nimmtRooms[gameCode],
+        isHost,
+        userToken,
+        playerName
+      );
       if (!allowJoin.canJoin) {
-        socket.send({type: 'not-allowing-join', message: allowJoin.error});
+        socket.send({ type: "not-allowing-join", message: allowJoin.error });
         return console.error(allowJoin.error);
       }
       socket.currentGameCode = gameCode;
@@ -35,6 +40,7 @@ async function attachSocketServer(server) {
         if (!nimmtRooms[gameCode].players[userToken]) {
           const playerObj = {
             userToken,
+            socketId: socket.id,
             playerName,
             selectedCard: null,
             cardIsStacked: false,
@@ -69,7 +75,23 @@ async function attachSocketServer(server) {
       io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
     });
 
-    
+    socket.on("kick-player", (data) => {
+      const { gameCode, playerId } = data;
+      if (!nimmtRooms[gameCode]) return console.error("game not found");
+      if (!nimmtRooms[gameCode].players[playerId]) {
+        return console.error("player not found");
+      }
+      console.log(
+        "kicking player socketId: ",
+        nimmtRooms[gameCode].players[playerId].socketId
+      );
+      io.to(nimmtRooms[gameCode].players[playerId].socketId).emit(
+        "kicked-from-game"
+      );
+      delete nimmtRooms[gameCode].players[playerId];
+      // send a message just to the kicked player
+      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    });
 
     // when a player picks a card, validate their choice. then if all players have a card picked,
     // start a countdown. If a player changes their card, reset the countdown. If the countdown
@@ -156,7 +178,6 @@ async function attachSocketServer(server) {
   });
 }
 
-
 async function tryStackingCards(gameCode) {
   const filteredPlayers = Object.values(nimmtRooms[gameCode].players)
     .filter((player) => player.cardIsStacked === false)
@@ -165,11 +186,16 @@ async function tryStackingCards(gameCode) {
     await sleep(1500);
     const result = nimmtStackCards(nimmtRooms[gameCode], player);
     if (result) {
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-      return;
-    } else {
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    }
+      if (result.message === "player-took-row") {
+        io.to(gameCode).emit("player-took-row", result.data);
+      } else if (result.message === "pick-row") {
+        return io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+      }
+    } 
+    io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    // else {
+    //   io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    // }
   }
   // if all players have stacked their cards, move to next round
   const allPlayersHaveStackedCards = Object.values(
@@ -185,8 +211,7 @@ function sleep(ms = 2000) {
 }
 
 function handleMoveNextRound(gameCode) {
-  playerCardCount = Object.values(nimmtRooms[gameCode].players)[0].cards
-    .length;
+  playerCardCount = Object.values(nimmtRooms[gameCode].players)[0].cards.length;
   if (playerCardCount === 0) {
     // TODO: calculate round scores
     Object.values(nimmtRooms[gameCode].players).forEach((player) => {
@@ -206,8 +231,6 @@ function handleMoveNextRound(gameCode) {
     io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
   }
 }
-
-
 
 module.exports = {
   attachSocketServer,
@@ -255,7 +278,7 @@ module.exports = {
 
   handlePlayerSelectRow: async (req, res) => {
     try {
-      const { gameCode, userToken, rowIndex } = req.body
+      const { gameCode, userToken, rowIndex } = req.body;
       nimmtRooms[gameCode].players[userToken].pickedRow = rowIndex;
       tryStackingCards(gameCode);
       res.status(200).send(true);
@@ -268,7 +291,6 @@ module.exports = {
   checkGameCodeExists: async (req, res) => {
     try {
       const { gameCode } = req.params;
-      console.log(gameCode)
       if (!nimmtRooms[gameCode]) {
         console.error("game room not found");
         return res.status(202).send(false);
@@ -277,7 +299,7 @@ module.exports = {
       }
     } catch (err) {
       console.error(err);
-      res.status(503).send(err)
+      res.status(503).send(err);
     }
   },
 };

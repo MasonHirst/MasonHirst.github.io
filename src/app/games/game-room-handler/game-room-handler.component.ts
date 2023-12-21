@@ -12,6 +12,7 @@ export class GameRoomHandlerComponent {
   @Output() submitHostGame: EventEmitter<void> = new EventEmitter();
   gameCodeInput: string = '';
   playerNameInput: string = localStorage.getItem('playerName') || '';
+  playerNameInputError: string = '';
   enableJoinBtn: boolean = false;
   hostingOptionsOpen: boolean = false;
 
@@ -23,9 +24,9 @@ export class GameRoomHandlerComponent {
     }
     if (!this.gameCodeInput) return alert('Please enter a game code');
     if (!this.playerNameInput && !isHost)
-      return alert('Please enter a player name');
-    if (this.playerNameInput.length > 20)
-      return alert('Player name must be less than 20 characters');
+      return this.playerNameInputError = "Please enter a player name"
+    if (this.playerNameInput.length > 15)
+      return this.playerNameInputError = "Player name must be 15 characters or less"
     this.submitGameCode.emit({
       code: this.gameCodeInput,
       isHost,

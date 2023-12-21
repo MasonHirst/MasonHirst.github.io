@@ -1,5 +1,5 @@
-<div class="page-wrapper">
-  <h1 style="color: orange">{{ gameInfo.gameName }}</h1>
+<div class="page-wrapper mt-4">
+  <h1 style="color: orange;">{{ gameInfo.gameName }}</h1>
 
   <!-- <h4>Join an existing game</h4> -->
   <form (submit)="handleSubmitForm(false)" class="player-join-form">
@@ -13,8 +13,11 @@
         aria-label="player-name-input"
         name="playerNameInput"
         [(ngModel)]="playerNameInput"
-        maxlength="20"
+        maxlength="15"
       />
+      <p *ngIf="playerNameInputError" class="text-danger">
+        {{ playerNameInputError }}
+      </p>
     </div>
 
     <div>

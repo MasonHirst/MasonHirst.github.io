@@ -33,4 +33,8 @@ export class JoinedPageComponent implements OnInit {
   startFreshGame() {
     this.nimmtService.sendSocketMessage('start-fresh-game')
   }
+  
+  canStartGame() {
+    return Object.values(this.gameData?.players).length >= 2;
+  }
 }

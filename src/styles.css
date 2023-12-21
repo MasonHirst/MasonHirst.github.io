@@ -172,3 +172,23 @@ button {
   min-height: calc(100vh - 60px);
   z-index: 100;
 }
+
+.toast-top-center {
+  top: 55px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.ngx-toastr {
+  padding: 10px !important;
+  background-image: none !important;
+  box-shadow: 0 0 12px #686868 !important;
+  border-radius: 8px !important;
+}
+.ngx-toastr p {
+  margin: 0 !important;
+  text-align: center !important;
+}
+.toast-warning {
+  background-color: #d67d00 !important;
+}

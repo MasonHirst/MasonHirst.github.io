@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-join-page',
@@ -15,7 +16,7 @@ export class JoinPageComponent implements OnInit {
   ngOnInit() {}
 
   startFreshGame() {
-    this.nimmtService.sendSocketMessage('start-fresh-game')
+    this.nimmtService.sendSocketMessage('start-fresh-game');
   }
 
   getPlayersList() {
@@ -28,5 +29,27 @@ export class JoinPageComponent implements OnInit {
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
+  }
+
+  kickPlayer(player: any) {
+    Swal.fire({
+      title: `Are you sure you want to kick <strong>${player.playerName}</strong>?`,
+      text: 'This will remove them from the game',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Kick',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.nimmtService.sendSocketMessage('kick-player', {
+          playerId: player.userToken,
+        });
+      }
+    });
+  }
+
+  canStartGame() {
+    return Object.values(this.gameData?.players).length >= 2;
   }
 }

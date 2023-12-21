@@ -38,8 +38,9 @@ attachSocketServer(server);
 //! Server listen
 const PORT = process.env.PORT || 8080;
 let host;
-host = "192.168.1.196";
+// host = "10.0.0.251";
 // host = '192.168.12.196'
+// host = '10.254.1.50'
 
 if (host) {
   server.listen(PORT, host, () =>

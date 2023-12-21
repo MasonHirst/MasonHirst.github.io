@@ -6,16 +6,34 @@
 
 .card-row {
   display: flex;
-  gap: 5px
+  gap: 5px;
 }
 
 .name-card-duo {
   display: flex;
   gap: 10px;
   align-items: center;
-  min-height: 60px;
+  justify-content: space-between;
+  width: 100%;
 }
 
-h4, p {
+h4,
+p {
   margin: 0;
+}
+
+.player-cards-wrapper {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 100vh;
+}
+
+.card-select-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  width: 100%;
 }

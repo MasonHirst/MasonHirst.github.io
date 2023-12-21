@@ -8,7 +8,7 @@
     cursor: selectable ? 'pointer' : 'default',
     bottom: selected ? .2 * height + 'px' : '',
     marginLeft: cardIndex > 0 ? -.2 * height + 'px' : '',
-    backgroundColor: 'white',
+    backgroundColor: backgroundColor,
   }"
 >
   <p
@@ -43,6 +43,7 @@
 
   <p>{{card.bullheads}}</p>
   <section
+    *ngIf="card.bullHeads"
     class="bullheads-wrapper"
     
   >

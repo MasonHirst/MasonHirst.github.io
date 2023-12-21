@@ -1,6 +1,16 @@
-<div
-  class="review-table-container"
->
+<div *ngIf="gameIsOver()">
+  <h1>Game over!</h1>
+  <h6>
+    Looks like
+    <strong class="text-primary">{{ getLosersStatement() }}</strong> got at
+    least 66 points. Let's be nice guys - they probably feel bad already.
+  </h6>
+  <h2>Final scores:</h2>
+</div>
+
+<div class="review-table-container" [ngClass]="{
+  'mt-4': !gameIsOver(),
+}">
   <table class="table">
     <thead>
       <tr>
@@ -26,6 +36,8 @@
   </table>
 </div>
 
-<button class="btn btn-info" (click)="sendMessage('start-next-round')">Another round</button>
+<button class="btn btn-primary m-2" (click)="sendMessage('start-next-round')">
+  {{ gameIsOver() ? "New game" : "Next round" }}
+</button>
 
-<button class="btn btn-info" (click)="navigateToGames()">Back to games home</button>
+<button class="btn btn-info" (click)="navigateToGames()">End this game</button>

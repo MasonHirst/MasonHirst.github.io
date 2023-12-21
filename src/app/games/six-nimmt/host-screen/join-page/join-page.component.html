@@ -1,4 +1,4 @@
-<div class="join-page-wrapper">
+<div class="join-page-wrapper mt-5">
   <h2 style="color: orange">6 Nimmt!</h2>
   <!-- <h3 style="opacity: 0.8">Waiting for players</h3> -->
   <section class="game-code-wrapper">
@@ -11,17 +11,32 @@
 
   <h4>Players:</h4>
   <ul class="mb-4">
-    <p *ngFor="let player of getPlayersList(); let i = index" [key]="i" style="color: orange;">
+    <p
+      *ngFor="let player of getPlayersList(); let i = index"
+      [key]="i"
+      style="color: orange"
+    >
+      <a (click)="kickPlayer(player)">
+        <span aria-hidden="true" class="kick-player-btn"> &times; </span>
+      </a>
       {{ player.playerName }}
     </p>
   </ul>
 
-
-  <button
-    class="btn btn-lg btn-primary"
-    color="primary"
-    (click)="startFreshGame()"
+  <section
+    class="d-flex flex-col align-items-center"
+    style="max-width: 200px; text-align: center"
   >
-    Start Game
-  </button>
+    <p class="mb-2 text-info" *ngIf="!canStartGame()">
+      This game requires at least 2 players!
+    </p>
+    <button
+      class="btn btn-lg btn-primary"
+      color="primary"
+      (click)="startFreshGame()"
+      [disabled]="!canStartGame()"
+    >
+      Start Game
+    </button>
+  </section>
 </div>

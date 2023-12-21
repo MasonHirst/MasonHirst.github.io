@@ -44,7 +44,17 @@ export class ClientScreenComponent implements OnInit, OnDestroy {
 
   getMyPlayer() {
     const me = this.gameData?.players[this.myToken];
-    return me || 'Error getting player name';
+    return me || {};
+  }
+
+  getTotalScore(): number {
+    if (!this.getMyPlayer().userToken) return 0;
+    return this.nimmtService.getTotalScore(this.getMyPlayer());
+  }
+
+  getRoundScore(): number {
+    if (!this.getMyPlayer().userToken) return 0;
+    return this.nimmtService.getRoundScore(this.getMyPlayer());
   }
 
   ngOnDestroy(): void {}

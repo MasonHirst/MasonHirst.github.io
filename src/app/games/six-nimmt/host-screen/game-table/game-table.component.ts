@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
 
 @Component({
@@ -13,20 +6,17 @@ import { SixNimmtService } from '../../six-nimmt.service';
   templateUrl: './game-table.component.html',
   styleUrls: ['./game-table.component.css'],
 })
-export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
+export class GameTableComponent implements OnInit, OnDestroy {
   @Input() gameCode: string;
   @Input() gameData: any;
 
-  constructor(private nimmtService: SixNimmtService) {}
+  constructor(
+    private nimmtService: SixNimmtService,
+  ) {}
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.gameData) {
-    }
-  }
-
-  showPlayerCard(player) {
+  showPlayerCard(player: any) {
     if (
       this.gameData?.gameState === 'STACKING_CARDS' &&
       player?.selectedCard &&
@@ -36,9 +26,9 @@ export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  cardIsNotStacked(selectedCard) {
+  cardIsNotStacked(selectedCard: any) {
     let notIncluded = true;
-    this.gameData?.tableStacks.forEach((stack) => {
+    this.gameData?.tableStacks.forEach((stack: any[]) => {
       stack.forEach((stackCard) => {
         if (stackCard.number === selectedCard.number) {
           notIncluded = false;
@@ -56,7 +46,7 @@ export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       return Object.values(this.gameData?.players).sort((a: any, b: any) => {
         return this.getScoreboardScore(a) - this.getScoreboardScore(b);
-      })
+      });
     }
   }
 
@@ -70,25 +60,15 @@ export class GameTableComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   showPlayerNeedsToPick(player: any) {
-    return player.needsToPickRow && !this.cardIsNotStacked(player.selectedCard);
+    return player.needsToPickRow && this.cardIsNotStacked(player.selectedCard);
   }
 
-  getScoreboardScore(player: any) {
-    let total = 0;
-    player?.roundScores.forEach((round: any[]) => {
-      round.forEach((score: any) => {
-        total += score.bullHeads;
-      });
-    });
-    return total;
+  getScoreboardScore(player: any): number {
+    return this.nimmtService.getTotalScore(player);
   }
 
-  getRoundScores(player: any) {
-    let total = 0;
-    player?.pointCards.forEach((card: any) => {
-      total += card.bullHeads;
-    });
-    return total;
+  getRoundScores(player: any): number {
+    return this.nimmtService.getRoundScore(player);
   }
 
   ngOnDestroy(): void {}

@@ -1,29 +1,31 @@
-<!-- <div class="nimmt-game-float-wrapper"> -->
 <section class="client-header">
   <span class="bigger-txt">{{ getMyPlayer().playerName }}</span>
-  <p class="mb-0">
-    Game: <span class="bigger-txt">{{ gameCode }}</span>
+  <p class="mb-0" style="display: flex; align-items: center; gap: 5px">
+    Score:
+    <span class="bigger-txt">
+      {{ getTotalScore() }}(+{{ getRoundScore() }})
+    </span>
   </p>
 </section>
+<div class="client-wrapper">
+  <app-joined-page
+    *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
+    [gameCode]="gameCode"
+    [gameData]="gameData"
+  />
 
-<app-joined-page
-  *ngIf="gameData?.gameState === 'WAITING_FOR_PLAYERS'"
-  [gameCode]="gameCode"
-  [gameData]="gameData"
-/>
+  <app-card-select
+    *ngIf="
+      gameData?.gameState === 'PICKING_CARDS' ||
+      gameData?.gameState === 'STACKING_CARDS'
+    "
+    [gameCode]="gameCode"
+    [gameData]="gameData"
+  />
 
-<app-card-select
-  *ngIf="
-    gameData?.gameState === 'PICKING_CARDS' ||
-    gameData?.gameState === 'STACKING_CARDS'
-  "
-  [gameCode]="gameCode"
-  [gameData]="gameData"
-/>
-
-<app-game-review-client
-  *ngIf="gameData?.gameState === 'GAME_REVIEW'"
-  [gameCode]="gameCode"
-  [gameData]="gameData"
-/>
-<!-- </div> -->
+  <app-game-review-client
+    *ngIf="gameData?.gameState === 'GAME_REVIEW'"
+    [gameCode]="gameCode"
+    [gameData]="gameData"
+  />
+</div>

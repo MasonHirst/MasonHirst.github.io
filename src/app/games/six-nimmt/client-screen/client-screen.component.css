@@ -9,6 +9,15 @@
 }
 
 .bigger-txt {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
+}
+
+.client-wrapper {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
 }

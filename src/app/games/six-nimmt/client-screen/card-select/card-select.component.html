@@ -1,21 +1,16 @@
-<div
-  style="
-    height: 50vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 50px;
-  "
->
-  <p>Total points this round: {{ totalCardPoints() }}</p>
+<div class="card-select-wrapper">
   <app-pick-a-row
     *ngIf="showPickRowComponent()"
     [gameData]="gameData"
     [gameCode]="gameCode"
   />
 
-  <div class="player-cards-wrapper">
+  <div
+    class="player-cards-wrapper"
+    [ngStyle]="{
+      opacity: gameData?.gameState !== 'PICKING_CARDS' ? 0.6 : 1
+    }"
+  >
     <app-nimmt-card
       *ngFor="let card of getMyCards(); let i = index"
       key="{{ i }}"
@@ -24,6 +19,7 @@
       [cardIndex]="i"
       (cardClick)="handleCardClick(card)"
       [selected]="isSelected(card)"
+      [selectable]="gameData?.gameState === 'PICKING_CARDS'"
     />
   </div>
 </div>

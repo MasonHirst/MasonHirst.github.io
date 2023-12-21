@@ -14,7 +14,7 @@
     <span class="bi bi-search" style="font-size: 18px"></span>
     <span style="opacity: 0.8">Search</span>
   </a>
-  <h2 class="text-info mb-0" style="font-size: 25px;">Pokédex</h2>
+  <h2 class="text-info mb-0" style="font-size: 25px">Pokédex</h2>
 </div>
 
 <div *ngIf="screen > 460">
@@ -62,7 +62,14 @@
 </div>
 
 <ng-template #pokeSearchBar>
-  <div class="input-group mb-3">
+  <div
+    class="input-group mb-3"
+    style="
+      max-width: min(100vw - 10px, 1090px);
+      margin-left: auto;
+      margin-right: auto;
+    "
+  >
     <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
     <input
       type="text"

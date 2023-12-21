@@ -1,0 +1,7 @@
+.host-screen-wrapper {
+  min-height: calc(100vh - 55px);
+  /* border: 1px solid red; */
+  width: 100%;
+  z-index: 10;
+  margin-bottom: 200px;
+}

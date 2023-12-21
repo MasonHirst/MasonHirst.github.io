@@ -25,32 +25,15 @@ export class PickARowComponent implements OnChanges {
   handleSelectRow(rowIndex: number) {
     if (!this.canPickRow) return;
     this.canPickRow = false;
-    // this.nimmtService.sendSocketMessage('player-select-row', { rowIndex });
-
     axios
       .post('/api/nimmt/player/choose-row', {
         gameCode: this.gameCode,
         rowIndex,
         userToken: this.myToken,
       })
-      .then(({ data }) => {
-        console.log('data', data);
-      })
+      .then(({ data }) => {})
       .catch((err) => {
         console.error(err);
       });
-
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: `You will be selecting row ${rowIndex + 1} and will be unable to change your selection.`,
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonText: 'Yes',
-    //   cancelButtonText: 'Cancel',
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     this.nimmtService.sendSocketMessage('player-select-row', { rowIndex });
-    //   }
-    // })
   }
 }

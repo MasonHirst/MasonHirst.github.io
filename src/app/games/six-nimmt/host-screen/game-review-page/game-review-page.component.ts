@@ -25,7 +25,7 @@ export class GameReviewPageComponent implements OnInit, OnDestroy {
     return Object.values(this.gameData?.players);
   }
 
-  getRoundScores(score: any[]) {
+  getRoundScores(score: any[]): number {
     let total = 0;
     score.forEach((s: { number: number; bullHeads: number }) => {
       total += s.bullHeads;
@@ -33,24 +33,52 @@ export class GameReviewPageComponent implements OnInit, OnDestroy {
     return total;
   }
 
-  getTotalScore(player: any) {
-    let total = 0;
-    player?.roundScores.forEach((round: any[]) => {
-      total += this.getRoundScores(round);
-    });
-    return total;
+  getTotalScore(player: any): number {
+    return this.nimmtService.getTotalScore(player);
   }
 
   sendMessage(message: string) {
     this.nimmtService.sendSocketMessage(message);
   }
-  
+
   navigateToGames() {
     this.router.navigate(['/games/6-nimmt!']);
   }
 
-  isFirstPlayer() {
+  isFirstPlayer(): boolean {
     return this.nimmtService.isFirstPlayer();
+  }
+
+  gameIsOver(): boolean {
+    // if any player has 66 or more points, the game is over
+    let gameOver = false;
+    Object.values(this.gameData?.players).forEach((player: any) => {
+      if (this.getTotalScore(player) >= 66) {
+        gameOver = true;
+      }
+    });
+    return gameOver;
+  }
+
+  getLosersStatement(): string {
+    // if any player has 66 or more points, add their name to a string
+    let losersArr = [];
+    Object.values(this.gameData?.players).forEach((player: any) => {
+      if (this.getTotalScore(player) >= 66) {
+        losersArr.push(player.playerName);
+      }
+    });
+    let losersStr = '';
+    losersArr.forEach((loser, i) => {
+      if (i === 0) {
+        losersStr += loser;
+      } else if (i === losersArr.length - 1) {
+        losersStr += ' and ' + loser;
+      } else {
+        losersStr += ', ' + loser;
+      }
+    });
+    return losersStr
   }
 
   ngOnDestroy(): void {}
