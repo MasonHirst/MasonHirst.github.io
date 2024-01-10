@@ -50,6 +50,7 @@ export class SixNimmtService {
     // serverUrl = 'ws://10.0.0.251:8080';
     // serverUrl = 'ws://192.168.12.196:8080';
     // serverUrl = 'ws://10.254.1.50:8080';
+    serverUrl = 'ws://192.168.1.136:8080';
 
     this.socket = io(serverUrl + '?token=' + token);
     const { socket } = this;
@@ -98,9 +99,9 @@ export class SixNimmtService {
     });
     socket.on('game-updated', (data: any) => {
       // console.log('game-updated: ', data);
-      this.toastr.info(`<strong>${'Jackson'}</strong> took row <strong>${this.getRowString(
-        0
-      )}</strong> for <strong>${21}</strong> points!<p>${'What a loser!'}</p>`)
+      // this.toastr.info(`<strong>${'Jackson'}</strong> took row <strong>${this.getRowString(
+      //   0
+      // )}</strong> for <strong>${21}</strong> points!<p>${'What a loser!'}</p>`)
       this.updateGameData(data);
     });
     socket.on('counting-down', (data: boolean) => {

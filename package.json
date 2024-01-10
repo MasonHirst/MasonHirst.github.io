@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "startWifi": "ng serve --host 10.254.1.50",
+    "startWifi": "ng serve --host 192.168.1.136",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
