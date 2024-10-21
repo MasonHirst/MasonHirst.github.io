@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import axios from 'axios';
-import { SixNimmtService } from './six-nimmt.service';
 import { Router } from '@angular/router';
+import axios from 'axios';
+import { PirateDiceService } from './pirate-dice.service';
 
 @Component({
-  selector: 'app-six-nimmt',
-  templateUrl: './six-nimmt.component.html',
-  styleUrls: ['./six-nimmt.component.css'],
+  selector: 'app-pirate-dice',
+  templateUrl: './pirate-dice.component.html',
+  styleUrls: ['./pirate-dice.component.css']
 })
-export class SixNimmtComponent implements OnInit, OnDestroy {
-  constructor(private nimmtService: SixNimmtService, private router: Router) {}
-
+export class PirateDiceComponent implements OnInit, OnDestroy {
+  constructor(private pirateService: PirateDiceService, private router: Router) {}
+  
   ngOnInit(): void {}
 
   handleCodeSubmit(data: {
@@ -19,9 +19,9 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
     playerName: string;
   }) {
     const { code, isHost, playerName } = data;
-    this.nimmtService.checkGameExists(code).then((res) => {
+    this.pirateService.checkGameExists(code).then((res) => {
       if (res) {
-        this.nimmtService.sendSocketMessage('join-game', {
+        this.pirateService.sendSocketMessage('join-game', {
           gameCode: code,
           isHost,
           playerName,

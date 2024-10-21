@@ -7,9 +7,9 @@ import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class SixNimmtService {
+export class PirateDiceService {
   private socket: any;
   private gameData: any;
   private urlGameCode: string = '';
@@ -36,9 +36,9 @@ export class SixNimmtService {
     const token = localStorage.getItem('userToken');
 
     let serverUrl: string;
-    let scheme: String = 'ws';
+    let scheme = 'ws';
     let location = document.location;
-    if (location.protocol === 'https:') {
+    if (location.protocol.includes('https:') || location.protocol.includes('wss:')) {
       scheme += 's';
     }
     serverUrl = `${scheme}://${location.hostname}:${location.port}`;
@@ -47,7 +47,10 @@ export class SixNimmtService {
       serverUrl = `${scheme}://${location.hostname}:8080`;
     }
 
-    serverUrl = 'ws://192.168.1.136:8080';
+    // serverUrl = 'ws://10.0.0.251:8080';
+    // serverUrl = 'ws://192.168.12.196:8080';
+    // serverUrl = 'ws://10.254.1.50:8080';
+    // serverUrl = 'ws://192.168.1.136:8080';
 
     this.socket = io(serverUrl + '?token=' + token);
     const { socket } = this;

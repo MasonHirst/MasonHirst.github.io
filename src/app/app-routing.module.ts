@@ -15,6 +15,7 @@ import { AudioLibraryComponent } from './extras/audio-library/audio-library.comp
 import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
 import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.component';
 import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
+import { PirateDiceComponent } from './games/pirate-dice/pirate-dice.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -23,7 +24,7 @@ const routes: Routes = [
     component: ProjectsPageComponent,
     children: [
       { path: ':name', component: ProjectComponent },
-      { path: '**', redirectTo: 'pokerface' }
+      { path: '**', redirectTo: 'pokerface' },
     ],
   },
   { path: 'resume', component: WorkHistoryComponent },
@@ -48,10 +49,17 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'pirate-dice',
+        component: PirateDiceComponent,
+        children: [
+          
+        ]
+      },
       { path: '**', redirectTo: '' },
     ],
   },
-  {
+    {
     path: 'extras',
     component: ExtrasComponent,
     children: [

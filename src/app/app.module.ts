@@ -40,6 +40,7 @@ import { CardSelectComponent } from './games/six-nimmt/client-screen/card-select
 import { PickARowComponent } from './games/six-nimmt/client-screen/card-select/pick-a-row/pick-a-row.component';
 import { GameReviewPageComponent } from './games/six-nimmt/host-screen/game-review-page/game-review-page.component';
 import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-review-client/game-review-client.component';
+import { PirateDiceComponent } from './games/pirate-dice/pirate-dice.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-
     PickARowComponent,
     GameReviewPageComponent,
     GameReviewClientComponent,
+    PirateDiceComponent,
   ],
   imports: [
     CommonModule,

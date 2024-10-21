@@ -23,5 +23,10 @@ export class GameSelectComponent {
       '6-nimmt!',
       'https://www.ultraboardgames.com/img/slideshow/6-nimmt.jpg'
     ),
+    new PreviewCard(
+      'Pirate\'s Dice',
+      'pirate-dice',
+      'https://simplednd.files.wordpress.com/2022/05/pirate-dice2.webp'
+    ),
   ];
 }
