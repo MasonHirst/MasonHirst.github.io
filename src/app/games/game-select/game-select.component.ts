@@ -23,5 +23,10 @@ export class GameSelectComponent {
       '6-nimmt!',
       'https://www.ultraboardgames.com/img/slideshow/6-nimmt.jpg'
     ),
+    new PreviewCard(
+      'Pinochle scoreboard',
+      'pinochle-scoreboard',
+      'https://benefitsofaclassicaleducation.wordpress.com/wp-content/uploads/2014/04/pinochle_meld.jpg'
+    ),
   ];
 }

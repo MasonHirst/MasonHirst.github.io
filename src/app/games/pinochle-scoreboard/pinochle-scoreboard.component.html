@@ -1,0 +1,45 @@
+<!-- <div class="page-cont mt-4 fade-in">
+  This is the game
+</div> -->
+
+<div class="container fade-in my-5">
+  <div class="text-center">
+    <h1 class="display-4 mb-4">Pinochle Scoring Tool</h1>
+    <p class="lead">
+      Welcome to the Pinochle Scoring Tool! This tool is designed to help you
+      keep track of scores, bids, and round details during a game of Pinochle.
+      It guides you through each stage, from bidding to melding to trick-taking,
+      and provides a summary after each round.
+    </p>
+    <p>
+      This tool follows the standard rules for Pinochle, including bidding,
+      melding, and scoring conventions. You can find a full overview of the
+      rules we adhere to
+      <a
+        href="https://entertainment.howstuffworks.com/how-to-play-partnership-pinochle.htm"
+        target="_blank"
+        rel="noopener noreferrer"
+        >here</a
+      >.
+    </p>
+    <h2 class="text-center mb-4">Choose a Pinochle Game Format</h2>
+
+    <div class="d-flex flex-column align-items-center">
+      <p class="text-white">Select the game format you’d like to play:</p>
+
+      <div class="btn-group-vertical w-100" style="max-width: 400px">
+        <div *ngFor="let format of gameFormats" class="mb-4 text-center">
+          <button
+            (click)="startNewGame(format)"
+            class="btn btn-primary btn-lg w-100"
+          >
+            {{ "Start " + format.label + " game" }}
+          </button>
+          <small class="text-muted">{{
+            format.description
+          }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
