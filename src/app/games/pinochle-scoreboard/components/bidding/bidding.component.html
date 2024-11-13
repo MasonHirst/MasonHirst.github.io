@@ -1,1 +1,72 @@
-<p>bidding works!</p>
+<div class="container fade-in my-3">
+  <h2 class="text-center mb-4">Bidding Phase</h2>
+
+  <div class="mb-4">
+    <p><strong>Instructions:</strong></p>
+    <ul>
+      <li>Deal the cards evenly among players.</li>
+      <li>The player to the left of the dealer should organize their cards first.</li>
+      <li>Bidding starts with the player to the dealer's left and proceeds clockwise.</li>
+    </ul>
+  </div>
+
+  <form class="mb-3">
+    <div class="form-group mb-3">
+      <label for="bidAmount">Enter Winning Bid Amount</label>
+      <input
+        type="number"
+        id="bidAmount"
+        [(ngModel)]="gameState.currentBid"
+        (ngModelChange)="onBidAmountChange()"
+        name="bidAmount"
+        class="form-control"
+        placeholder="Enter Bid Amount"
+        min="0"
+        required
+      />
+      <small *ngIf="noBidMessage" class="text-danger">{{ noBidMessage }}</small>
+    </div>
+
+    <div class="form-group mb-4">
+      <label>Select Winning Team</label>
+      <div *ngFor="let team of gameState.teams; let i = index" class="form-check">
+        <input
+          type="radio"
+          [id]="'team' + i"
+          [(ngModel)]="primaryWinningTeamIndex"
+          (ngModelChange)="onPrimaryWinningTeamChange()"
+          [value]="i"
+          name="winningTeam"
+          class="form-check-input"
+          required
+        />
+        <label [for]="'team' + i" class="form-check-label">{{ team.name }}</label>
+      </div>
+    </div>
+
+    <div *ngIf="shouldShowSecondaryWinnerChoice" class="form-group mb-4">
+      <label>Select Secondary Winning Team</label>
+      <ng-container *ngFor="let team of gameState.teams; let i = index">
+        <div *ngIf="i !== primaryWinningTeamIndex" class="form-check">
+          <input
+            type="radio"
+            [id]="'team' + i"
+            [(ngModel)]="secondaryWinningTeamIndex"
+            [value]="i"
+            name="secondaryWinningTeam"
+            class="form-check-input"
+            required
+          />
+          <label [for]="'team' + i" class="form-check-label">{{ team.name }}</label>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-between gap-2 mt-4">
+    <button class="btn btn-outline-info" (click)="goBack()">Back</button>
+    <button class="btn btn-primary" (click)="submitBids()">Submit Bid</button>
+  </div>
+
+  <p class="text-muted mt-2">Note: If no one bids in the first round, reshuffle and redeal the cards.</p>
+</div>

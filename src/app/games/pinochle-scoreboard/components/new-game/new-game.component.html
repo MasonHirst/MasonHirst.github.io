@@ -1,9 +1,9 @@
-<div class="container fade-in my-5">
+<div class="container fade-in my-3">
   <h2 class="text-center mb-4">Name Your Teams</h2>
 
-  <form (ngSubmit)="startGame()" class="mb-3">
+  <form class="mb-3">
     <p class="text-center">
-      You are setting up a {{ gameFormat }} game. Please enter names for each team:
+      You are setting up a {{ gameFormat.label }} game. Please enter names for each team:
     </p>
 
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
@@ -18,7 +18,10 @@
         required
       />
     </div>
-
-    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">Start Game</button>
   </form>
+
+  <div class="d-flex justify-content-between gap-2 mt-4">
+    <button class="btn btn-outline-info" (click)="goBack()">Back</button>
+    <button class="btn btn-primary" (click)="startGame()">Start Game</button>
+  </div>
 </div>

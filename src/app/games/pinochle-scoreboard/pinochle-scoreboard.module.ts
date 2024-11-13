@@ -7,6 +7,7 @@ import { BiddingComponent } from './components/bidding/bidding.component';
 import { MeldingComponent } from './components/melding/melding.component';
 import { TrickTakingComponent } from './components/trick-taking/trick-taking.component';
 import { RoundSummaryComponent } from './components/round-summary/round-summary.component';
+import { ConfirmChoiceModalComponent } from './components/modals/confirm-choice-modal/confirm-choice-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { RoundSummaryComponent } from './components/round-summary/round-summary.
     MeldingComponent,
     TrickTakingComponent,
     RoundSummaryComponent,
+    ConfirmChoiceModalComponent,
   ],
   imports: [
     CommonModule,

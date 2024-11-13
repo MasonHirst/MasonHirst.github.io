@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
+import { Team } from '../../interfaces/team.interface';
+import { GameFormat } from '../../interfaces/gameformat.interface';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-new-game',
@@ -8,55 +11,49 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
   styleUrls: ['./new-game.component.css'],
 })
 export class NewGameComponent implements OnInit {
-  gameFormat: string;
-  teams: { name: string }[] = [];
+  teams: Team[] = [];
+  gameFormat: GameFormat;
 
-  constructor(private router: Router, private gameStateService: PinochleStateService) {}
+  constructor(
+    private router: Router,
+    private location: Location,
+    private gameStateService: PinochleStateService
+  ) {}
 
   ngOnInit(): void {
     // Get game format from service
+    this.teams = this.gameStateService.getGameState()?.teams;
     this.gameFormat = this.gameStateService.getGameFormat();
 
-    // Set up teams based on game format
-    this.initializeTeams();
+    if (!this.teams || !this.gameFormat) {
+      this.router.navigate(['/games/pinochle-scoreboard']);
+    }
   }
 
-  initializeTeams() {
-    const formatTeams = {
-      '3-hand': 3,
-      '4-hand': 2,
-      '5-hand': 5,
-      '6-hand': 2,
-      '8-hand': 4
-    };
-    const numTeams = formatTeams[this.gameFormat];
-
-    this.teams = Array.from({ length: numTeams }, () => ({ name: '' }));
+  goBack() {
+    this.location.back();
   }
 
   startGame() {
     try {
-      this.teams.forEach(team => {
+      let namesArray = [];
+      this.teams.forEach((team) => {
         if (!team.name.trim()) {
-          throw new Error("Name for each team is required");
+          throw new Error('Name for each team is required');
         }
-      })
-      
-      const initializedTeams = this.teams.map(team => ({
-        name: team.name,
-        endingTotalScore: 0,
-        meldScore: null,
-        trickScore: null,
-      }));
-  
+        if (namesArray.includes(team.name)) {
+          throw new Error('Multiple teams cannot have the same name');
+        }
+        namesArray.push(team.name);
+      });
+
       // Initialize the game state with team names
-      this.gameStateService.initializeGame(initializedTeams);
-  
+      this.gameStateService.setTeamsData(this.teams);
+
       // Navigate to the bidding stage
       this.router.navigate(['/games/pinochle-scoreboard/bidding']);
     } catch (error) {
-      console.error('Error in new-game.component.ts: ', error)
+      console.error('Error in new-game.component.ts: ', error);
     }
-    
   }
 }

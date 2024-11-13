@@ -1,1 +1,31 @@
-<p>melding works!</p>
+<div class="container fade-in my-3">
+  <h2 class="text-center mb-4">Melding Phase</h2>
+
+  <div class="mb-4">
+    <p><strong>Instructions:</strong></p>
+    <ul>
+      <li>Enter the total meld points for each team in the fields below.</li>
+    </ul>
+  </div>
+
+  <form class="mb-3">
+    <div *ngFor="let team of teams" class="form-group mb-3">
+      <label [for]="team.name">{{ team.name }}'s Meld Points</label>
+      <input
+        type="number"
+        [id]="team.name"
+        [(ngModel)]="team.meldScore"
+        [name]="team.name + 'MeldPoints'"
+        class="form-control"
+        placeholder="Enter Meld Points"
+        min="0"
+        required
+      />
+    </div>
+  </form>
+
+  <div class="d-flex justify-content-between gap-2 mt-4">
+    <button type="button" class="btn btn-outline-info" (click)="goBack()">Back</button>
+    <button type="button" class="btn btn-primary" (click)="submitMeld()">Submit Meld Points</button>
+  </div>
+</div>
