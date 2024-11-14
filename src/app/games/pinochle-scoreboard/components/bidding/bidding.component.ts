@@ -26,7 +26,6 @@ export class BiddingComponent implements OnInit {
   ngOnInit(): void {
     // Retrieve the list of teams from the game state service
     this.gameState = getDeepCopy(this.gameStateService.getCurrentGameState());
-    console.log("🚀 ~ BiddingComponent ~ ngOnInit ~ this.gameState:", this.gameState)
     
 
     if (!this.gameState?.teams || !this.gameState?.gameFormat) {
