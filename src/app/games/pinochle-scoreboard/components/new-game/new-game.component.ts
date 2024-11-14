@@ -22,7 +22,7 @@ export class NewGameComponent implements OnInit {
 
   ngOnInit(): void {
     // Get game format from service
-    this.teams = this.gameStateService.getGameState()?.teams;
+    this.teams = this.gameStateService.getCurrentGameState()?.teams;
     this.gameFormat = this.gameStateService.getGameFormat();
 
     if (!this.teams || !this.gameFormat) {

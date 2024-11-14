@@ -4,7 +4,7 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { Location } from '@angular/common';
 import { Team } from '../../interfaces/team.interface';
-import { isValidNumber } from 'src/app/games/games-helper-functions';
+import { getDeepCopy, isValidNumber } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-bidding',
@@ -25,7 +25,9 @@ export class BiddingComponent implements OnInit {
 
   ngOnInit(): void {
     // Retrieve the list of teams from the game state service
-    this.gameState = { ...this.gameStateService.getGameState() };
+    this.gameState = getDeepCopy(this.gameStateService.getCurrentGameState());
+    console.log("🚀 ~ BiddingComponent ~ ngOnInit ~ this.gameState:", this.gameState)
+    
 
     if (!this.gameState?.teams || !this.gameState?.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
@@ -81,10 +83,14 @@ export class BiddingComponent implements OnInit {
       ) {
         throw new Error('Must pick a secondary team for the bid.');
       }
+      if (!this.gameState?.trumpSuit) {
+        throw new Error('Must pick a declared trump suit.');
+      }
       // Store the winning team and bid amount
       this.gameStateService.setWinningBid(
         [this.primaryWinningTeamIndex, this.secondaryWinningTeamIndex],
-        this.gameState?.currentBid
+        this.gameState?.currentBid,
+        this.gameState?.trumpSuit
       );
 
       // Navigate to the next stage (e.g., melding)

@@ -15,26 +15,31 @@ export class PinochleScoreboardComponent implements OnInit {
       label: '3-hand',
       description: '3 teams of 1 player',
       teamCount: 3,
+      possibleTrickPoints: 250,
     },
     {
       label: '4-hand',
       description: '2 teams of 2 players',
       teamCount: 2,
+      possibleTrickPoints: 250,
     },
     {
       label: '5-hand',
       description: '5 teams of 1 player',
       teamCount: 5,
+      possibleTrickPoints: 500,
     },
     {
       label: '6-hand',
       description: '2 teams of 3 players',
       teamCount: 2,
+      possibleTrickPoints: 500,
     },
     {
       label: '8-hand',
       description: '4 teams of 2 players',
       teamCount: 4,
+      possibleTrickPoints: 500,
     },
   ]
 

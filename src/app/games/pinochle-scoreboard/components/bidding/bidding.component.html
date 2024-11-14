@@ -63,9 +63,26 @@
     </div>
   </form>
 
+  <div class="form-group mt-3">
+    <label for="trumpSuit">Select Trump Suit</label>
+    <select
+      id="trumpSuit"
+      [(ngModel)]="gameState.trumpSuit"
+      name="trumpSuit"
+      class="form-control"
+      required
+    >
+      <option value="" disabled selected>Select a suit</option>
+      <option value="Hearts">♥ Hearts</option>
+      <option value="Diamonds">♦ Diamonds</option>
+      <option value="Clubs">♣ Clubs</option>
+      <option value="Spades">♠ Spades</option>
+    </select>
+  </div>
+
   <div class="d-flex justify-content-between gap-2 mt-4">
     <button class="btn btn-outline-info" (click)="goBack()">Back</button>
-    <button class="btn btn-primary" (click)="submitBids()">Submit Bid</button>
+    <button class="btn btn-primary" (click)="submitBids()">Save Bid</button>
   </div>
 
   <p class="text-muted mt-2">Note: If no one bids in the first round, reshuffle and redeal the cards.</p>

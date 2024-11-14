@@ -21,10 +21,14 @@ export class MeldingComponent implements OnInit {
 
   ngOnInit(): void {
     // Get the teams from the game state service and initialize meld points for each team
-    if (!this.gameStateService.getGameState()) {
+    if (!this.gameStateService.getCurrentGameState()) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
-    this.teams = [...this.gameStateService.getGameState()?.teams];
+
+    const teams = this.gameStateService.getCurrentGameState()?.teams;
+    if (Array.isArray(teams)) {
+      this.teams = teams;
+    }
   }
 
   submitMeld() {
@@ -35,7 +39,7 @@ export class MeldingComponent implements OnInit {
           throw new Error('Meld score is required for each team');
         }
       });
-      this.gameStateService.setMeldPoints(this.teams);
+      this.gameStateService.setTeamsData(this.teams);
       // Navigate to the next stage (e.g., trick-taking)
       this.router.navigate(['/games/pinochle-scoreboard/trick-taking']);
     } catch (error) {
