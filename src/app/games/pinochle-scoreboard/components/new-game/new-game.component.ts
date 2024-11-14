@@ -14,6 +14,10 @@ export class NewGameComponent implements OnInit {
   teams: Team[] = [];
   gameFormat: GameFormat;
 
+  get formatLabel(): string {
+    return this.gameFormat?.label;
+  }
+
   constructor(
     private router: Router,
     private location: Location,

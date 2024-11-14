@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { Location } from '@angular/common';
-import { formatSubScore, getDeepCopy } from 'src/app/games/games-helper-functions';
+import { formatSubScore } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-round-summary',
@@ -30,38 +30,42 @@ export class RoundSummaryComponent implements OnInit {
     this.calculateTeamScores();
   }
 
+  get getBidWinningTeamName(): string {
+    return this.gameState?.teams[this.gameState.bidWinningTeamIndices[0]].name;
+  }
+
   goBack(): void {
     this.location.back();
   }
 
   calculateTeamScores(): void {
     this.gameState?.teams.forEach((team, i) => {
-      const isBidWinning = this.gameState?.bidWinningTeamIndeces?.includes(i);
+      const isBidWinning = this.gameState?.bidWinningTeamIndices?.includes(i);
       const pointsEarned =
         team.trickScore > 0 ? team.meldScore + team.trickScore : 0;
 
       if (isBidWinning && pointsEarned < this.gameState.currentBid) {
         team.roundSubTotal = -this.gameState?.currentBid;
       } else {
-        team.roundSubTotal = pointsEarned; 
+        team.roundSubTotal = pointsEarned;
       }
       team.currentTotalScore += team.roundSubTotal;
     });
-    this.gameStateService?.setTeamsData(this.gameState?.teams)
+    this.gameStateService?.setTeamsData(this.gameState?.teams);
   }
 
   startNewRound(): void {
     this.gameStateService.saveRoundToHistory();
-    
+
     this.gameState.trumpSuit = null;
-    this.gameState.bidWinningTeamIndeces = null;
+    this.gameState.bidWinningTeamIndices = null;
     this.gameState.currentBid = null;
     this.gameState.roundNumber++;
-    this.gameState.teams.forEach(team => {
+    this.gameState.teams.forEach((team) => {
       team.meldScore = null;
       team.trickScore = null;
       team.roundSubTotal = null;
-    })
+    });
 
     this.gameStateService.setCurrentGameState(this.gameState);
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);

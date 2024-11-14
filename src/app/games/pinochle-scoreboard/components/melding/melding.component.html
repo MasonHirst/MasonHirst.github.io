@@ -9,23 +9,32 @@
   </div>
 
   <form class="mb-3">
-    <div *ngFor="let team of teams" class="form-group mb-3">
-      <label [for]="team.name">{{ team.name }}'s Meld Points</label>
-      <input
-        type="number"
-        [id]="team.name"
-        [(ngModel)]="team.meldScore"
-        [name]="team.name + 'MeldPoints'"
-        class="form-control"
-        placeholder="Enter Meld Points"
-        min="0"
-        required
-      />
+    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+      <ng-container *ngIf="showTeamMeldingInput(i)">
+        <label [for]="team.name"
+          ><strong>{{ getMeldingComboName(i) }}</strong
+          >'s meld points</label
+        >
+        <input
+          type="number"
+          [id]="team.name"
+          [(ngModel)]="team.meldScore"
+          [name]="team.name + 'MeldPoints'"
+          class="form-control"
+          placeholder="Enter Meld Points"
+          min="0"
+          required
+        />
+      </ng-container>
     </div>
   </form>
 
   <div class="d-flex justify-content-between gap-2 mt-4">
-    <button type="button" class="btn btn-outline-info" (click)="goBack()">Back</button>
-    <button type="button" class="btn btn-primary" (click)="submitMeld()">Save Meld Points</button>
+    <button type="button" class="btn btn-outline-info" (click)="goBack()">
+      Back
+    </button>
+    <button type="button" class="btn btn-primary" (click)="submitMeld()">
+      Save Meld Points
+    </button>
   </div>
 </div>

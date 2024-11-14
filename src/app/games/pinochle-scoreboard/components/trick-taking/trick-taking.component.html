@@ -4,29 +4,40 @@
   <div class="mb-4">
     <p><strong>Instructions:</strong></p>
     <ul>
-      <li>Record the total trick points each team has won during this round.</li>
+      <li>
+        Record the total trick points each team has won during this round.
+      </li>
       <li>Enter the trick score for each team below.</li>
     </ul>
   </div>
 
-  <form (ngSubmit)="submitTricks()" class="mb-3">
-    <div *ngFor="let team of teams" class="form-group mb-3">
-      <label [for]="team.name">{{ team.name }}'s Trick Points</label>
-      <input
-        type="number"
-        [id]="team.name"
-        [(ngModel)]="team.trickScore"
-        [name]="team.name + 'TrickPoints'"
-        class="form-control"
-        placeholder="Enter Trick Points"
-        min="0"
-        required
-      />
-    </div>
-
-    <div class="d-flex justify-content-between mt-4">
-      <button type="button" (click)="goBack()" class="btn btn-outline-info">Back to Meld</button>
-      <button type="submit" class="btn btn-primary">Submit Trick Points</button>
+  <form class="mb-3">
+    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+      <ng-container *ngIf="showTeamInput(i)">
+        <label [for]="team.name"
+          >{{ getTeamComboName(i) }}'s trick points</label
+        >
+        <input
+          type="number"
+          [id]="team.name"
+          [(ngModel)]="team.trickScore"
+          (blur)="onTrickInputChange()"
+          [name]="team.name + 'TrickPoints'"
+          class="form-control"
+          placeholder="Enter Trick Points"
+          min="0"
+          required
+        />
+      </ng-container>
     </div>
   </form>
+
+  <div class="d-flex justify-content-between mt-4">
+    <button type="button" (click)="goBack()" class="btn btn-outline-info">
+      Back
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="submitTricks()">
+      Submit Trick Points
+    </button>
+  </div>
 </div>

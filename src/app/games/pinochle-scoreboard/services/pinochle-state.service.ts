@@ -5,6 +5,7 @@ import { GameFormat } from '../interfaces/gameformat.interface';
 import { getDeepCopy } from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
 import shortId from 'shortid';
+import { GameSettings } from '../interfaces/gamesettings.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,7 @@ export class PinochleStateService {
       currentGameState: {
         teams,
         currentBid: null,
-        bidWinningTeamIndeces: null,
+        bidWinningTeamIndices: null,
         trumpSuit: null,
         roundNumber: 1,
         gameIsActive: true,
@@ -60,6 +61,21 @@ export class PinochleStateService {
     return getDeepCopy(this.gameData?.currentGameState);
   }
 
+  getNonBidWinnerIndices(): number[] {
+    let indeces: number[] = [];
+    const { teams, bidWinningTeamIndices } = this.gameData?.currentGameState;
+    teams?.forEach((team, i) => {
+      if (!bidWinningTeamIndices.includes(i)) {
+       indeces.push(i);
+      }
+    });
+    return indeces;
+  }
+ 
+  getGameSettings(): GameSettings {
+    return getDeepCopy(this.gameData?.gameSettings);
+  }
+
   setTeamsData(teams: Team[]): void {
     this.gameData.currentGameState.teams = teams;
   }
@@ -68,9 +84,9 @@ export class PinochleStateService {
     this.gameData.currentGameState = newGameState;
   }
 
-  setWinningBid(teamIndeces: number[], bidAmount: number, trumpSuit: string) {
+  setWinningBid(teamIndices: number[], bidAmount: number, trumpSuit: string) {
     this.gameData.currentGameState.currentBid = bidAmount;
-    this.gameData.currentGameState.bidWinningTeamIndeces = teamIndeces;
+    this.gameData.currentGameState.bidWinningTeamIndices = teamIndices;
     this.gameData.currentGameState.trumpSuit = trumpSuit;
   }
 
@@ -78,12 +94,12 @@ export class PinochleStateService {
     return this.gameData?.currentGameState.currentBid;
   }
 
-  getBidWinningTeamIndeces(): number[] {
-    return this.gameData?.currentGameState.bidWinningTeamIndeces;
+  getBidWinningTeamIndices(): number[] {
+    return this.gameData?.currentGameState.bidWinningTeamIndices;
   }
 
   saveRoundToHistory(): void {
     console.log('about to save data: ', this.gameData.currentGameState);
-    this.gameData.roundHistory.push(this.gameData.currentGameState);
+    this.gameData.roundHistory.push(getDeepCopy(this.gameData.currentGameState));
   }
 }

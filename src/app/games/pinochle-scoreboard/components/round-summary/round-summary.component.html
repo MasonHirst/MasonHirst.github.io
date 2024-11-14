@@ -4,8 +4,13 @@
   <div class="mb-4">
     <p><strong>Round Summary:</strong></p>
     <ul>
-      <li>Winning Bid: {{ gameState.currentBid }} by Team {{ gameState.bidWinningTeamIndeces[0] + 1 }}</li>
-      <li>Trump Suit: {{ gameState.trumpSuit }}</li>
+      <li>
+        Winning Bid: {{ gameState.currentBid }} by Team
+        <strong>{{ getBidWinningTeamName }}</strong>
+      </li>
+      <li>
+        Trump Suit: <strong>{{ gameState.trumpSuit }}</strong>
+      </li>
     </ul>
   </div>
 
@@ -33,6 +38,8 @@
   <div class="d-flex justify-content-between gap-2 mt-4">
     <button class="btn btn-outline-info" (click)="goBack()">Back</button>
     <button class="btn btn-outline-info" (click)="endGame()">End Game</button>
-    <button class="btn btn-primary" (click)="startNewRound()">Start Round {{ gameState.roundNumber + 1 }}</button>
+    <button class="btn btn-primary" (click)="startNewRound()">
+      Start Round {{ gameState.roundNumber + 1 }}
+    </button>
   </div>
 </div>

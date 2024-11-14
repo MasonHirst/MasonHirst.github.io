@@ -32,12 +32,12 @@ export class BiddingComponent implements OnInit {
     if (!this.gameState?.teams || !this.gameState?.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
-    if (!isNaN(this.gameState.bidWinningTeamIndeces?.[0])) {
-      this.primaryWinningTeamIndex = this.gameState.bidWinningTeamIndeces?.[0];
+    if (!isNaN(this.gameState.bidWinningTeamIndices?.[0])) {
+      this.primaryWinningTeamIndex = this.gameState.bidWinningTeamIndices?.[0];
     }
-    if (!isNaN(this.gameState.bidWinningTeamIndeces?.[1])) {
+    if (!isNaN(this.gameState.bidWinningTeamIndices?.[1])) {
       this.secondaryWinningTeamIndex =
-        this.gameState.bidWinningTeamIndeces?.[1];
+        this.gameState.bidWinningTeamIndices?.[1];
     }
   }
 
