@@ -40,6 +40,10 @@ export class BiddingComponent implements OnInit {
     }
   }
 
+  get goBackLabel(): string {
+    return this.gameState.roundNumber == 1 ? 'Back' : null;
+  }
+
   get shouldShowSecondaryWinnerChoice(): boolean {
     return (
       this.gameState?.gameFormat?.label === '5-hand' &&
@@ -52,7 +56,7 @@ export class BiddingComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/games/pinochle-scoreboard/new-game']);
   }
 
   onBidAmountChange() {

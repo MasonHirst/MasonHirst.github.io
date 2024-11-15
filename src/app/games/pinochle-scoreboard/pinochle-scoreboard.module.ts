@@ -8,6 +8,7 @@ import { MeldingComponent } from './components/melding/melding.component';
 import { TrickTakingComponent } from './components/trick-taking/trick-taking.component';
 import { RoundSummaryComponent } from './components/round-summary/round-summary.component';
 import { ConfirmChoiceModalComponent } from './components/modals/confirm-choice-modal/confirm-choice-modal.component';
+import { NavButtonsComponent } from './components/nav-buttons/nav-buttons.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ConfirmChoiceModalComponent } from './components/modals/confirm-choice-
     TrickTakingComponent,
     RoundSummaryComponent,
     ConfirmChoiceModalComponent,
+    NavButtonsComponent,
   ],
   imports: [
     CommonModule,

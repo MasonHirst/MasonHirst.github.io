@@ -83,7 +83,7 @@ export class MeldingComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
 
   showTeamMeldingInput(i: number): boolean {

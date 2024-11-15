@@ -4,6 +4,7 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { Location } from '@angular/common';
 import { formatSubScore } from 'src/app/games/games-helper-functions';
+import { Team } from '../../interfaces/team.interface';
 
 @Component({
   selector: 'app-round-summary',
@@ -15,18 +16,14 @@ export class RoundSummaryComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private location: Location,
     private gameStateService: PinochleStateService
   ) {}
 
   ngOnInit(): void {
-    this.gameState = this.gameStateService.getCurrentGameState();
-
+    this.gameState = this.gameStateService?.getCurrentGameState();
     if (!Array.isArray(this.gameState?.teams) || !this.gameState?.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
-
-    // Calculate total scores for each team after the round
     this.calculateTeamScores();
   }
 
@@ -34,8 +31,16 @@ export class RoundSummaryComponent implements OnInit {
     return this.gameState?.teams[this.gameState.bidWinningTeamIndices[0]].name;
   }
 
+  get nextRoundButtonText(): string {
+    return `Start Round ${this.gameState.roundNumber + 1}`;
+  }
+
+  getTotalScoreWithRoundTotal(team: Team): number {
+    return team.roundSubTotal + team.currentTotalScore;
+  }
+
   goBack(): void {
-    this.location.back();
+    this.router.navigate(['/games/pinochle-scoreboard/trick-taking']);
   }
 
   calculateTeamScores(): void {
@@ -49,19 +54,18 @@ export class RoundSummaryComponent implements OnInit {
       } else {
         team.roundSubTotal = pointsEarned;
       }
-      team.currentTotalScore += team.roundSubTotal;
     });
     this.gameStateService?.setTeamsData(this.gameState?.teams);
   }
 
   startNewRound(): void {
     this.gameStateService.saveRoundToHistory();
-
     this.gameState.trumpSuit = null;
     this.gameState.bidWinningTeamIndices = null;
     this.gameState.currentBid = null;
     this.gameState.roundNumber++;
     this.gameState.teams.forEach((team) => {
+      team.currentTotalScore += team.roundSubTotal;
       team.meldScore = null;
       team.trickScore = null;
       team.roundSubTotal = null;

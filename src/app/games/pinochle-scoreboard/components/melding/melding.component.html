@@ -29,12 +29,10 @@
     </div>
   </form>
 
-  <div class="d-flex justify-content-between gap-2 mt-4">
-    <button type="button" class="btn btn-outline-info" (click)="goBack()">
-      Back
-    </button>
-    <button type="button" class="btn btn-primary" (click)="submitMeld()">
-      Save Meld Points
-    </button>
-  </div>
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Save Meld Points'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitMeld()"
+  />
 </div>

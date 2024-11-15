@@ -35,7 +35,7 @@ export class NewGameComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/games/pinochle-scoreboard']);
   }
 
   startGame() {

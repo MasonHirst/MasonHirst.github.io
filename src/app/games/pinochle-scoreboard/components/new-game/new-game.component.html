@@ -20,8 +20,10 @@
     </div>
   </form>
 
-  <div class="d-flex justify-content-between gap-2 mt-4">
-    <button class="btn btn-outline-info" (click)="goBack()">Back</button>
-    <button class="btn btn-primary" (click)="startGame()">Start Game</button>
-  </div>
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Start Game'"
+    (backClicked)="goBack()"
+    (forwardClicked)="startGame()"
+  />
 </div>

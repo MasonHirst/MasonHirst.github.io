@@ -32,12 +32,10 @@
     </div>
   </form>
 
-  <div class="d-flex justify-content-between mt-4">
-    <button type="button" (click)="goBack()" class="btn btn-outline-info">
-      Back
-    </button>
-    <button type="submit" class="btn btn-primary" (click)="submitTricks()">
-      Submit Trick Points
-    </button>
-  </div>
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Save Trick Points'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitTricks()"
+  />
 </div>

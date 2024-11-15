@@ -30,16 +30,17 @@
         <td>{{ team.meldScore }}</td>
         <td>{{ team.trickScore }}</td>
         <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
-        <td>{{ team.currentTotalScore }}</td>
+        <td>{{ getTotalScoreWithRoundTotal(team) }}</td>
       </tr>
     </tbody>
   </table>
 
-  <div class="d-flex justify-content-between gap-2 mt-4">
-    <button class="btn btn-outline-info" (click)="goBack()">Back</button>
-    <button class="btn btn-outline-info" (click)="endGame()">End Game</button>
-    <button class="btn btn-primary" (click)="startNewRound()">
-      Start Round {{ gameState.roundNumber + 1 }}
-    </button>
-  </div>
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [middleActionLabel]="'End Game'"
+    [goForwardLabel]="nextRoundButtonText"
+    (backClicked)="goBack()"
+    (middleActionClicked)="endGame()"
+    (forwardClicked)="startNewRound()"
+  />
 </div>

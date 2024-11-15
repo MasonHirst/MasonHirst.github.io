@@ -5,8 +5,13 @@
     <p><strong>Instructions:</strong></p>
     <ul>
       <li>Deal the cards evenly among players.</li>
-      <li>The player to the left of the dealer should organize their cards first.</li>
-      <li>Bidding starts with the player to the dealer's left and proceeds clockwise.</li>
+      <li>
+        The player to the left of the dealer should organize their cards first.
+      </li>
+      <li>
+        Bidding starts with the player to the dealer's left and proceeds
+        clockwise.
+      </li>
     </ul>
   </div>
 
@@ -29,7 +34,10 @@
 
     <div class="form-group mb-4">
       <label>Select Winning Team</label>
-      <div *ngFor="let team of gameState.teams; let i = index" class="form-check">
+      <div
+        *ngFor="let team of gameState.teams; let i = index"
+        class="form-check mt-1 d-flex align-items-center"
+      >
         <input
           type="radio"
           [id]="'team' + i"
@@ -39,8 +47,11 @@
           name="winningTeam"
           class="form-check-input"
           required
+          style="transform: scale(1.4);"
         />
-        <label [for]="'team' + i" class="form-check-label">{{ team.name }}</label>
+        <label [for]="'team' + i" class="form-check-label fs-3 ml-1">{{
+          team.name
+        }}</label>
       </div>
     </div>
 
@@ -50,40 +61,46 @@
         <div *ngIf="i !== primaryWinningTeamIndex" class="form-check">
           <input
             type="radio"
-            [id]="'team' + i"
+            [id]="'secondary-team' + i"
             [(ngModel)]="secondaryWinningTeamIndex"
             [value]="i"
             name="secondaryWinningTeam"
             class="form-check-input"
             required
           />
-          <label [for]="'team' + i" class="form-check-label">{{ team.name }}</label>
+          <label [for]="'secondary-team' + i" class="form-check-label">{{
+            team.name
+          }}</label>
         </div>
       </ng-container>
     </div>
+
+    <div class="form-group mt-3">
+      <label for="trumpSuit">Select Trump Suit</label>
+      <select
+        id="trumpSuit"
+        [(ngModel)]="gameState.trumpSuit"
+        name="trumpSuit"
+        class="form-control"
+        required
+      >
+        <option value="" disabled selected>Select a suit</option>
+        <option value="Hearts">♥ Hearts</option>
+        <option value="Diamonds">♦ Diamonds</option>
+        <option value="Clubs">♣ Clubs</option>
+        <option value="Spades">♠ Spades</option>
+      </select>
+    </div>
   </form>
 
-  <div class="form-group mt-3">
-    <label for="trumpSuit">Select Trump Suit</label>
-    <select
-      id="trumpSuit"
-      [(ngModel)]="gameState.trumpSuit"
-      name="trumpSuit"
-      class="form-control"
-      required
-    >
-      <option value="" disabled selected>Select a suit</option>
-      <option value="Hearts">♥ Hearts</option>
-      <option value="Diamonds">♦ Diamonds</option>
-      <option value="Clubs">♣ Clubs</option>
-      <option value="Spades">♠ Spades</option>
-    </select>
-  </div>
+  <p class="text-muted mt-2">
+    Note: If no one bids in the first round, reshuffle and redeal the cards.
+  </p>
 
-  <div class="d-flex justify-content-between gap-2 mt-4">
-    <button class="btn btn-outline-info" (click)="goBack()">Back</button>
-    <button class="btn btn-primary" (click)="submitBids()">Save Bid</button>
-  </div>
-
-  <p class="text-muted mt-2">Note: If no one bids in the first round, reshuffle and redeal the cards.</p>
+  <app-nav-buttons
+    [goBackLabel]="goBackLabel"
+    [goForwardLabel]="'Save Bid'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitBids()"
+  />
 </div>
