@@ -7,7 +7,4 @@ export interface GameState {
   bidWinningTeamIndices: number[];
   trumpSuit: string;
   roundNumber: number;
-  gameIsActive: boolean;
-  gameStartTime: number;
-  gameFormat: GameFormat;
 }

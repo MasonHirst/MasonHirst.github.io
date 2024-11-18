@@ -5,6 +5,7 @@ import { GameState } from '../../interfaces/gamestate.interface';
 import { Location } from '@angular/common';
 import { formatSubScore } from 'src/app/games/games-helper-functions';
 import { Team } from '../../interfaces/team.interface';
+import { GameFormat } from '../../interfaces/gameformat.interface';
 
 @Component({
   selector: 'app-round-summary',
@@ -13,6 +14,7 @@ import { Team } from '../../interfaces/team.interface';
 })
 export class RoundSummaryComponent implements OnInit {
   gameState: GameState;
+  gameFormat: GameFormat;
 
   constructor(
     private router: Router,
@@ -21,7 +23,8 @@ export class RoundSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
-    if (!Array.isArray(this.gameState?.teams) || !this.gameState?.gameFormat) {
+    this.gameFormat = this.gameStateService?.getGameFormat();
+    if (!Array.isArray(this.gameState?.teams) || !this.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
     this.calculateTeamScores();
@@ -76,7 +79,7 @@ export class RoundSummaryComponent implements OnInit {
   }
 
   endGame(): void {
-    this.gameState.gameIsActive = false;
+    this.gameStateService?.setGameActiveStatus(false);
     this.router.navigate(['/games']);
   }
 

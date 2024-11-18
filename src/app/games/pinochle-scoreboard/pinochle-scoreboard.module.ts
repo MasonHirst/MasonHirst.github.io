@@ -9,6 +9,8 @@ import { TrickTakingComponent } from './components/trick-taking/trick-taking.com
 import { RoundSummaryComponent } from './components/round-summary/round-summary.component';
 import { ConfirmChoiceModalComponent } from './components/modals/confirm-choice-modal/confirm-choice-modal.component';
 import { NavButtonsComponent } from './components/nav-buttons/nav-buttons.component';
+import { FormatSelectComponent } from './components/format-select/format-select.component';
+import { GameStatusComponent } from './components/game-status/game-status.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { NavButtonsComponent } from './components/nav-buttons/nav-buttons.compon
     RoundSummaryComponent,
     ConfirmChoiceModalComponent,
     NavButtonsComponent,
+    FormatSelectComponent,
+    GameStatusComponent,
   ],
   imports: [
     CommonModule,

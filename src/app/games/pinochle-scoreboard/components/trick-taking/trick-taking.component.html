@@ -1,4 +1,10 @@
-<div class="container my-5">
+<app-game-status
+  [gameState]="getDataForStatus()"
+  [currentPage]="'trick-taking'"
+  [gameFormat]="gameFormat"
+/>
+
+<div class="container fade-in my-5">
   <h2 class="text-center mb-4">Trick-Taking Phase</h2>
 
   <div class="mb-4">

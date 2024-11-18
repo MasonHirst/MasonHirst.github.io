@@ -1,0 +1,11 @@
+############### PINOCHLE SCOREBOARD ###############
+- Add on page error messaging to handle validation problems
+- Make the gave same your state to indexedDB as you play, so you can recover your game
+- Clean up the text and styling on the pages
+- Add "are you sure" modals to certain buttons to double check actions that have irreversable results
+- fix styling on bidding page
+
+--------------- finished ---------------
+- Add a nav component to replace the buttons on each page
+- Move the settings outside of gameData, as it is client specific, not game specific
+- Add information component to each relevant page to show scores and data

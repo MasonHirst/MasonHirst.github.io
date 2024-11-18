@@ -9,6 +9,7 @@ import {
   showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
 import { GameState } from '../../interfaces/gamestate.interface';
+import { GameFormat } from '../../interfaces/gameformat.interface';
 
 @Component({
   selector: 'app-trick-taking',
@@ -17,9 +18,9 @@ import { GameState } from '../../interfaces/gamestate.interface';
 })
 export class TrickTakingComponent implements OnInit {
   teams: Team[] = null;
-  private gameState: GameState = null;
+  gameState: GameState = null;
+  gameFormat: GameFormat = null;
   private nonBidWinnerTeamIndices: number[] = null;
-  private autoScoreIndex: number = null;
 
   constructor(
     private router: Router,
@@ -27,7 +28,8 @@ export class TrickTakingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.teams = this.gameStateService.getCurrentGameState()?.teams;
+    this.teams = this.gameStateService?.getCurrentGameState()?.teams;
+    this.gameFormat = this.gameStateService?.getGameFormat();
     if (!Array.isArray(this.teams)) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
@@ -39,7 +41,7 @@ export class TrickTakingComponent implements OnInit {
   showTeamInput(i: number): boolean {
     return showTeamInput5Hand(
       i,
-      this.gameState?.gameFormat,
+      this.gameFormat,
       this.gameState?.bidWinningTeamIndices,
       this.nonBidWinnerTeamIndices
     );
@@ -48,15 +50,18 @@ export class TrickTakingComponent implements OnInit {
   getTeamComboName(i: number): string {
     return getTeamComboName5Hand(
       i,
-      this.gameState?.gameFormat,
+      this.gameFormat,
       this.gameState?.bidWinningTeamIndices,
       this.nonBidWinnerTeamIndices,
       this.teams
     );
   }
 
-  goBack() {
-    // Navigate back to the melding phase
+  getDataForStatus(): GameState {
+    return getDeepCopy(this.gameState);
+  }
+
+  goBack(): void {
     this.router.navigate(['/games/pinochle-scoreboard/melding']);
   }
 
@@ -64,7 +69,7 @@ export class TrickTakingComponent implements OnInit {
     if (!this.gameStateService.getGameSettings()?.autoCalculate) {
       return;
     }
-    const { gameFormat } = this.gameStateService.getCurrentGameState();
+    const gameFormat = this.gameStateService.getGameFormat();
     const possibleTrickPoints = gameFormat.possibleTrickPoints;
     const isFiveHand = gameFormat.label === '5-hand';
     let filledScores = 0;
@@ -114,7 +119,7 @@ export class TrickTakingComponent implements OnInit {
 
   submitTricks() {
     try {
-      if (this.gameState.gameFormat.label === '5-hand') {
+      if (this.gameFormat.label === '5-hand') {
         const primaryBidWinner =
           this.teams[this.gameState.bidWinningTeamIndices[0]];
         const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
@@ -141,6 +146,9 @@ export class TrickTakingComponent implements OnInit {
           throw new Error('Trick score is required for each team or alliance');
         }
       });
+
+      
+      
       // Update the trick scores for each team in the game state
       this.gameStateService.setTeamsData(this.teams);
 

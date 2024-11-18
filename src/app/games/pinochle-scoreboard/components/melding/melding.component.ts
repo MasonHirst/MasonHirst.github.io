@@ -4,11 +4,13 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
 import { Team } from '../../interfaces/team.interface';
 import { Location } from '@angular/common';
 import {
+  getDeepCopy,
   getTeamComboName5Hand,
   isValidNumber,
   showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
 import { GameState } from '../../interfaces/gamestate.interface';
+import { GameFormat } from '../../interfaces/gameformat.interface';
 
 @Component({
   selector: 'app-melding',
@@ -18,6 +20,7 @@ import { GameState } from '../../interfaces/gamestate.interface';
 export class MeldingComponent implements OnInit {
   teams: Team[] = [];
   gameState: GameState = null;
+  gameFormat: GameFormat = null;
   nonBidWinnerTeamIndices: number[] = [];
 
   constructor(
@@ -32,11 +35,12 @@ export class MeldingComponent implements OnInit {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
 
-    const teams = this.gameStateService.getCurrentGameState()?.teams;
+    const teams = this.gameStateService?.getCurrentGameState()?.teams;
+    this.gameFormat = this.gameStateService?.getGameFormat();
     if (Array.isArray(teams)) {
       this.teams = teams;
       this.gameState = this.gameStateService?.getCurrentGameState();
-      if (this.gameState?.gameFormat?.label === '5-hand') {
+      if (this.gameFormat?.label === '5-hand') {
         this.nonBidWinnerTeamIndices =
           this.gameStateService.getNonBidWinnerIndices();
       }
@@ -46,7 +50,7 @@ export class MeldingComponent implements OnInit {
   submitMeld() {
     // Update the meld points for each team in the service
     try {
-      if (this.gameState.gameFormat.label === '5-hand') {
+      if (this.gameFormat?.label === '5-hand') {
         const primaryBidWinner =
           this.teams[this.gameState.bidWinningTeamIndices[0]];
         const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
@@ -82,14 +86,18 @@ export class MeldingComponent implements OnInit {
     }
   }
 
-  goBack() {
+  getDataForStatus(): GameState {
+    return getDeepCopy(this.gameState);
+  }
+
+  goBack(): void {
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
 
   showTeamMeldingInput(i: number): boolean {
     return showTeamInput5Hand(
       i,
-      this.gameState?.gameFormat,
+      this.gameFormat,
       this.gameState?.bidWinningTeamIndices,
       this.nonBidWinnerTeamIndices
     );
@@ -98,7 +106,7 @@ export class MeldingComponent implements OnInit {
   getMeldingComboName(i: number): string {
     return getTeamComboName5Hand(
       i,
-      this.gameState?.gameFormat,
+      this.gameFormat,
       this.gameState?.bidWinningTeamIndices,
       this.nonBidWinnerTeamIndices,
       this.teams

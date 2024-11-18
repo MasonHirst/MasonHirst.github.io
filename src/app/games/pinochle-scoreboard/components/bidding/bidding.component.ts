@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
-import { Location } from '@angular/common';
-import { Team } from '../../interfaces/team.interface';
-import { getDeepCopy, isValidNumber } from 'src/app/games/games-helper-functions';
+import {
+  getDeepCopy,
+  isValidNumber,
+} from 'src/app/games/games-helper-functions';
+import { GameFormat } from '../../interfaces/gameformat.interface';
 
 @Component({
   selector: 'app-bidding',
@@ -13,25 +15,25 @@ import { getDeepCopy, isValidNumber } from 'src/app/games/games-helper-functions
 })
 export class BiddingComponent implements OnInit {
   gameState: GameState = null;
+  gameFormat: GameFormat = null;
   primaryWinningTeamIndex: number = null;
   secondaryWinningTeamIndex: number = null;
   noBidMessage: string = '';
 
   constructor(
     private router: Router,
-    private location: Location,
     private gameStateService: PinochleStateService
   ) {}
 
   ngOnInit(): void {
     // Retrieve the list of teams from the game state service
-    this.gameState = getDeepCopy(this.gameStateService.getCurrentGameState());
-    
+    this.gameState = this.gameStateService.getCurrentGameState();
+    this.gameFormat = this.gameStateService?.getGameFormat();
 
-    if (!this.gameState?.teams || !this.gameState?.gameFormat) {
+    if (!this.gameState?.teams || !this.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
-    if (!isNaN(this.gameState.bidWinningTeamIndices?.[0])) {
+    if (!isNaN(this.gameState?.bidWinningTeamIndices?.[0])) {
       this.primaryWinningTeamIndex = this.gameState.bidWinningTeamIndices?.[0];
     }
     if (!isNaN(this.gameState.bidWinningTeamIndices?.[1])) {
@@ -40,13 +42,17 @@ export class BiddingComponent implements OnInit {
     }
   }
 
+  getDataForStatus(): GameState {
+    return getDeepCopy(this.gameState);
+  }
+
   get goBackLabel(): string {
     return this.gameState.roundNumber == 1 ? 'Back' : null;
   }
 
   get shouldShowSecondaryWinnerChoice(): boolean {
     return (
-      this.gameState?.gameFormat?.label === '5-hand' &&
+      this.gameFormat?.label === '5-hand' &&
       isValidNumber(this.primaryWinningTeamIndex)
     );
   }
@@ -81,7 +87,7 @@ export class BiddingComponent implements OnInit {
         throw new Error('Must pick a team for the bid.');
       }
       if (
-        this.gameState?.gameFormat?.label === '5-hand' &&
+        this.gameFormat?.label === '5-hand' &&
         !isValidNumber(this.secondaryWinningTeamIndex)
       ) {
         throw new Error('Must pick a secondary team for the bid.');
