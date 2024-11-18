@@ -6,7 +6,7 @@ import { getDeepCopy } from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
 import shortId from 'shortid';
 import { GameSettings } from '../interfaces/gamesettings.interface';
-import { openDB, IDBPDatabase } from 'idb';
+import { PinochleDatabase } from './pinochle-database.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +14,10 @@ import { openDB, IDBPDatabase } from 'idb';
 export class PinochleStateService {
   private gameData: GameData = null;
   private gameSettings: GameSettings = null;
-  private dbPromise: Promise<IDBPDatabase>;
+  private db: PinochleDatabase;
 
   constructor() {
-    this.dbPromise = this.initDB();
+    this.db = new PinochleDatabase();
     this.gameSettings = {
       autoCalculate:
         JSON.parse(localStorage.getItem('masonhirst_pinochle_autoCalculate')) ||
@@ -25,28 +25,20 @@ export class PinochleStateService {
     };
   }
 
-  private async initDB(): Promise<IDBPDatabase> {
-    return await openDB('masonhirst_pinochle_DB', 1, {
-      upgrade(db) {
-        if (!db.objectStoreNames.contains('gameData')) {
-          db.createObjectStore('gameData', { keyPath: 'id' });
-        }
-      },
-    });
-  }
-
   private async saveGameDataToDB(): Promise<void> {
-    // Save the current gameData to IndexedDB
-    const db = await this.dbPromise;
     if (this.gameData) {
-      await db.put('gameData', getDeepCopy(this.gameData));
+      await this.db.gameData.put(this.gameData);
     }
   }
 
-  async getGamesFromDB(): Promise<any[]> {
-    const db = await this.dbPromise;
-    const allGames = await db.getAll('gameData');
-    return allGames;
+  async getGamesFromDB(): Promise<GameData[]> {
+    try {
+      const allGames = await this.db.gameData.toArray();
+      return allGames;
+    } catch (error) {
+      console.error('Error retrieving games from database:', error);
+      return [];
+    }
   }
 
   async startNewGameFormat(format: GameFormat): Promise<void> {
@@ -57,7 +49,7 @@ export class PinochleStateService {
       roundSubTotal: null,
       currentTotalScore: 0,
     }));
-
+    
     this.gameData = {
       id: shortId(),
       currentGameState: {
@@ -73,7 +65,6 @@ export class PinochleStateService {
       roundHistory: [],
     };
     await this.setAllPastGamesToNotActiveInDB();
-    await this.saveGameDataToDB();
   }
 
   getGameFormat(): GameFormat {
@@ -148,24 +139,30 @@ export class PinochleStateService {
 
   setGameActiveStatus(status: boolean): void {
     this.gameData.gameIsActive = status;
+    this.saveGameDataToDB();
   }
 
   async setAllPastGamesToNotActiveInDB(): Promise<void> {
-    const db = await this.dbPromise; // Wait for the database to initialize
-    const allGames = await db.getAll('gameData'); // Retrieve all games from the database
-  
-    // Iterate through each game and update its gameIsActive property
-    for (const game of allGames) {
-      if (game.gameIsActive) {
-        game.gameIsActive = false; // Set gameIsActive to false
-        await db.put('gameData', game); // Update the record in the database
+    try {
+      const savedGames = await this.db.gameData.toArray();
+      for (const game of savedGames) {
+        game.gameIsActive = false;
       }
-    }
-  }
+      await this.db.gameData.bulkPut(savedGames);
 
-  public async onDestroyAction(): Promise<void> {
-    // close IndexedDB connection
-    const db = await this.dbPromise;
-    db.close();
+      // delete oldest games if there are more than 25
+      if (savedGames.length > 25) {
+        const sortedGames = savedGames.sort(
+          (a, b) => a.gameStartTime - b.gameStartTime
+        );
+        const gamesToDelete = sortedGames.slice(0, savedGames.length - 25);
+        const idsToDelete = gamesToDelete.map(game => game.id);
+        await this.db.gameData.bulkDelete(idsToDelete);
+  
+        console.log(`Deleted ${idsToDelete.length} oldest games to maintain a limit of 25.`);
+      }
+    } catch (error) {
+      console.error('Error setting past games to not active or deleting old games:', error);
+    }
   }
 }

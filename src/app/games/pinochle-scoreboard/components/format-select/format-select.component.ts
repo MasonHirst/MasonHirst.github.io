@@ -84,10 +84,6 @@ export class FormatSelectComponent implements OnInit {
     const activeGame = this.gamesFromIndexedDB?.find(
       (game: GameData) => game?.gameIsActive
     );
-    console.log(
-      '🚀 ~ FormatSelectComponent ~ startNewGame ~ activeGame:',
-      activeGame
-    );
     if (activeGame) {
       const result = await Swal.fire({
         title: 'Are you sure?',
