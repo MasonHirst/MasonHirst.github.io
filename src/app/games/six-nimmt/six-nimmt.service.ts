@@ -46,11 +46,12 @@ export class SixNimmtService {
     if (location.hostname === 'localhost') {
       serverUrl = `${scheme}://${location.hostname}:8080`;
     }
+    console.log("🚀 ~ SixNimmtService ~ serverUrl:", serverUrl)
 
     // serverUrl = 'ws://10.0.0.251:8080';
     // serverUrl = 'ws://192.168.12.196:8080';
     // serverUrl = 'ws://10.254.1.50:8080';
-    serverUrl = 'ws://192.168.1.136:8080';
+    // serverUrl = 'ws://192.168.1.136:8080';
 
     this.socket = io(serverUrl + '?token=' + token);
     const { socket } = this;

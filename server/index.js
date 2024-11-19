@@ -5,7 +5,7 @@ const http = require("http");
 const cors = require("cors");
 require("dotenv").config();
 const path = require("path");
-const os = require('os');
+const os = require("os");
 
 //! Middleware
 const join = path.join(__dirname, ".", "build");
@@ -38,8 +38,12 @@ attachSocketServer(server);
 
 //! Server listen
 const PORT = process.env.PORT || 8080;
+const USE_LOCAL_IP = process.env.USE_LOCAL_IP === "true";
 let host;
-host = getLocalIPAddress();
+
+if (USE_LOCAL_IP) {
+  host = getLocalIPAddress();
+}
 
 if (host) {
   server.listen(PORT, host, () =>
@@ -49,14 +53,12 @@ if (host) {
   server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-
-
-
 function getLocalIPAddress() {
   const interfaces = os.networkInterfaces();
   for (const iface of Object.values(interfaces)) {
     for (const alias of iface) {
-      if (alias.family === 'IPv4' && !alias.internal) { // Only consider IPv4 addresses and exclude internal (localhost)
+      if (alias.family === "IPv4" && !alias.internal) {
+        // Only consider IPv4 addresses and exclude internal (localhost)
         return alias.address;
       }
     }
