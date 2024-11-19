@@ -157,7 +157,7 @@ const lowQuips = [
   "I've seen worse. Like when I tried to cook.",
   'Try taking zero points next time. Revolutionary, I know.',
   'Tis just a scratch!',
-  "Like getting a 'C' in P.E. class.",
+  "Like getting a 'B' in P.E. class.",
   'Warm-up round, right?',
   "Taking points? That's so last season.",
   'Like falling off a bike.',
@@ -182,11 +182,11 @@ const highQuips = [
   "I'd love you see how you play chess.",
   'Dun Dun Dun...',
   'Winning too mainstream for you? Clearly.',
-  "Winning is overrated, right? That's what I thought.",
+  "Winning is overrated, right?",
   'Are you ok?',
-  "Loving an uphill battle? Too bad it's a battle you'll likely lose.",
+  "You just love uphill battles, don't you?",
   'Do you think points are good? They are not.',
-  'Taking points with gusto! Not exactly the best stragety',
+  'Taking points with gusto! Not exactly the best strategy.',
 ];
 
 module.exports = {
