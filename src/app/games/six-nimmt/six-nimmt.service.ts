@@ -84,7 +84,6 @@ export class SixNimmtService {
       }
     });
     socket.on('someone-joined-game', (data: any) => {
-      // console.log('someone-joined-game: ', data);
       this.updateGameData(data);
       if (location.href.split('/').pop() === '6-nimmt!') {
         if (data?.players[localStorage.getItem('userToken')]) {
@@ -95,17 +94,15 @@ export class SixNimmtService {
       }
     });
     socket.on('someone-left-game', (data: any) => {
-      // console.log('someone left game: ', data);
+
     });
     socket.on('game-updated', (data: any) => {
-      // console.log('game-updated: ', data);
       // this.toastr.info(`<strong>${'Jackson'}</strong> took row <strong>${this.getRowString(
       //   0
       // )}</strong> for <strong>${21}</strong> points!<p>${'What a loser!'}</p>`)
       this.updateGameData(data);
     });
     socket.on('counting-down', (data: boolean) => {
-      // console.log('counting down: ', data);
       this.countdownEmit.emit(data);
     });
     socket.on('not-allowing-join', () => {

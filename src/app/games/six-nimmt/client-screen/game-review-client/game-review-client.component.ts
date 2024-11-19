@@ -15,7 +15,6 @@ export class GameReviewClientComponent {
   }
 
   sendMessage(message: string) {
-    console.log('bruv');
     this.nimmtService.sendSocketMessage(message);
   }
 

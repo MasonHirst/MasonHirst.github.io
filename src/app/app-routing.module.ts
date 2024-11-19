@@ -15,6 +15,7 @@ import { AudioLibraryComponent } from './extras/audio-library/audio-library.comp
 import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
 import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.component';
 import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
+import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
 
 const routes: Routes = [
   { path: 'home', component: LandingPageComponent },
@@ -47,6 +48,10 @@ const routes: Routes = [
             component: ClientScreenComponent,
           },
         ],
+      },
+      {
+        path: 'pinochle-scoreboard',
+        loadChildren: () => import('./games/pinochle-scoreboard/pinochle-scoreboard.module').then(m => m.PinochleScoreboardModule)
       },
       { path: '**', redirectTo: '' },
     ],

@@ -94,7 +94,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < height; i++) {
       for (let k = 0; k < width; k++) {
         const cell = this.gameRows[i][k];
-        // console.log(i, k)
         if (cell.value !== 'bomb') {
           // if cell isn't a bomb, determine how many bombs are touching
           cell.value = this.getBombCount(i, k);

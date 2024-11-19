@@ -1,0 +1,15 @@
+############### PINOCHLE SCOREBOARD ###############
+- Clean up the text and styling on the pages
+- update the ip address logic in the code so I don't have to update it everytime I want to use the server over wifi
+- create a settings modal for pinochle to adjust possible trick points and other things
+
+--------------- finished ---------------
+- Add a nav component to replace the buttons on each page
+- Move the settings outside of gameData, as it is client specific, not game specific
+- Add information component to each relevant page to show scores and data
+- Make the gave same your state to indexedDB as you play, so you can recover your game
+- Add "are you sure" modals to certain buttons to double check actions that have irreversable results
+- Add on page error messaging to handle validation problems
+- fix styling on bidding page
+- give each number input a proper cap on the number
+- fix logic with auto calculation

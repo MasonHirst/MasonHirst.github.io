@@ -1,0 +1,99 @@
+<app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
+  [gameState]="getDataForStatus()"
+  [currentPage]="'trick-taking'"
+  [gameFormat]="gameFormat"
+/>
+
+<div class="container fade-in my-4">
+  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+    <h2 class="text-center mb-2">Trick-Taking Phase</h2>
+    <sub class="text-center text-muted"
+      >Remember the last trick is worth extra points!</sub
+    >
+  </div>
+
+  <form class="mb-3">
+    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+      <ng-container *ngIf="showTeamInput(i)">
+        <label [for]="team.name"
+          >{{ getTeamComboName(i) }}'s trick points</label
+        >
+        <ng-container *ngIf="showCalculateButtons; else soloInput">
+          <div class="input-group">
+            <input
+              type="number"
+              [min]="0"
+              [max]="gameFormat.possibleTrickPoints"
+              [id]="team.name"
+              [(ngModel)]="team.trickScore"
+              (ngModelChange)="setNoTrickPointsMessage('')"
+              [name]="team.name + 'TrickPoints'"
+              class="form-control"
+              placeholder="Enter Trick Points"
+              min="0"
+              required
+            />
+            <button
+              *ngIf="showCalculateButtons"
+              type="button"
+              class="btn btn-outline-info ms-2"
+              (click)="calculateTrickPoints(i)"
+              [disabled]="!isEligibleForAutoCalculate(i)"
+            >
+              Calculate
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #soloInput>
+          <input
+            type="number"
+            [min]="0"
+            [max]="gameFormat.possibleTrickPoints"
+            [id]="team.name"
+            [(ngModel)]="team.trickScore"
+            (ngModelChange)="onTrickInputChange(i)"
+            (blur)="onTrickInputChange(i, true)"
+            [name]="team.name + 'TrickPoints'"
+            class="form-control"
+            placeholder="Enter Trick Points"
+            min="0"
+            required
+          />
+        </ng-template>
+      </ng-container>
+    </div>
+    <p>
+      <span class="text-muted">Trick points claimed: </span
+      ><span
+        [ngClass]="{
+          'text-primary': trickSubTotal === possibleTrickPoints,
+          'text-danger': trickSubTotal > possibleTrickPoints,
+        }"
+      >
+        <i
+          class="bi bi-check-circle-fill text-success"
+          [ngStyle]="{
+            opacity: trickSubTotal === possibleTrickPoints ? 1 : 0
+          }"
+          [ngClass]="{
+            'fade-in': trickSubTotal === possibleTrickPoints
+          }"
+        ></i>
+        {{ trickSubTotal }}</span
+      >
+      / <span class="text-muted">{{ possibleTrickPoints }}</span>
+    </p>
+    <small *ngIf="noTrickPointsMessage" class="text-danger">{{
+      noTrickPointsMessage
+    }}</small>
+  </form>
+
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Save Trick Points'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitTricks()"
+  />
+</div>

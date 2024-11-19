@@ -1,0 +1,32 @@
+<div class="container fade-in my-3">
+  <h2 class="text-center mb-4">Name Your Teams</h2>
+
+  <form class="mb-3">
+    <p class="text-center text-muted">
+      You are setting up a {{ formatLabel }} game. Please enter names for each team:
+    </p>
+
+    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+      <label [for]="'teamName' + i">Team {{ i + 1 }} Name</label>
+      <input
+        type="text"
+        [maxlength]="25"
+        [id]="'teamName' + i"
+        [(ngModel)]="team.name"
+        (ngModelChange)="onNameInputChange"
+        [name]="'teamName' + i"
+        class="form-control"
+        placeholder="Enter Team Name"
+        required
+      />
+    </div>
+    <small *ngIf="noNameMessage" class="text-danger">{{ noNameMessage }}</small>
+  </form>
+
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Start Game'"
+    (backClicked)="goBack()"
+    (forwardClicked)="startGame()"
+  />
+</div>

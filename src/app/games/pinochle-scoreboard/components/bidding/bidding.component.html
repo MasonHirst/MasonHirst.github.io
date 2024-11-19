@@ -1,0 +1,122 @@
+<app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
+  [gameState]="getDataForStatus()"
+  [currentPage]="'bidding'"
+  [gameFormat]="gameFormat"
+/>
+
+<div class="container fade-in my-4">
+  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+    <h2 class="text-center">Bidding Phase</h2>
+    <small class="text-muted"
+      >Bidding starts with the player to the dealer's left and proceeds
+      clockwise.</small
+    >
+    <small class="text-muted"
+      >If no one bids in the first round, reshuffle and redeal the cards.</small
+    >
+  </div>
+
+  <form *ngIf="gameState" class="mb-3">
+    <div class="form-group mb-3">
+      <label for="bidAmount">Enter Winning Bid Amount</label>
+      <input
+        type="number"
+        id="bidAmount"
+        [(ngModel)]="gameState.currentBid"
+        (ngModelChange)="onBidAmountChange()"
+        name="bidAmount"
+        class="form-control"
+        placeholder="Enter Bid Amount"
+        min="0"
+        required
+      />
+      <small *ngIf="noBidMessage" class="text-danger">{{ noBidMessage }}</small>
+    </div>
+
+    <div class="form-group mb-4 d-flex flex-column gap-1">
+      <label>Select Winning Team</label>
+      <div
+        *ngFor="let team of gameState.teams; let i = index"
+        class="form-check d-flex gap-2"
+      >
+        <input
+          type="radio"
+          [id]="'team' + i"
+          [(ngModel)]="primaryWinningTeamIndex"
+          (ngModelChange)="onPrimaryWinningTeamChange()"
+          [value]="i"
+          name="winningTeam"
+          class="form-check-input"
+          required
+          style="transform: scale(1.35)"
+        />
+        <label [for]="'team' + i" class="form-check-label">{{
+          team.name
+        }}</label>
+      </div>
+      <small *ngIf="noWinnerMessage" class="text-danger">{{
+        noWinnerMessage
+      }}</small>
+    </div>
+
+    <div
+      *ngIf="shouldShowSecondaryWinnerChoice"
+      class="form-group mb-4 d-flex flex-column gap-1"
+    >
+      <label>Select Secondary Winning Team</label>
+      <ng-container *ngFor="let team of gameState.teams; let i = index">
+        <div
+          *ngIf="i !== primaryWinningTeamIndex"
+          class="form-check d-flex gap-2"
+        >
+          <input
+            type="radio"
+            [id]="'secondary-team' + i"
+            [(ngModel)]="secondaryWinningTeamIndex"
+            (ngModelChange)="onSecondaryWinningTeamChange()"
+            [value]="i"
+            name="secondaryWinningTeam"
+            class="form-check-input"
+            required
+            style="transform: scale(1.35)"
+          />
+          <label [for]="'secondary-team' + i" class="form-check-label">{{
+            team.name
+          }}</label>
+        </div>
+      </ng-container>
+      <small *ngIf="noSecondaryWinnerMessage" class="text-danger">{{
+        noSecondaryWinnerMessage
+      }}</small>
+    </div>
+
+    <div class="form-group mt-3">
+      <label for="trumpSuit">Select Trump Suit</label>
+      <select
+        id="trumpSuit"
+        [(ngModel)]="gameState.trumpSuit"
+        (ngModelChange)="onTrumpSuitChange()"
+        name="trumpSuit"
+        class="form-control"
+        required
+      >
+        <option value="" disabled selected>Select a suit</option>
+        <option value="Hearts">♥ Hearts</option>
+        <option value="Diamonds">♦ Diamonds</option>
+        <option value="Spades">♠ Spades</option>
+        <option value="Clubs">♣ Clubs</option>
+      </select>
+      <small *ngIf="noTrumpSuitMessage" class="text-danger">{{
+        noTrumpSuitMessage
+      }}</small>
+    </div>
+  </form>
+
+  <app-nav-buttons
+    [goBackLabel]="goBackLabel"
+    [goForwardLabel]="'Save Bid'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitBids()"
+  />
+</div>

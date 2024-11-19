@@ -1,0 +1,36 @@
+<div class="container fade-in my-4">
+  <div class="text-center">
+    <h1 class="display-4 mb-4">Pinochle Scoreboard</h1>
+    <p>
+      Welcome to Pinochle Scoreboard! This tool is designed to help you keep
+      track of round details during a game of Pinochle. It guides you through
+      each stage of the game, and provides a summary after each round.
+    </p>
+    <h2 class="text-center text-info mb-4">Choose a Game Format</h2>
+
+    <div class="d-flex flex-column align-items-center">
+      <div
+        class="btn-group-vertical d-flex flex-column align-items-center w-100"
+        style="max-width: 240px"
+      >
+        <div *ngFor="let format of gameFormats" class="mb-4 text-center">
+          <button (click)="startNewGame(format)" class="btn btn-primary w-100">
+            New {{ format.label }} game
+          </button>
+          <small class="text-muted">{{ format.description }}</small>
+        </div>
+      </div>
+    </div>
+    <p>
+      This tool follows the standard rules for Partnership Pinochle, including
+      bidding, melding, and scoring conventions. You can find an overview
+      Partnership Pinochle
+      <a
+        href="https://entertainment.howstuffworks.com/how-to-play-partnership-pinochle.htm"
+        target="_blank"
+        rel="noopener noreferrer"
+        >here</a
+      >.
+    </p>
+  </div>
+</div>

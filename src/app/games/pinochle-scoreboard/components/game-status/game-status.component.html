@@ -1,0 +1,71 @@
+<div class="info-container">
+  <!-- Top Row -->
+  <div class="row" [ngClass]="{ 'mb-2': topRowHasBottomMargin }">
+    <ng-container
+      *ngTemplateOutlet="teamSlot; context: { team: slotOneTeam }"
+    />
+
+    <ng-container *ngIf="!placeBidSectionTopMiddle">
+      <ng-container
+        *ngTemplateOutlet="teamSlot; context: { team: slotTwoTeam }"
+      />
+    </ng-container>
+
+    <ng-container *ngIf="placeBidSectionTopMiddle">
+      <ng-container *ngTemplateOutlet="bidTrumpSection" />
+    </ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="teamSlot; context: { team: slotThreeTeam }"
+    />
+  </div>
+
+  <!-- Bottom Row -->
+  <div *ngIf="showSecondRow" class="row">
+    <ng-container
+      *ngTemplateOutlet="teamSlot; context: { team: slotFourTeam }"
+    />
+    <ng-container *ngTemplateOutlet="bidTrumpSection" />
+    <ng-container
+      *ngTemplateOutlet="teamSlot; context: { team: slotFiveTeam }"
+    />
+  </div>
+</div>
+
+<!-- Templates -->
+
+<ng-template #teamSlot let-team="team">
+  <div class="col text-center d-flex flex-column game-status-team-text">
+    <span
+      [ngClass]="{ 
+        'primary-bid-winner-highlight': getBidWinningStatus(team) === 'primary',
+        'secondary-bid-winner-highlight': getBidWinningStatus(team) === 'secondary',
+      }"
+    >
+      {{ getTeamSubInfo(team, true) }}
+    </span>
+    <span class="text-muted status-label-text text-up">
+      {{ getTeamSubInfo(team) }}
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #bidTrumpSection>
+  <div
+    class="col text-center game-status-team-text trump-bid-text d-flex align-items-center justify-content-center"
+  >
+    <ng-container *ngIf="showBidTrumpSection">
+      <span
+        class="suit-icon black-shape-border"
+        [ngStyle]="{ color: trumpSuitColor }"
+        >{{ trumpSuitIcon }}</span
+      >
+      <span class="d-flex flex-column">
+        <span class="text-muted status-label-text">bid:</span>
+        <span class="bid-number">
+          {{ bidAmount }}
+        </span>
+      </span>
+    </ng-container>
+  </div>
+</ng-template>

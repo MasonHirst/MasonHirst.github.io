@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "startWifi": "ng serve --host 192.168.1.136",
+    "host": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -12,30 +12,31 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^16.1.0",
-    "@angular/common": "^16.1.0",
-    "@angular/compiler": "^16.1.0",
-    "@angular/core": "^16.1.0",
-    "@angular/forms": "^16.1.0",
-    "@angular/platform-browser": "^16.1.0",
-    "@angular/platform-browser-dynamic": "^16.1.0",
-    "@angular/router": "^16.1.0",
+    "@angular/animations": "^18.2.12",
+    "@angular/common": "^18.2.12",
+    "@angular/compiler": "^18.2.12",
+    "@angular/core": "^18.2.12",
+    "@angular/forms": "^18.2.12",
+    "@angular/platform-browser": "^18.2.12",
+    "@angular/platform-browser-dynamic": "^18.2.12",
+    "@angular/router": "^18.2.12",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
+    "dexie": "^4.0.10",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
     "shortid": "^2.2.16",
     "socket.io-client": "^4.7.2",
-    "sweetalert2": "^11.7.28",
+    "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",
     "wavesurfer.js": "^7.1.1",
-    "zone.js": "~0.13.0"
+    "zone.js": "~0.14.10"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.1.1",
-    "@angular/cli": "~16.1.1",
-    "@angular/compiler-cli": "^16.1.0",
+    "@angular-devkit/build-angular": "^18.2.12",
+    "@angular/cli": "~18.2.12",
+    "@angular/compiler-cli": "^18.2.12",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
@@ -44,6 +45,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "node-sass": "^9.0.0",
-    "typescript": "~5.1.3"
+    "typescript": "~5.4.5"
   }
 }

@@ -1,0 +1,25 @@
+<div class="d-flex flex-row-reverse justify-content-between mt-4">
+  <button
+    *ngIf="goForwardLabel"
+    type="submit"
+    class="btn btn-primary"
+    (click)="onForwardClicked()"
+  >
+    {{ goForwardLabel }}
+  </button>
+  <button
+  *ngIf="middleActionLabel"
+  class="btn btn-outline-info"
+  (click)="onMiddleActionClicked()"
+  >
+  {{ middleActionLabel }}
+</button>
+<button
+  *ngIf="goBackLabel"
+  type="button"
+  (click)="onBackClicked()"
+  class="btn btn-outline-info"
+>
+  {{ goBackLabel }}
+</button>
+</div>

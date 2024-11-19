@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -40,6 +38,8 @@ import { CardSelectComponent } from './games/six-nimmt/client-screen/card-select
 import { PickARowComponent } from './games/six-nimmt/client-screen/card-select/pick-a-row/pick-a-row.component';
 import { GameReviewPageComponent } from './games/six-nimmt/host-screen/game-review-page/game-review-page.component';
 import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-review-client/game-review-client.component';
+import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
+import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-scoreboard.module';
 
 @NgModule({
   declarations: [
@@ -75,10 +75,12 @@ import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-
     PickARowComponent,
     GameReviewPageComponent,
     GameReviewClientComponent,
+    PinochleScoreboardComponent,
   ],
   imports: [
     CommonModule,
     AppRoutingModule,
+    PinochleScoreboardModule,
     FormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot({

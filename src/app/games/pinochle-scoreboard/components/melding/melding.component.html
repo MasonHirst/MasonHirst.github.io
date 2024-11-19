@@ -1,0 +1,51 @@
+<app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
+  [gameState]="getDataForStatus()"
+  [currentPage]="'melding'"
+  [gameFormat]="gameFormat"
+/>
+
+<div class="container fade-in my-3">
+  <h2 class="text-center mb-4">Melding Phase</h2>
+
+  <div class="mb-4">
+    <p><strong>Instructions:</strong></p>
+    <ul>
+      <li>Enter the total meld points for each team in the fields below.</li>
+    </ul>
+  </div>
+
+  <form class="mb-3">
+    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+      <ng-container *ngIf="showTeamMeldingInput(i)">
+        <label [for]="team.name"
+          ><strong>{{ getMeldingComboName(i) }}</strong
+          >'s meld points</label
+        >
+        <input
+          type="number"
+          [min]="0"
+          [max]="1000000"
+          [id]="team.name"
+          [(ngModel)]="team.meldScore"
+          (ngModelChange)="onMeldInputChange()"
+          [name]="team.name + 'MeldPoints'"
+          class="form-control"
+          placeholder="Enter Meld Points"
+          min="0"
+          required
+        />
+      </ng-container>
+    </div>
+    <small *ngIf="notAllInputsFilledMessage" class="text-danger">{{
+      notAllInputsFilledMessage
+    }}</small>
+  </form>
+
+  <app-nav-buttons
+    [goBackLabel]="'Back'"
+    [goForwardLabel]="'Save Meld Points'"
+    (backClicked)="goBack()"
+    (forwardClicked)="submitMeld()"
+  />
+</div>
