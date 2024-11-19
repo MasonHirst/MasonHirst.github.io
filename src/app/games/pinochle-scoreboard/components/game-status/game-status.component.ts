@@ -41,7 +41,6 @@ export class GameStatusComponent {
 
   getTeamSubInfo(team: Team, isName: boolean = false): string | number {
     if (!team?.name) {
-      console.log('no team');
       return null;
     }
     if (isName) {

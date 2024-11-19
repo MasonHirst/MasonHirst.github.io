@@ -82,7 +82,7 @@ export class RoundSummaryComponent implements OnInit {
   async endGame(): Promise<void> {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This will end the game',
+      text: 'This will end the game.',
       confirmButtonText: 'End Game',
       showCancelButton: true,
       cancelButtonText: 'Cancel',

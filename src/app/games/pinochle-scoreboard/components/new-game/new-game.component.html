@@ -10,14 +10,17 @@
       <label [for]="'teamName' + i">Team {{ i + 1 }} Name</label>
       <input
         type="text"
+        [maxlength]="25"
         [id]="'teamName' + i"
         [(ngModel)]="team.name"
+        (ngModelChange)="onNameInputChange"
         [name]="'teamName' + i"
         class="form-control"
         placeholder="Enter Team Name"
         required
       />
     </div>
+    <small *ngIf="noNameMessage" class="text-danger">{{ noNameMessage }}</small>
   </form>
 
   <app-nav-buttons

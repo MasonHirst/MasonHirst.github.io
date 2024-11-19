@@ -23,9 +23,11 @@
           <div class="input-group">
             <input
               type="number"
+              [min]="0"
+              [max]="gameFormat.possibleTrickPoints"
               [id]="team.name"
               [(ngModel)]="team.trickScore"
-              (ngModelChange)="clearNoTrickPointsMessage()"
+              (ngModelChange)="setNoTrickPointsMessage('')"
               [name]="team.name + 'TrickPoints'"
               class="form-control"
               placeholder="Enter Trick Points"
@@ -47,6 +49,8 @@
         <ng-template #soloInput>
           <input
             type="number"
+            [min]="0"
+            [max]="gameFormat.possibleTrickPoints"
             [id]="team.name"
             [(ngModel)]="team.trickScore"
             (ngModelChange)="onTrickInputChange(i)"
@@ -60,6 +64,27 @@
         </ng-template>
       </ng-container>
     </div>
+    <p>
+      <span class="text-muted">Trick points claimed: </span
+      ><span
+        [ngClass]="{
+          'text-primary': trickSubTotal === possibleTrickPoints,
+          'text-danger': trickSubTotal > possibleTrickPoints,
+        }"
+      >
+        <i
+          class="bi bi-check-circle-fill text-success"
+          [ngStyle]="{
+            opacity: trickSubTotal === possibleTrickPoints ? 1 : 0
+          }"
+          [ngClass]="{
+            'fade-in': trickSubTotal === possibleTrickPoints
+          }"
+        ></i>
+        {{ trickSubTotal }}</span
+      >
+      / <span class="text-muted">{{ possibleTrickPoints }}</span>
+    </p>
     <small *ngIf="noTrickPointsMessage" class="text-danger">{{
       noTrickPointsMessage
     }}</small>

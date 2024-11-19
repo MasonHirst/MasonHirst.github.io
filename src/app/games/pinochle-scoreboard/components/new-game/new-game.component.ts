@@ -13,6 +13,15 @@ import { Location } from '@angular/common';
 export class NewGameComponent implements OnInit {
   teams: Team[] = [];
   gameFormat: GameFormat;
+  noNameMessage: string = '';
+
+  setNoNameMessage(val: string = 'Please enter a name for each team'): void {
+    this.noNameMessage = val;
+  }
+
+  onNameInputChange(): void {
+    this.setNoNameMessage('');
+  }
 
   get formatLabel(): string {
     return this.gameFormat?.label;
@@ -43,9 +52,11 @@ export class NewGameComponent implements OnInit {
       let namesArray = [];
       this.teams.forEach((team) => {
         if (!team.name.trim()) {
+          this.setNoNameMessage();
           throw new Error('Name for each team is required');
         }
         if (namesArray.includes(team.name)) {
+          this.setNoNameMessage('Each team name must be unique');
           throw new Error('Multiple teams cannot have the same name');
         }
         namesArray.push(team.name);

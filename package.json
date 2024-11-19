@@ -28,7 +28,7 @@
     "rxjs": "~7.8.0",
     "shortid": "^2.2.16",
     "socket.io-client": "^4.7.2",
-    "sweetalert2": "^11.7.28",
+    "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",
     "wavesurfer.js": "^7.1.1",
     "zone.js": "~0.14.10"

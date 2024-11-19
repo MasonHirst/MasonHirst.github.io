@@ -112,86 +112,63 @@ export class TrickTakingComponent implements OnInit {
       this.teams[otherInputIndex].trickScore =
         possibleTrickPoints - inputPoints;
     }
-
-    //   if (isFiveHand) {
-    // const primaryBidWinnerIndex = this.gameState.bidWinningTeamIndices[0];
-    // const primaryNonBidWinnerIndex = this.nonBidWinnerTeamIndices[0];
-    // const primaryBidScore = this.teams[primaryBidWinnerIndex].trickScore;
-    // const primaryNonBidScore =
-    //   this.teams[primaryNonBidWinnerIndex].trickScore;
-    // if (isValidNumber(primaryBidScore)) {
-    //   filledScores++;
-    //   currentSum += primaryBidScore;
-    // }
-    // if (isValidNumber(primaryNonBidScore)) {
-    //   filledScores++;
-    //   currentSum += primaryNonBidScore;
-    // }
-    // if (filledScores == 1) {
-    //   const remainingPoints = possibleTrickPoints - currentSum;
-    //   if (!isValidNumber(primaryBidScore) && remainingPoints >= 0) {
-    //     this.teams[primaryBidWinnerIndex].trickScore = remainingPoints;
-    //   } else if (!isValidNumber(primaryNonBidScore) && remainingPoints >= 0) {
-    //     this.teams[primaryNonBidWinnerIndex].trickScore = remainingPoints;
-    //   }
-    // }
-    //   } else {
-    //     const trickScoresArr = this.teams.map((team) => team.trickScore);
-    //     trickScoresArr.forEach((score) => {
-    //       if (isValidNumber(score)) {
-    //         filledScores++;
-    //         currentSum += score;
-    //       }
-    //     });
-    //     if (filledScores == trickScoresArr.length - 1) {
-    //       const remainingPoints = possibleTrickPoints - currentSum;
-    //       for (let i = 0; i < trickScoresArr.length; i++) {
-    //         if (!isValidNumber(trickScoresArr[i]) && remainingPoints >= 0) {
-    //           this.teams[i].trickScore = remainingPoints;
-    //           break;
-    //         }
-    //       }
-    //     }
-    //   }
   }
 
-  // autoCalculateForTwoInputs(teamIndex: number, isFiveHand: boolean): void {
-  //   const inputPoints = this.teams?.[teamIndex]?.trickScore;
-  //   const possibleTrickPoints = this.gameFormat.possibleTrickPoints;
-  //   let otherInputIndex: number;
-  //   if (isFiveHand) {
-  //     otherInputIndex =
-  //       teamIndex === this.primaryBidWinnerIndex
-  //         ? this.primaryNonBidWinnerIndex
-  //         : this.primaryBidWinnerIndex;
-  //   } else {
-  //     otherInputIndex = teamIndex === 0 ? 1 : 0;
-  //   }
-  //   if (inputPoints > possibleTrickPoints) {
-  //     return;
-  //   }
-  //   this.teams[otherInputIndex].trickScore = possibleTrickPoints - inputPoints;
-  // }
+  get trickSubTotal(): number {
+    let tricksTotal: number = 0;
+    if (this.gameFormat?.label === '5-hand') {
+      tricksTotal += this.teams?.[this.nonBidWinnerTeamIndices[0]]?.trickScore;
+      tricksTotal +=
+        this.teams?.[this.gameState?.bidWinningTeamIndices[0]]?.trickScore;
+    } else {
+      this.teams?.forEach((team) => {
+        tricksTotal += team.trickScore;
+      });
+    }
+    return tricksTotal;
+  }
+
+  get possibleTrickPoints(): number {
+    return this.gameFormat?.possibleTrickPoints;
+  }
 
   isEligibleForAutoCalculate(teamIndex: number): boolean {
-    if (!this.gameStateService.getGameSettings()?.autoCalculate) {
+    // only for 3-hand and 8-hand formats
+    let otherTeamsAllFilled: boolean = true;
+    let otherTeamsTotal: number = 0;
+    this.teams?.forEach((team, i) => {
+      if (teamIndex !== i) {
+        if (!isValidNumber(team.trickScore)) {
+          otherTeamsAllFilled = false;
+        } else {
+          otherTeamsTotal += team.trickScore;
+        }
+      }
+    });
+    const thisTeamScore = this.teams?.[teamIndex]?.trickScore;
+    if (
+      isValidNumber(thisTeamScore) &&
+      otherTeamsTotal + thisTeamScore === this.possibleTrickPoints
+    ) {
       return false;
     }
-    const { label, teamCount } = this.gameFormat;
-    const isFiveHand = label === '5-hand';
+    const caseOneValid: boolean =
+      otherTeamsTotal === this.possibleTrickPoints &&
+      !isValidNumber(thisTeamScore);
+    const caseTwoValid: boolean =
+      otherTeamsAllFilled && otherTeamsTotal <= this.possibleTrickPoints;
+    return caseOneValid || caseTwoValid;
+  }
 
-    if (teamCount === 2) {
-      const otherInputIndex = teamIndex === 0 ? 1 : 0;
-      return !!this.teams?.[otherInputIndex]?.trickScore;
-    } else if (isFiveHand) {
-      const otherInputIndex =
-        teamIndex === this.primaryBidWinnerIndex
-          ? this.primaryNonBidWinnerIndex
-          : this.primaryBidWinnerIndex;
-      return !!this.teams?.[otherInputIndex]?.trickScore;
-    } else {
-      // write this
-    }
+  calculateTrickPoints(teamIndex: number): void {
+    let otherTeamsTotal: number = 0;
+    this.teams?.forEach((team, i) => {
+      if (teamIndex !== i) {
+        otherTeamsTotal += team.trickScore;
+      }
+    });
+    this.teams[teamIndex].trickScore =
+      this.gameFormat?.possibleTrickPoints - otherTeamsTotal;
   }
 
   async submitTricks(): Promise<void> {
@@ -226,6 +203,14 @@ export class TrickTakingComponent implements OnInit {
           this.setNoTrickPointsMessage();
           throw new Error('Trick score is required for each team or alliance');
         }
+        if (team.trickScore < 0 || team.trickScore > 100000) {
+          this.setNoTrickPointsMessage(
+            'Allowed range for trick scores is between 0 and 100,000'
+          );
+          throw new Error(
+            'Allowed range for trick scores is between 0 and 100,000'
+          );
+        }
       });
 
       const trickPointsSum = this.teams.reduce(
@@ -236,7 +221,7 @@ export class TrickTakingComponent implements OnInit {
       if (trickPointsSum !== this.gameFormat?.possibleTrickPoints) {
         const result = await Swal.fire({
           title: 'Total does not match game format!',
-          text: `The sum of all team's tricking points is ${trickPointsSum}. It should be ${this.gameFormat?.possibleTrickPoints}`,
+          text: `The sum of all team's tricking points is ${trickPointsSum}. It should be ${this.gameFormat?.possibleTrickPoints}.`,
           confirmButtonText: 'Save Anyway',
           showCancelButton: true,
           cancelButtonText: 'Cancel',

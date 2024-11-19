@@ -49,7 +49,7 @@ export class MeldingComponent implements OnInit {
   onMeldInputChange(): void {
     this.setNotAllInputsFilledMessage('');
   }
-  
+
   setNotAllInputsFilledMessage(
     val: string = 'Please enter a meld score for each team'
   ) {
@@ -86,6 +86,10 @@ export class MeldingComponent implements OnInit {
         if (!isValidNumber(team.meldScore)) {
           this.setNotAllInputsFilledMessage();
           throw new Error('Meld score is required for each team');
+        }
+        if (team.meldScore < 0 || team.meldScore > 100000) {
+          this.setNotAllInputsFilledMessage('Allowed range for meld scores is between 0 and 100,000');
+          throw new Error('Allowed range for meld scores is between 0 and 100,000');
         }
       });
 

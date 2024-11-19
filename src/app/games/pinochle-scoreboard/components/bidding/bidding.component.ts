@@ -100,7 +100,7 @@ export class BiddingComponent implements OnInit {
   onBidAmountChange() {
     // Display a message if bid amount is zero
     this.setNoBidMessage(
-      this.gameState?.currentBid === 0
+      this.gameState?.currentBid <= 0
         ? 'If no team bids, please reshuffle and redeal.'
         : ''
     );
@@ -110,11 +110,17 @@ export class BiddingComponent implements OnInit {
     try {
       if (
         !isValidNumber(this.gameState?.currentBid) ||
-        this.gameState?.currentBid == 0
+        this.gameState?.currentBid <= 0
       ) {
         this.setNoBidMessage();
         throw new Error(
           'Bid amount is required. If bid is 0, please re-shuffle and re-deal.'
+        );
+      }
+      if (this.gameState?.currentBid > 100000) {
+        this.setNoBidMessage('Please enter a bid less than 100,000');
+        throw new Error(
+          'Bid amount must be less than 100,000'
         );
       }
       if (!isValidNumber(this.primaryWinningTeamIndex)) {
