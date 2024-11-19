@@ -5,7 +5,11 @@
   "projects": {
     "masonhirst-portfolio-angular": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -64,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "masonhirst-portfolio-angular:build:production"
+              "buildTarget": "masonhirst-portfolio-angular:build:production"
             },
             "development": {
-              "browserTarget": "masonhirst-portfolio-angular:build:development"
+              "buildTarget": "masonhirst-portfolio-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "masonhirst-portfolio-angular:build"
+            "buildTarget": "masonhirst-portfolio-angular:build"
           }
         },
         "test": {

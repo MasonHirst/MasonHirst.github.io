@@ -1,20 +1,16 @@
 <app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
   [gameState]="getDataForStatus()"
   [currentPage]="'trick-taking'"
   [gameFormat]="gameFormat"
 />
 
-<div class="container fade-in my-5">
-  <h2 class="text-center mb-4">Trick-Taking Phase</h2>
-
-  <div class="mb-4">
-    <p><strong>Instructions:</strong></p>
-    <ul>
-      <li>
-        Record the total trick points each team has won during this round.
-      </li>
-      <li>Enter the trick score for each team below.</li>
-    </ul>
+<div class="container fade-in my-4">
+  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+    <h2 class="text-center mb-2">Trick-Taking Phase</h2>
+    <sub class="text-center text-muted"
+      >Remember the last trick is worth extra points!</sub
+    >
   </div>
 
   <form class="mb-3">
@@ -23,19 +19,50 @@
         <label [for]="team.name"
           >{{ getTeamComboName(i) }}'s trick points</label
         >
-        <input
-          type="number"
-          [id]="team.name"
-          [(ngModel)]="team.trickScore"
-          (blur)="onTrickInputChange()"
-          [name]="team.name + 'TrickPoints'"
-          class="form-control"
-          placeholder="Enter Trick Points"
-          min="0"
-          required
-        />
+        <ng-container *ngIf="showCalculateButtons; else soloInput">
+          <div class="input-group">
+            <input
+              type="number"
+              [id]="team.name"
+              [(ngModel)]="team.trickScore"
+              (ngModelChange)="clearNoTrickPointsMessage()"
+              [name]="team.name + 'TrickPoints'"
+              class="form-control"
+              placeholder="Enter Trick Points"
+              min="0"
+              required
+            />
+            <button
+              *ngIf="showCalculateButtons"
+              type="button"
+              class="btn btn-outline-info ms-2"
+              (click)="calculateTrickPoints(i)"
+              [disabled]="!isEligibleForAutoCalculate(i)"
+            >
+              Calculate
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #soloInput>
+          <input
+            type="number"
+            [id]="team.name"
+            [(ngModel)]="team.trickScore"
+            (ngModelChange)="onTrickInputChange(i)"
+            (blur)="onTrickInputChange(i, true)"
+            [name]="team.name + 'TrickPoints'"
+            class="form-control"
+            placeholder="Enter Trick Points"
+            min="0"
+            required
+          />
+        </ng-template>
       </ng-container>
     </div>
+    <small *ngIf="noTrickPointsMessage" class="text-danger">{{
+      noTrickPointsMessage
+    }}</small>
   </form>
 
   <app-nav-buttons

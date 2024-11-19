@@ -22,6 +22,7 @@ export class PinochleStateService {
       autoCalculate:
         JSON.parse(localStorage.getItem('masonhirst_pinochle_autoCalculate')) ||
         true,
+      customTrickPossiblePoints: null,
     };
   }
 
@@ -49,7 +50,7 @@ export class PinochleStateService {
       roundSubTotal: null,
       currentTotalScore: 0,
     }));
-    
+
     this.gameData = {
       id: shortId(),
       currentGameState: {
@@ -85,6 +86,9 @@ export class PinochleStateService {
 
   getNonBidWinnerIndices(): number[] {
     let indeces: number[] = [];
+    if (!this.gameData) {
+      return null;
+    }
     const { teams, bidWinningTeamIndices } = this.gameData?.currentGameState;
     teams?.forEach((team, i) => {
       if (!bidWinningTeamIndices.includes(i)) {
@@ -107,6 +111,9 @@ export class PinochleStateService {
   }
 
   setTeamsData(teams: Team[]): void {
+    if (!this.gameData) {
+      return;
+    }
     this.gameData.currentGameState.teams = teams;
     this.saveGameDataToDB();
   }
@@ -156,13 +163,18 @@ export class PinochleStateService {
           (a, b) => a.gameStartTime - b.gameStartTime
         );
         const gamesToDelete = sortedGames.slice(0, savedGames.length - 25);
-        const idsToDelete = gamesToDelete.map(game => game.id);
+        const idsToDelete = gamesToDelete.map((game) => game.id);
         await this.db.gameData.bulkDelete(idsToDelete);
-  
-        console.log(`Deleted ${idsToDelete.length} oldest games to maintain a limit of 25.`);
+
+        console.log(
+          `Deleted ${idsToDelete.length} oldest games to maintain a limit of 25.`
+        );
       }
     } catch (error) {
-      console.error('Error setting past games to not active or deleting old games:', error);
+      console.error(
+        'Error setting past games to not active or deleting old games:',
+        error
+      );
     }
   }
 }

@@ -1,20 +1,23 @@
 <app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
   [gameState]="getDataForStatus()"
   [currentPage]="'bidding'"
   [gameFormat]="gameFormat"
 />
 
-<div class="container fade-in my-3">
-  <h2 class="text-center mb-4">Bidding Phase</h2>
-
-  <div class="mb-4">
-    <p>
-      Bidding starts with the player to the dealer's left and proceeds
-      clockwise.
-    </p>
+<div class="container fade-in my-4">
+  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+    <h2 class="text-center">Bidding Phase</h2>
+    <small class="text-muted"
+      >Bidding starts with the player to the dealer's left and proceeds
+      clockwise.</small
+    >
+    <small class="text-muted"
+      >If no one bids in the first round, reshuffle and redeal the cards.</small
+    >
   </div>
 
-  <form class="mb-3">
+  <form *ngIf="gameState" class="mb-3">
     <div class="form-group mb-3">
       <label for="bidAmount">Enter Winning Bid Amount</label>
       <input
@@ -52,6 +55,9 @@
           team.name
         }}</label>
       </div>
+      <small *ngIf="noWinnerMessage" class="text-danger">{{
+        noWinnerMessage
+      }}</small>
     </div>
 
     <div
@@ -68,6 +74,7 @@
             type="radio"
             [id]="'secondary-team' + i"
             [(ngModel)]="secondaryWinningTeamIndex"
+            (ngModelChange)="onSecondaryWinningTeamChange()"
             [value]="i"
             name="secondaryWinningTeam"
             class="form-check-input"
@@ -79,6 +86,9 @@
           }}</label>
         </div>
       </ng-container>
+      <small *ngIf="noSecondaryWinnerMessage" class="text-danger">{{
+        noSecondaryWinnerMessage
+      }}</small>
     </div>
 
     <div class="form-group mt-3">
@@ -86,6 +96,7 @@
       <select
         id="trumpSuit"
         [(ngModel)]="gameState.trumpSuit"
+        (ngModelChange)="onTrumpSuitChange()"
         name="trumpSuit"
         class="form-control"
         required
@@ -96,12 +107,11 @@
         <option value="Spades">♠ Spades</option>
         <option value="Clubs">♣ Clubs</option>
       </select>
+      <small *ngIf="noTrumpSuitMessage" class="text-danger">{{
+        noTrumpSuitMessage
+      }}</small>
     </div>
   </form>
-
-  <p class="text-muted mt-2">
-    Note: If no one bids in the first round, reshuffle and redeal the cards.
-  </p>
 
   <app-nav-buttons
     [goBackLabel]="goBackLabel"

@@ -1,4 +1,5 @@
 <app-game-status
+  *ngIf="getDataForStatus() && gameFormat"
   [gameState]="getDataForStatus()"
   [currentPage]="'melding'"
   [gameFormat]="gameFormat"
@@ -25,6 +26,7 @@
           type="number"
           [id]="team.name"
           [(ngModel)]="team.meldScore"
+          (ngModelChange)="onMeldInputChange()"
           [name]="team.name + 'MeldPoints'"
           class="form-control"
           placeholder="Enter Meld Points"
@@ -33,6 +35,9 @@
         />
       </ng-container>
     </div>
+    <small *ngIf="notAllInputsFilledMessage" class="text-danger">{{
+      notAllInputsFilledMessage
+    }}</small>
   </form>
 
   <app-nav-buttons

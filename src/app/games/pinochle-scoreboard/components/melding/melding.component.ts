@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { Team } from '../../interfaces/team.interface';
-import { Location } from '@angular/common';
 import {
   getDeepCopy,
   getTeamComboName5Hand,
@@ -22,10 +21,10 @@ export class MeldingComponent implements OnInit {
   gameState: GameState = null;
   gameFormat: GameFormat = null;
   nonBidWinnerTeamIndices: number[] = [];
+  notAllInputsFilledMessage: string;
 
   constructor(
     private router: Router,
-    private location: Location,
     private gameStateService: PinochleStateService
   ) {}
 
@@ -47,6 +46,16 @@ export class MeldingComponent implements OnInit {
     }
   }
 
+  onMeldInputChange(): void {
+    this.setNotAllInputsFilledMessage('');
+  }
+  
+  setNotAllInputsFilledMessage(
+    val: string = 'Please enter a meld score for each team'
+  ) {
+    this.notAllInputsFilledMessage = val;
+  }
+
   submitMeld() {
     // Update the meld points for each team in the service
     try {
@@ -58,6 +67,7 @@ export class MeldingComponent implements OnInit {
           !isValidNumber(primaryBidWinner.meldScore) ||
           !isValidNumber(primaryNonBidwinner.meldScore)
         ) {
+          this.setNotAllInputsFilledMessage('Please enter a meld score for each alliance');
           throw new Error(
             'Meld score is required for each temporary alliance (5-hand)'
           );
@@ -74,6 +84,7 @@ export class MeldingComponent implements OnInit {
 
       this.teams.forEach((team) => {
         if (!isValidNumber(team.meldScore)) {
+          this.setNotAllInputsFilledMessage();
           throw new Error('Meld score is required for each team');
         }
       });

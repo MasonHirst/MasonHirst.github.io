@@ -85,7 +85,7 @@ export class GameStatusComponent {
   }
 
   get topRowHasBottomMargin(): boolean {
-    const { teamCount } = this.gameFormat;
+    const teamCount = this.gameFormat?.teamCount;
     if (teamCount < 3) {
       return false;
     }

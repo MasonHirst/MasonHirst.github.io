@@ -19,6 +19,9 @@ export class BiddingComponent implements OnInit {
   primaryWinningTeamIndex: number = null;
   secondaryWinningTeamIndex: number = null;
   noBidMessage: string = '';
+  noWinnerMessage: string = '';
+  noSecondaryWinnerMessage: string = '';
+  noTrumpSuitMessage: string = '';
 
   constructor(
     private router: Router,
@@ -33,13 +36,33 @@ export class BiddingComponent implements OnInit {
     if (!this.gameState?.teams || !this.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
-    if (!isNaN(this.gameState?.bidWinningTeamIndices?.[0])) {
-      this.primaryWinningTeamIndex = this.gameState.bidWinningTeamIndices?.[0];
+    if (isValidNumber(this.gameState?.bidWinningTeamIndices?.[0])) {
+      this.primaryWinningTeamIndex = this.gameState?.bidWinningTeamIndices?.[0];
     }
-    if (!isNaN(this.gameState.bidWinningTeamIndices?.[1])) {
+    if (isValidNumber(this.gameState?.bidWinningTeamIndices?.[1])) {
       this.secondaryWinningTeamIndex =
         this.gameState.bidWinningTeamIndices?.[1];
     }
+  }
+
+  setNoBidMessage(
+    val: string = 'If no team bids, please reshuffle and redeal'
+  ): void {
+    this.noBidMessage = val;
+  }
+
+  setNoWinnerMessage(val: string = 'Please select a bid winner'): void {
+    this.noWinnerMessage = val;
+  }
+
+  setNoSecondaryWinnerMessage(
+    val: string = "Please select the winner's ally"
+  ): void {
+    this.noSecondaryWinnerMessage = val;
+  }
+
+  setNoTrumpSuitMessage(val: string = 'Please select a trump suit'): void {
+    this.noTrumpSuitMessage = val;
   }
 
   getDataForStatus(): GameState {
@@ -47,7 +70,7 @@ export class BiddingComponent implements OnInit {
   }
 
   get goBackLabel(): string {
-    return this.gameState.roundNumber == 1 ? 'Back' : null;
+    return this.gameState?.roundNumber == 1 ? 'Back' : null;
   }
 
   get shouldShowSecondaryWinnerChoice(): boolean {
@@ -58,7 +81,16 @@ export class BiddingComponent implements OnInit {
   }
 
   onPrimaryWinningTeamChange(): void {
+    this.setNoWinnerMessage('');
     this.secondaryWinningTeamIndex = null;
+  }
+
+  onSecondaryWinningTeamChange(): void {
+    this.setNoSecondaryWinnerMessage('');
+  }
+
+  onTrumpSuitChange(): void {
+    this.setNoTrumpSuitMessage('');
   }
 
   goBack() {
@@ -67,10 +99,11 @@ export class BiddingComponent implements OnInit {
 
   onBidAmountChange() {
     // Display a message if bid amount is zero
-    this.noBidMessage =
+    this.setNoBidMessage(
       this.gameState?.currentBid === 0
         ? 'If no team bids, please reshuffle and redeal.'
-        : '';
+        : ''
+    );
   }
 
   submitBids() {
@@ -79,20 +112,24 @@ export class BiddingComponent implements OnInit {
         !isValidNumber(this.gameState?.currentBid) ||
         this.gameState?.currentBid == 0
       ) {
+        this.setNoBidMessage();
         throw new Error(
           'Bid amount is required. If bid is 0, please re-shuffle and re-deal.'
         );
       }
       if (!isValidNumber(this.primaryWinningTeamIndex)) {
+        this.setNoWinnerMessage();
         throw new Error('Must pick a team for the bid.');
       }
       if (
         this.gameFormat?.label === '5-hand' &&
         !isValidNumber(this.secondaryWinningTeamIndex)
       ) {
+        this.setNoSecondaryWinnerMessage();
         throw new Error('Must pick a secondary team for the bid.');
       }
       if (!this.gameState?.trumpSuit) {
+        this.setNoTrumpSuitMessage();
         throw new Error('Must pick a declared trump suit.');
       }
       // Store the winning team and bid amount

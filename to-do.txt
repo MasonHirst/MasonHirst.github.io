@@ -4,6 +4,7 @@
 - Add "are you sure" modals to certain buttons to double check actions that have irreversable results
 - fix styling on bidding page
 - fix logic with auto calculation
+- update the ip address logic in the code so I don't have to update it everytime I want to use the server over wifi
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page

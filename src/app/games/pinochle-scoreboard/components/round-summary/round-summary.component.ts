@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { formatSubScore } from 'src/app/games/games-helper-functions';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-round-summary',
@@ -78,9 +79,19 @@ export class RoundSummaryComponent implements OnInit {
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
 
-  endGame(): void {
-    this.gameStateService?.setGameActiveStatus(false);
-    this.router.navigate(['/games']);
+  async endGame(): Promise<void> {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will end the game',
+      confirmButtonText: 'End Game',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+    });
+    if (result.isConfirmed) {
+      this.gameStateService?.setGameActiveStatus(false);
+      this.router.navigate(['/games/pinochle-scoreboard']);
+    }
   }
 
   formatSubtotal(val: number): string | number {

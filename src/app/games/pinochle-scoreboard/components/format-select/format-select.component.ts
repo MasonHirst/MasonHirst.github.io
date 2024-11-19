@@ -4,6 +4,7 @@ import { GameFormat } from '../../interfaces/gameformat.interface';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameData } from '../../interfaces/gamedata.interface';
 import Swal from 'sweetalert2';
+import { isValidNumber } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-format-select',
@@ -55,6 +56,35 @@ export class FormatSelectComponent implements OnInit {
     this.getGamesFromIndexedDB();
   }
 
+  resumeGameFromDB(game: GameData): void {
+    if (!game) {
+      return;
+    }
+    this.gameStateService?.setGameData(game);
+    const { teams, currentBid } = game.currentGameState;
+    let allTeamsMelded: boolean = true;
+    let allTeamsTricked: boolean = true;
+    teams.forEach((team) => {
+      if (!isValidNumber(team.meldScore)) {
+        allTeamsMelded = false;
+      }
+    });
+    teams.forEach((team) => {
+      if (!isValidNumber(team.trickScore)) {
+        allTeamsTricked = false;
+      }
+    });
+    if (!!currentBid && allTeamsMelded && allTeamsTricked) {
+      this.router.navigate(['/games/pinochle-scoreboard/round-summary']);
+    } else if (!!currentBid && allTeamsMelded) {
+      this.router.navigate(['/games/pinochle-scoreboard/trick-taking']);
+    } else if (!!currentBid) {
+      this.router.navigate(['/games/pinochle-scoreboard/melding']);
+    } else {
+      this.router.navigate(['/games/pinochle-scoreboard/bidding']);
+    }
+  }
+
   async getGamesFromIndexedDB(): Promise<void> {
     this.gamesFromIndexedDB = await this.gameStateService?.getGamesFromDB();
 
@@ -73,8 +103,7 @@ export class FormatSelectComponent implements OnInit {
           reverseButtons: true,
         });
         if (result.isConfirmed) {
-          this.gameStateService?.setGameData(activeGame);
-          this.router.navigate(['/games/pinochle-scoreboard/bidding']);
+          this.resumeGameFromDB(activeGame);
         }
       }
     }

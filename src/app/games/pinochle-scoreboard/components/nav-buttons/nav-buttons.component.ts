@@ -6,9 +6,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./nav-buttons.component.css'],
 })
 export class NavButtonsComponent {
-  @Input() goBackLabel: string;
-  @Input() middleActionLabel: string;
-  @Input() goForwardLabel: string;
+  @Input() goBackLabel!: string;
+  @Input() middleActionLabel?: string;
+  @Input() goForwardLabel!: string;
 
   @Output() backClicked = new EventEmitter<void>();
   @Output() middleActionClicked = new EventEmitter<void>();

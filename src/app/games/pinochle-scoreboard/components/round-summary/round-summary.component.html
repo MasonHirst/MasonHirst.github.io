@@ -1,4 +1,4 @@
-<div class="container my-5">
+<div *ngIf="gameState" class="container my-5">
   <h2 class="text-center mb-4">Round {{ gameState.roundNumber }} Summary</h2>
 
   <div class="mb-4">
@@ -28,7 +28,13 @@
       <tr *ngFor="let team of gameState.teams">
         <td>{{ team.name }}</td>
         <td>{{ team.meldScore }}</td>
-        <td>{{ team.trickScore }}</td>
+        <td
+          [ngClass]="{
+            'text-danger': team.trickScore <= 0,
+          }"
+        >
+          {{ team.trickScore }}
+        </td>
         <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
         <td>{{ getTotalScoreWithRoundTotal(team) }}</td>
       </tr>
