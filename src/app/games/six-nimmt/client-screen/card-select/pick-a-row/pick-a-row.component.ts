@@ -1,6 +1,4 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import Swal from 'sweetalert2';
-import { SixNimmtService } from '../../../six-nimmt.service';
 import axios from 'axios';
 
 @Component({
@@ -14,7 +12,7 @@ export class PickARowComponent implements OnChanges {
   myToken = localStorage.getItem('userToken');
   canPickRow: boolean = true;
 
-  constructor(private nimmtService: SixNimmtService) {}
+  constructor() {}
 
   ngOnChanges(changes: any) {
     if (changes.gameCode) {
