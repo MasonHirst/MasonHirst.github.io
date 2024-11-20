@@ -32,6 +32,10 @@
   </div>
 </div>
 
+<button class="btn btn-outline-info" (click)="toggleSettingsModal()">
+  Settings
+</button>
+
 <!-- Templates -->
 
 <ng-template #teamSlot let-team="team">
@@ -42,6 +46,10 @@
         'secondary-bid-winner-highlight': getBidWinningStatus(team) === 'secondary',
       }"
     >
+      <i
+        *ngIf="getBidWinningStatus(team) === 'primary'"
+        class="bi bi-fire text-danger"
+      ></i>
       {{ getTeamSubInfo(team, true) }}
     </span>
     <span class="text-muted status-label-text text-up">
@@ -69,3 +77,121 @@
     </ng-container>
   </div>
 </ng-template>
+
+<!-- Settings modal -->
+<div
+  #settingsModal
+  class="modal fade"
+  id="pinochle-settings-modal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="pinochle-settings-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Pinochle settings</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" style="overflow-x: auto">
+        <!-- start of modal body content -->
+
+        <form>
+          <div
+            *ngFor="let format of defaultGameFormats"
+            class="mb-4 d-flex flex-column"
+          >
+            <!-- Format Label and Description -->
+            <p
+              class="mb-1"
+              [ngClass]="{
+                'text-info': format.label === gameFormat.label
+              }"
+            >
+              {{ format.label }}
+              <span class="text-muted">possible trick points</span>
+            </p>
+
+            <!-- Dropdown and Value/Input -->
+            <div class="d-flex align-items-center">
+              <select
+                class="form-select me-2"
+                [(ngModel)]="selectedPoints[format.label]"
+                (change)="
+                  onDropdownChange(format.label, format.possibleTrickPoints)
+                "
+                [name]="format.label + '-dropdown'"
+                style="width: 120px"
+              >
+                <option value="default">Default</option>
+                <option value="custom">Custom</option>
+              </select>
+
+              <!-- Value/Input Display -->
+              <div
+                *ngIf="
+                  selectedPoints[format.label] === 'default';
+                  else customInput
+                "
+              >
+                <span class="form-control-plaintext">{{
+                  format.possibleTrickPoints
+                }}</span>
+              </div>
+
+              <ng-template #customInput>
+                <input
+                  type="number"
+                  [(ngModel)]="gameSettings.customTrickPoints[format.label]"
+                  (blur)="onCustomInputBlur(format)"
+                  [name]="format.label + '-custom-input'"
+                  class="form-control"
+                  min="0"
+                  placeholder="Enter custom points"
+                  style="width: 100px"
+                />
+              </ng-template>
+            </div>
+          </div>
+          <small *ngIf="invalidCustomTricksMessage" class="text-danger">{{
+            invalidCustomTricksMessage
+          }}</small>
+
+          <!-- Auto Calculate Setting -->
+          <div class="form-check mt-4">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="auto-calculate"
+              [(ngModel)]="gameSettings.autoCalculate"
+              name="autoCalculate"
+            />
+            <label class="form-check-label" for="auto-calculate">
+              Enable Auto-Calculate
+            </label>
+          </div>
+        </form>
+
+        <!-- end of modal body content -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveNewGameSettings()"
+        >
+          Save settings
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

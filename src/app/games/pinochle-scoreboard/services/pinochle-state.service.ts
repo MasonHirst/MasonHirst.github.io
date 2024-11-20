@@ -1,8 +1,12 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { GameState } from '../interfaces/gamestate.interface';
 import { Team } from '../interfaces/team.interface';
 import { GameFormat } from '../interfaces/gameformat.interface';
-import { getDeepCopy } from '../../games-helper-functions';
+import {
+  getDeepCopy,
+  getDefaultPinochleSettings,
+  isValidNumber,
+} from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
 import shortId from 'shortid';
 import { GameSettings } from '../interfaces/gamesettings.interface';
@@ -14,16 +18,41 @@ import { PinochleDatabase } from './pinochle-database.service';
 export class PinochleStateService {
   private gameData: GameData = null;
   private gameSettings: GameSettings = null;
+  public gameSettingsEmit: EventEmitter<GameSettings> = new EventEmitter();
   private db: PinochleDatabase;
 
   constructor() {
     this.db = new PinochleDatabase();
-    this.gameSettings = {
-      autoCalculate:
-        JSON.parse(localStorage.getItem('masonhirst_pinochle_autoCalculate')) ||
-        true,
-      customTrickPossiblePoints: null,
-    };
+    const storedSettings = this.getSettingsFromLocalStorage();
+    if (storedSettings) {
+      this.gameSettings = storedSettings;
+    } else {
+      localStorage.setItem(
+        'masonhirst_pinochle_settings',
+        JSON.stringify(getDefaultPinochleSettings())
+      );
+      this.gameSettings = getDefaultPinochleSettings();
+    }
+  }
+
+  getGameSettings(): GameSettings {
+    return getDeepCopy(this.gameSettings);
+  }
+
+  getSettingsFromLocalStorage(): GameSettings {
+    const settings = JSON.parse(
+      localStorage.getItem('masonhirst_pinochle_settings')
+    );
+    return settings;
+  }
+
+  updateGameSettings(newSettings: GameSettings): void {
+    this.gameSettings = newSettings;
+    localStorage.setItem(
+      'masonhirst_pinochle_settings',
+      JSON.stringify(newSettings)
+    );
+    this.gameSettingsEmit.emit(newSettings);
   }
 
   private async saveGameDataToDB(): Promise<void> {
@@ -96,10 +125,6 @@ export class PinochleStateService {
       }
     });
     return indeces;
-  }
-
-  getGameSettings(): GameSettings {
-    return getDeepCopy(this.gameSettings);
   }
 
   setSettingAutoCalculate(newVal: boolean): void {

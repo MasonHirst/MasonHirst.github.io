@@ -11,6 +11,7 @@ import {
 import { GameState } from '../../interfaces/gamestate.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
 import Swal from 'sweetalert2';
+import { GameSettings } from '../../interfaces/gamesettings.interface';
 
 @Component({
   selector: 'app-trick-taking',
@@ -23,6 +24,7 @@ export class TrickTakingComponent implements OnInit {
   gameFormat: GameFormat = null;
   private nonBidWinnerTeamIndices: number[] = null;
   noTrickPointsMessage: string;
+  gameSettings: GameSettings;
 
   constructor(
     private router: Router,
@@ -32,12 +34,16 @@ export class TrickTakingComponent implements OnInit {
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
     this.teams = this.gameState?.teams;
-    this.gameFormat = this.gameStateService?.getGameFormat();
     if (!Array.isArray(this.teams)) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
+    this.gameFormat = this.gameStateService?.getGameFormat();
     this.nonBidWinnerTeamIndices =
       this.gameStateService.getNonBidWinnerIndices();
+    this.gameSettings = this.gameStateService.getGameSettings();
+    this.gameStateService.gameSettingsEmit.subscribe((newVal) => {
+      this.gameSettings = newVal;
+    });
   }
 
   setNoTrickPointsMessage(
@@ -69,6 +75,12 @@ export class TrickTakingComponent implements OnInit {
     return getDeepCopy(this.gameState);
   }
 
+  get showCustomFlag(): boolean {
+    return isValidNumber(
+      this.gameSettings?.customTrickPoints[this.gameFormat?.label]
+    );
+  }
+
   get primaryBidWinnerIndex(): number {
     return this.gameState.bidWinningTeamIndices[0];
   }
@@ -88,11 +100,10 @@ export class TrickTakingComponent implements OnInit {
 
   onTrickInputChange(teamIndex: number, isBlurEvent: boolean = false): void {
     this.setNoTrickPointsMessage('');
-    if (!this.gameStateService.getGameSettings()?.autoCalculate) {
+    if (!this.gameSettings?.autoCalculate) {
       return;
     }
     const inputPoints = this.teams?.[teamIndex]?.trickScore;
-    const possibleTrickPoints = this.gameFormat.possibleTrickPoints;
     let otherInputIndex: number;
     if (this.gameFormat?.label === '5-hand') {
       otherInputIndex =
@@ -102,15 +113,15 @@ export class TrickTakingComponent implements OnInit {
     } else {
       otherInputIndex = teamIndex === 0 ? 1 : 0;
     }
-    if (inputPoints > possibleTrickPoints) {
+    if (inputPoints > this.possibleTricks) {
       return;
     }
     if (isBlurEvent) {
       const otherTeamPoints = this.teams[otherInputIndex].trickScore;
-      this.teams[teamIndex].trickScore = possibleTrickPoints - otherTeamPoints;
+      this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamPoints;
     } else {
       this.teams[otherInputIndex].trickScore =
-        possibleTrickPoints - inputPoints;
+        this.possibleTricks - inputPoints;
     }
   }
 
@@ -128,11 +139,15 @@ export class TrickTakingComponent implements OnInit {
     return tricksTotal;
   }
 
-  get possibleTrickPoints(): number {
-    return this.gameFormat?.possibleTrickPoints;
+  get possibleTricks(): number {
+    const { label, possibleTrickPoints: defaultTricks } = this.gameFormat;
+    const customVal = this.gameSettings?.customTrickPoints?.[label];
+    return isValidNumber(customVal) && customVal > 0
+      ? customVal
+      : defaultTricks;
   }
 
-  isEligibleForAutoCalculate(teamIndex: number): boolean {
+  isEligibleForAutoCalculateButton(teamIndex: number): boolean {
     // only for 3-hand and 8-hand formats
     let otherTeamsAllFilled: boolean = true;
     let otherTeamsTotal: number = 0;
@@ -148,15 +163,14 @@ export class TrickTakingComponent implements OnInit {
     const thisTeamScore = this.teams?.[teamIndex]?.trickScore;
     if (
       isValidNumber(thisTeamScore) &&
-      otherTeamsTotal + thisTeamScore === this.possibleTrickPoints
+      otherTeamsTotal + thisTeamScore === this.possibleTricks
     ) {
       return false;
     }
     const caseOneValid: boolean =
-      otherTeamsTotal === this.possibleTrickPoints &&
-      !isValidNumber(thisTeamScore);
+      otherTeamsTotal === this.possibleTricks && !isValidNumber(thisTeamScore);
     const caseTwoValid: boolean =
-      otherTeamsAllFilled && otherTeamsTotal <= this.possibleTrickPoints;
+      otherTeamsAllFilled && otherTeamsTotal <= this.possibleTricks;
     return caseOneValid || caseTwoValid;
   }
 
@@ -167,8 +181,7 @@ export class TrickTakingComponent implements OnInit {
         otherTeamsTotal += team.trickScore;
       }
     });
-    this.teams[teamIndex].trickScore =
-      this.gameFormat?.possibleTrickPoints - otherTeamsTotal;
+    this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamsTotal;
   }
 
   async submitTricks(): Promise<void> {
@@ -213,15 +226,21 @@ export class TrickTakingComponent implements OnInit {
         }
       });
 
-      const trickPointsSum = this.teams.reduce(
+      let trickPointsSum: number = this.teams.reduce(
         (accumulator, currentValue) => accumulator + currentValue?.trickScore,
         0
       );
 
-      if (trickPointsSum !== this.gameFormat?.possibleTrickPoints) {
+      if (this.gameFormat?.label === '5-hand') {
+        trickPointsSum =
+          this.teams[this.nonBidWinnerTeamIndices[0]].trickScore +
+          this.teams[this.gameState.bidWinningTeamIndices[0]].trickScore;
+      }
+
+      if (trickPointsSum !== this.possibleTricks) {
         const result = await Swal.fire({
           title: 'Total does not match game format!',
-          text: `The sum of all team's tricking points is ${trickPointsSum}. It should be ${this.gameFormat?.possibleTrickPoints}.`,
+          text: `The sum of all team's tricking points is ${trickPointsSum}. It should be ${this.possibleTricks}.`,
           confirmButtonText: 'Save Anyway',
           showCancelButton: true,
           cancelButtonText: 'Cancel',

@@ -1,4 +1,5 @@
 import { GameFormat } from './pinochle-scoreboard/interfaces/gameformat.interface';
+import { GameSettings } from './pinochle-scoreboard/interfaces/gamesettings.interface';
 import { Team } from './pinochle-scoreboard/interfaces/team.interface';
 
 export function isValidNumber(val: number): boolean {
@@ -48,4 +49,52 @@ export function getTeamComboName5Hand(
     });
     return comboName;
   }
+}
+
+export function getDefaultPinochleSettings(): GameSettings {
+  return {
+    autoCalculate: true,
+    customTrickPoints: {
+      '3-hand': null,
+      '4-hand': null,
+      '5-hand': null,
+      '6-hand': null,
+      '8-hand': null,
+    },
+  };
+}
+
+export function getDefaultPinochleFormats(): GameFormat[] {
+  return [
+    {
+      label: '3-hand',
+      description: '3 teams of 1 player',
+      teamCount: 3,
+      possibleTrickPoints: 250,
+    },
+    {
+      label: '4-hand',
+      description: '2 teams of 2 players',
+      teamCount: 2,
+      possibleTrickPoints: 250,
+    },
+    {
+      label: '5-hand',
+      description: '5 teams of 1 player',
+      teamCount: 5,
+      possibleTrickPoints: 500,
+    },
+    {
+      label: '6-hand',
+      description: '2 teams of 3 players',
+      teamCount: 2,
+      possibleTrickPoints: 500,
+    },
+    {
+      label: '8-hand',
+      description: '4 teams of 2 players',
+      teamCount: 4,
+      possibleTrickPoints: 500,
+    },
+  ];
 }

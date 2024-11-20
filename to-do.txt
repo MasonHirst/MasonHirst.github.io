@@ -1,7 +1,8 @@
 ############### PINOCHLE SCOREBOARD ###############
 - Clean up the text and styling on the pages
-- update the ip address logic in the code so I don't have to update it everytime I want to use the server over wifi
 - create a settings modal for pinochle to adjust possible trick points and other things
+- Create a destination page for when the user ends the game. Should have stats and the winner scores
+- Create a modal or something that shows the full game round history
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -13,3 +14,4 @@
 - fix styling on bidding page
 - give each number input a proper cap on the number
 - fix logic with auto calculation
+- update the ip address logic in the code so I don't have to update it everytime I want to use the server over wifi
