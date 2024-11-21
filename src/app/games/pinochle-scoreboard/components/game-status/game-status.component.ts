@@ -16,6 +16,7 @@ export class GameStatusComponent implements OnInit {
   @Input() gameState: GameState = null;
   @Input() gameFormat: GameFormat = null;
   @Input() currentPage: string = null;
+  @Input() onlySettingsButton: boolean = false;
   gameSettings: GameSettings;
   defaultGameFormats: GameFormat[];
   selectedPoints: { [key: string]: 'default' | 'custom' } = {};
@@ -30,6 +31,11 @@ export class GameStatusComponent implements OnInit {
       this.gameSettings = newVal;
     });
 
+    this.refreshGameSettings();
+  }
+
+  refreshGameSettings(): void {
+    this.gameSettings = this.gameStateService?.getGameSettings();
     this.defaultGameFormats.forEach(format => {
       const customVal = this.gameSettings?.customTrickPoints?.[format.label];
       this.selectedPoints[format.label] = customVal ? 'custom' : 'default';
@@ -37,7 +43,6 @@ export class GameStatusComponent implements OnInit {
   }
 
   saveNewGameSettings(): void {
-    console.log("🚀 ~ GameStatusComponent ~ saveNewGameSettings ~ this.gameSettings:", this.gameSettings)
     this.defaultGameFormats.forEach(format => {
       this.onCustomInputBlur(format);
     })

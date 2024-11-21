@@ -26,6 +26,10 @@ export function showTeamInput5Hand(
   return bidWinnerIndices[0] == i || nonBidWinnerIndices[0] == i;
 }
 
+export function hasDecimal(num: number): boolean {
+  return num.toString().includes('.');
+}
+
 export function getTeamComboName5Hand(
   i: number,
   gameFormat: GameFormat,

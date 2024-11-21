@@ -5,6 +5,7 @@ import { Team } from '../../interfaces/team.interface';
 import {
   getDeepCopy,
   getTeamComboName5Hand,
+  hasDecimal,
   isValidNumber,
   showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
@@ -29,16 +30,20 @@ export class MeldingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get the teams from the game state service and initialize meld points for each team
-    if (!this.gameStateService.getCurrentGameState()) {
+    const teams = this.gameStateService?.getCurrentGameState()?.teams;
+    this.gameFormat = this.gameStateService?.getGameFormat();
+    this.gameState = this.gameStateService?.getCurrentGameState();
+    if (
+      !this.gameState ||
+      !this.gameFormat ||
+      !teams?.[0]?.name ||
+      !this.gameState?.currentBid
+    ) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
 
-    const teams = this.gameStateService?.getCurrentGameState()?.teams;
-    this.gameFormat = this.gameStateService?.getGameFormat();
     if (Array.isArray(teams)) {
       this.teams = teams;
-      this.gameState = this.gameStateService?.getCurrentGameState();
       if (this.gameFormat?.label === '5-hand') {
         this.nonBidWinnerTeamIndices =
           this.gameStateService.getNonBidWinnerIndices();
@@ -67,7 +72,9 @@ export class MeldingComponent implements OnInit {
           !isValidNumber(primaryBidWinner.meldScore) ||
           !isValidNumber(primaryNonBidwinner.meldScore)
         ) {
-          this.setNotAllInputsFilledMessage('Please enter a meld score for each alliance');
+          this.setNotAllInputsFilledMessage(
+            'Please enter a meld score for each alliance'
+          );
           throw new Error(
             'Meld score is required for each temporary alliance (5-hand)'
           );
@@ -82,14 +89,26 @@ export class MeldingComponent implements OnInit {
         });
       }
 
-      this.teams.forEach((team) => {
-        if (!isValidNumber(team.meldScore)) {
+      this.teams.forEach(({ meldScore }) => {
+        if (!isValidNumber(meldScore)) {
           this.setNotAllInputsFilledMessage();
           throw new Error('Meld score is required for each team');
         }
-        if (team.meldScore < 0 || team.meldScore > 100000) {
-          this.setNotAllInputsFilledMessage('Allowed range for meld scores is between 0 and 100,000');
-          throw new Error('Allowed range for meld scores is between 0 and 100,000');
+        if (hasDecimal(meldScore)) {
+          this.setNotAllInputsFilledMessage(
+            `Please enter a whole number for each ${
+              this.gameFormat?.label === '5-hand' ? 'alliance' : 'team'
+            }`
+          );
+          throw new Error('Meld amount must be a whole number');
+        }
+        if (meldScore < 0 || meldScore > 100000) {
+          this.setNotAllInputsFilledMessage(
+            'Allowed range for meld scores is between 0 and 100,000'
+          );
+          throw new Error(
+            'Allowed range for meld scores is between 0 and 100,000'
+          );
         }
       });
 

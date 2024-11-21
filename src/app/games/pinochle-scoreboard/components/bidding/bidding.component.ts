@@ -4,6 +4,7 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
 import {
   getDeepCopy,
+  hasDecimal,
   isValidNumber,
 } from 'src/app/games/games-helper-functions';
 import { GameFormat } from '../../interfaces/gameformat.interface';
@@ -108,20 +109,20 @@ export class BiddingComponent implements OnInit {
 
   submitBids() {
     try {
-      if (
-        !isValidNumber(this.gameState?.currentBid) ||
-        this.gameState?.currentBid <= 0
-      ) {
+      const { currentBid } = this.gameState || {};
+      if (!isValidNumber(currentBid) || currentBid <= 0) {
         this.setNoBidMessage();
         throw new Error(
           'Bid amount is required. If bid is 0, please re-shuffle and re-deal.'
         );
       }
-      if (this.gameState?.currentBid > 100000) {
+      if (currentBid > 100000) {
         this.setNoBidMessage('Please enter a bid less than 100,000');
-        throw new Error(
-          'Bid amount must be less than 100,000'
-        );
+        throw new Error('Bid amount must be less than 100,000');
+      }
+      if (hasDecimal(currentBid)) {
+        this.setNoBidMessage('Please enter a whole number for the bid');
+        throw new Error('Bid amount must be a whole number');
       }
       if (!isValidNumber(this.primaryWinningTeamIndex)) {
         this.setNoWinnerMessage();
@@ -141,7 +142,7 @@ export class BiddingComponent implements OnInit {
       // Store the winning team and bid amount
       this.gameStateService.setWinningBid(
         [this.primaryWinningTeamIndex, this.secondaryWinningTeamIndex],
-        this.gameState?.currentBid,
+        currentBid,
         this.gameState?.trumpSuit
       );
 

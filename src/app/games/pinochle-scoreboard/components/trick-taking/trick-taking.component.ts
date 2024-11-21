@@ -5,6 +5,7 @@ import { Team } from '../../interfaces/team.interface';
 import {
   getDeepCopy,
   getTeamComboName5Hand,
+  hasDecimal,
   isValidNumber,
   showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
@@ -34,7 +35,7 @@ export class TrickTakingComponent implements OnInit {
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
     this.teams = this.gameState?.teams;
-    if (!Array.isArray(this.teams)) {
+    if (!this.teams?.[0]?.meldScore) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
     this.gameFormat = this.gameStateService?.getGameFormat();
@@ -89,7 +90,7 @@ export class TrickTakingComponent implements OnInit {
   }
 
   get showCalculateButtons(): boolean {
-    const { label, teamCount } = this.gameFormat;
+    const { label, teamCount } = this.gameFormat || {};
     // Only show buttons for 3-hand and 8-hand
     return label !== '5-hand' && teamCount > 2;
   }
@@ -140,7 +141,7 @@ export class TrickTakingComponent implements OnInit {
   }
 
   get possibleTricks(): number {
-    const { label, possibleTrickPoints: defaultTricks } = this.gameFormat;
+    const { label, possibleTrickPoints: defaultTricks } = this.gameFormat || {};
     const customVal = this.gameSettings?.customTrickPoints?.[label];
     return isValidNumber(customVal) && customVal > 0
       ? customVal
@@ -186,7 +187,7 @@ export class TrickTakingComponent implements OnInit {
 
   async submitTricks(): Promise<void> {
     try {
-      if (this.gameFormat.label === '5-hand') {
+      if (this.gameFormat?.label === '5-hand') {
         const primaryBidWinner =
           this.teams[this.gameState.bidWinningTeamIndices[0]];
         const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
@@ -211,12 +212,20 @@ export class TrickTakingComponent implements OnInit {
         });
       }
 
-      this.teams.forEach((team) => {
-        if (!isValidNumber(team.trickScore)) {
+      this.teams.forEach(({ trickScore }) => {
+        if (!isValidNumber(trickScore)) {
           this.setNoTrickPointsMessage();
           throw new Error('Trick score is required for each team or alliance');
         }
-        if (team.trickScore < 0 || team.trickScore > 100000) {
+        if (hasDecimal(trickScore)) {
+          this.setNoTrickPointsMessage(
+            `Please enter a whole number for each ${
+              this.gameFormat?.label === '5-hand' ? 'alliance' : 'team'
+            }`
+          );
+          throw new Error('Trick amount must be a whole number');
+        }
+        if (trickScore < 0 || trickScore > 100000) {
           this.setNoTrickPointsMessage(
             'Allowed range for trick scores is between 0 and 100,000'
           );

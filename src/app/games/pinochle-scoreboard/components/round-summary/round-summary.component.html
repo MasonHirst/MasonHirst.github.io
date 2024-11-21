@@ -1,3 +1,7 @@
+<app-game-status
+  [onlySettingsButton]="true"
+/>
+
 <div *ngIf="gameState" class="container my-5">
   <h2 class="text-center mb-4">
     Round <span class="text-info">{{ gameState.roundNumber }}</span> Summary

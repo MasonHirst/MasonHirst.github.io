@@ -12,14 +12,11 @@
       >Remember the last trick is worth extra points!</sub
     >
     <div
-      *ngIf="!gameSettings.autoCalculate"
+      *ngIf="!gameSettings.autoCalculate && !showCalculateButtons"
       class="text-muted d-flex align-items-center"
       style="font-size: 0.9rem"
     >
-      <i
-        class="bi bi-exclamation-triangle-fill me-2"
-        style="color: yellow"
-      ></i>
+      <i class="bi bi-exclamation-triangle-fill me-2" style="color: yellow"></i>
       <small>Auto-calculate is turned off.</small>
     </div>
   </div>
@@ -46,7 +43,11 @@
             <button
               *ngIf="showCalculateButtons"
               type="button"
-              class="btn btn-outline-info ms-2"
+              class="btn ms-2"
+              [ngClass]="{
+                'btn-outline-info': !isEligibleForAutoCalculateButton(i),
+                'btn-info': isEligibleForAutoCalculateButton(i)
+              }"
               (click)="calculateTrickPoints(i)"
               [disabled]="!isEligibleForAutoCalculateButton(i)"
             >
@@ -71,7 +72,7 @@
         </ng-template>
       </ng-container>
     </div>
-    
+
     <p class="mb-1">
       <span class="text-muted">Trick points claimed: </span
       ><span
@@ -101,9 +102,7 @@
       class="text-muted d-flex align-items-center"
       style="font-size: 0.9rem"
     >
-      <i
-        class="bi bi-info-circle-fill me-2 text-info"
-      ></i>
+      <i class="bi bi-info-circle-fill me-2 text-info"></i>
       <small>You have set a custom trick points total.</small>
     </div>
 

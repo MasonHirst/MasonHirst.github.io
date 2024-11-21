@@ -1,6 +1,5 @@
 ############### PINOCHLE SCOREBOARD ###############
 - Clean up the text and styling on the pages
-- create a settings modal for pinochle to adjust possible trick points and other things
 - Create a destination page for when the user ends the game. Should have stats and the winner scores
 - Create a modal or something that shows the full game round history
 
@@ -15,3 +14,12 @@
 - give each number input a proper cap on the number
 - fix logic with auto calculation
 - update the ip address logic in the code so I don't have to update it everytime I want to use the server over wifi
+- Add more data validation to the onInit step of each phase page.
+- New game page does not remove error when typing in name field
+- Remove the autoCalculate disabled flag on pages where it doesn't apply.
+- Make the calculation buttons more obvious when they are enabled.
+- change settings button spacing, make it a gear icon
+- Fix the settings 'soft-saving' when you close the modal without saving.
+- Add a max width to the whole pinochle game area
+- create a settings modal for pinochle to adjust possible trick points and other things
+- Fix problem where you can enter 0.00094837289472387498237498327

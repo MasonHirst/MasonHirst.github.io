@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-new-game',
@@ -29,14 +28,13 @@ export class NewGameComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private location: Location,
     private gameStateService: PinochleStateService
   ) {}
 
   ngOnInit(): void {
     // Get game format from service
-    this.teams = this.gameStateService.getCurrentGameState()?.teams;
-    this.gameFormat = this.gameStateService.getGameFormat();
+    this.teams = this.gameStateService?.getCurrentGameState()?.teams;
+    this.gameFormat = this.gameStateService?.getGameFormat();
 
     if (!this.teams || !this.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
