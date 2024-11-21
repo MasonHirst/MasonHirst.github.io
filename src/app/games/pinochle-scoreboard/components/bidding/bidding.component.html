@@ -23,6 +23,7 @@
       <input
         type="number"
         id="bidAmount"
+        step="1"
         [(ngModel)]="gameState.currentBid"
         (ngModelChange)="onBidAmountChange()"
         name="bidAmount"
@@ -98,10 +99,10 @@
         [(ngModel)]="gameState.trumpSuit"
         (ngModelChange)="onTrumpSuitChange()"
         name="trumpSuit"
-        class="form-control"
+        class="form-select"
         required
       >
-        <option value="" disabled selected>Select a suit</option>
+        <option value="" disabled [defaultSelected]="true" selected>Select a suit</option>
         <option value="Hearts">♥ Hearts</option>
         <option value="Diamonds">♦ Diamonds</option>
         <option value="Spades">♠ Spades</option>

@@ -1,4 +1,4 @@
-<div class="info-container">
+<div *ngIf="!onlySettingsButton" class="info-container">
   <!-- Top Row -->
   <div class="row" [ngClass]="{ 'mb-2': topRowHasBottomMargin }">
     <ng-container
@@ -32,8 +32,11 @@
   </div>
 </div>
 
-<button class="btn btn-outline-info" (click)="toggleSettingsModal()">
-  Settings
+<button
+  class="btn btn-outline-info settings-open-btn"
+  (click)="toggleSettingsModal()"
+>
+  <i class="bi bi-gear-fill"></i>
 </button>
 
 <!-- Templates -->
@@ -52,7 +55,7 @@
       ></i>
       {{ getTeamSubInfo(team, true) }}
     </span>
-    <span class="text-muted status-label-text text-up">
+    <span class="text-muted status-label-text">
       {{ getTeamSubInfo(team) }}
     </span>
   </div>
@@ -97,6 +100,7 @@
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"
+          (click)="refreshGameSettings()"
         ></button>
       </div>
       <div class="modal-body" style="overflow-x: auto">
@@ -111,7 +115,7 @@
             <p
               class="mb-1"
               [ngClass]="{
-                'text-info': format.label === gameFormat.label
+                'text-info': format.label === gameFormat?.label
               }"
             >
               {{ format.label }}
@@ -181,7 +185,12 @@
         <!-- end of modal body content -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+          (click)="refreshGameSettings()"
+        >
           Cancel
         </button>
         <button

@@ -7,9 +7,13 @@
   border-radius: 0.3rem;
   padding: 0.2rem;
   margin-bottom: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   margin-left: 0.3rem;
   margin-right: 0.3rem;
+}
+
+.settings-open-btn {
+  margin-left: 0.3rem;
 }
 
 .row {
@@ -42,7 +46,7 @@
 }
 
 .status-label-text {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 .bid-number {
