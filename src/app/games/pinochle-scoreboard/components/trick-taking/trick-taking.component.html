@@ -8,9 +8,20 @@
 <div class="container fade-in my-4">
   <div class="d-flex flex-column align-items-center gap-2 mb-4">
     <h2 class="text-center mb-2">Trick-Taking Phase</h2>
-    <sub class="text-center text-muted"
+    <sub class="text-center text-muted mb-3"
       >Remember the last trick is worth extra points!</sub
     >
+    <div
+      *ngIf="!gameSettings.autoCalculate"
+      class="text-muted d-flex align-items-center"
+      style="font-size: 0.9rem"
+    >
+      <i
+        class="bi bi-exclamation-triangle-fill me-2"
+        style="color: yellow"
+      ></i>
+      <small>Auto-calculate is turned off.</small>
+    </div>
   </div>
 
   <form class="mb-3">
@@ -23,8 +34,6 @@
           <div class="input-group">
             <input
               type="number"
-              [min]="0"
-              [max]="gameFormat.possibleTrickPoints"
               [id]="team.name"
               [(ngModel)]="team.trickScore"
               (ngModelChange)="setNoTrickPointsMessage('')"
@@ -39,7 +48,7 @@
               type="button"
               class="btn btn-outline-info ms-2"
               (click)="calculateTrickPoints(i)"
-              [disabled]="!isEligibleForAutoCalculate(i)"
+              [disabled]="!isEligibleForAutoCalculateButton(i)"
             >
               Calculate
             </button>
@@ -49,8 +58,6 @@
         <ng-template #soloInput>
           <input
             type="number"
-            [min]="0"
-            [max]="gameFormat.possibleTrickPoints"
             [id]="team.name"
             [(ngModel)]="team.trickScore"
             (ngModelChange)="onTrickInputChange(i)"
@@ -64,27 +71,42 @@
         </ng-template>
       </ng-container>
     </div>
-    <p>
+    
+    <p class="mb-1">
       <span class="text-muted">Trick points claimed: </span
       ><span
         [ngClass]="{
-          'text-primary': trickSubTotal === possibleTrickPoints,
-          'text-danger': trickSubTotal > possibleTrickPoints,
+          'text-primary': trickSubTotal === possibleTricks,
+          'text-danger': trickSubTotal > possibleTricks,
         }"
       >
         <i
-          class="bi bi-check-circle-fill text-success"
-          [ngStyle]="{
-            opacity: trickSubTotal === possibleTrickPoints ? 1 : 0
-          }"
+          class="bi"
           [ngClass]="{
-            'fade-in': trickSubTotal === possibleTrickPoints
+            'fade-in': trickSubTotal >= possibleTricks,
+            'bi-check-circle-fill text-success': trickSubTotal <= possibleTricks,
+            'bi-x-circle-fill text-danger': trickSubTotal > possibleTricks,
+          }"
+          [ngStyle]="{
+            opacity: trickSubTotal === possibleTricks ? 1 : 0
           }"
         ></i>
         {{ trickSubTotal }}</span
       >
-      / <span class="text-muted">{{ possibleTrickPoints }}</span>
+      / <span class="text-muted">{{ possibleTricks }}</span>
     </p>
+
+    <div
+      *ngIf="showCustomFlag"
+      class="text-muted d-flex align-items-center"
+      style="font-size: 0.9rem"
+    >
+      <i
+        class="bi bi-info-circle-fill me-2 text-info"
+      ></i>
+      <small>You have set a custom trick points total.</small>
+    </div>
+
     <small *ngIf="noTrickPointsMessage" class="text-danger">{{
       noTrickPointsMessage
     }}</small>

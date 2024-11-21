@@ -1,8 +1,9 @@
 <div *ngIf="gameState" class="container my-5">
-  <h2 class="text-center mb-4">Round {{ gameState.roundNumber }} Summary</h2>
+  <h2 class="text-center mb-4">
+    Round <span class="text-info">{{ gameState.roundNumber }}</span> Summary
+  </h2>
 
   <div class="mb-4">
-    <p><strong>Round Summary:</strong></p>
     <ul>
       <li>
         Winning Bid: {{ gameState.currentBid }} by Team

@@ -6,14 +6,14 @@
 />
 
 <div class="container fade-in my-3">
-  <h2 class="text-center mb-4">Melding Phase</h2>
-
-  <div class="mb-4">
-    <p><strong>Instructions:</strong></p>
-    <ul>
-      <li>Enter the total meld points for each team in the fields below.</li>
-    </ul>
+  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+    <h2 class="text-center mb-2">Melding Phase</h2>
+    <sub class="text-center text-muted mb-3"
+      >Enter the total meld points for each team.</sub
+    >
   </div>
+
+  
 
   <form class="mb-3">
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
@@ -24,8 +24,6 @@
         >
         <input
           type="number"
-          [min]="0"
-          [max]="1000000"
           [id]="team.name"
           [(ngModel)]="team.meldScore"
           (ngModelChange)="onMeldInputChange()"

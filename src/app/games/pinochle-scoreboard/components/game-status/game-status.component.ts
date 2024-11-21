@@ -1,17 +1,92 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
+import { Modal } from 'bootstrap';
+import { GameSettings } from '../../interfaces/gamesettings.interface';
+import { PinochleStateService } from '../../services/pinochle-state.service';
+import { getDefaultPinochleFormats } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-game-status',
   templateUrl: './game-status.component.html',
   styleUrls: ['./game-status.component.css'],
 })
-export class GameStatusComponent {
+export class GameStatusComponent implements OnInit {
   @Input() gameState: GameState = null;
   @Input() gameFormat: GameFormat = null;
   @Input() currentPage: string = null;
+  gameSettings: GameSettings;
+  defaultGameFormats: GameFormat[];
+  selectedPoints: { [key: string]: 'default' | 'custom' } = {};
+  invalidCustomTricksMessage: string = '';
+
+  constructor(private gameStateService: PinochleStateService) {}
+
+  ngOnInit(): void {
+    this.defaultGameFormats = getDefaultPinochleFormats();
+    this.gameSettings = this.gameStateService?.getGameSettings();
+    this.gameStateService.gameSettingsEmit.subscribe((newVal) => {
+      this.gameSettings = newVal;
+    });
+
+    this.defaultGameFormats.forEach(format => {
+      const customVal = this.gameSettings?.customTrickPoints?.[format.label];
+      this.selectedPoints[format.label] = customVal ? 'custom' : 'default';
+    })
+  }
+
+  saveNewGameSettings(): void {
+    console.log("🚀 ~ GameStatusComponent ~ saveNewGameSettings ~ this.gameSettings:", this.gameSettings)
+    this.defaultGameFormats.forEach(format => {
+      this.onCustomInputBlur(format);
+    })
+    if (!this.checkSettingsValid()) {
+      return;
+    }
+    this.gameStateService?.updateGameSettings(this.gameSettings);
+    this.toggleSettingsModal(false);
+  }
+
+  resetCustomPoints(formatLabel: string): void {
+    this.gameSettings.customTrickPoints[formatLabel] = null;
+  }
+
+  onDropdownChange(formatLabel: string, defaultValue: number): void {
+    if (this.selectedPoints[formatLabel] === 'custom') {
+      // Pre-fill custom input if empty
+      if (!this.gameSettings.customTrickPoints[formatLabel]) {
+        this.gameSettings.customTrickPoints[formatLabel] = defaultValue;
+      }
+    }
+    if (this.selectedPoints[formatLabel] === 'default') {
+      this.gameSettings.customTrickPoints[formatLabel] = null;
+    }
+  }
+
+  onCustomInputBlur(format: GameFormat): void {
+    const { label, possibleTrickPoints } = format;
+    const customValue = this.gameSettings.customTrickPoints[label];
+  
+    if (!customValue || customValue === possibleTrickPoints) {
+      // Reset to default if input is empty or matches default
+      this.selectedPoints[label] = 'default';
+      this.gameSettings.customTrickPoints[label] = null;
+    }
+  }
+
+  checkSettingsValid(): boolean {
+    let valid: boolean = true;
+    this.defaultGameFormats.forEach(format => {
+      const input = this.gameSettings.customTrickPoints[format.label]
+      const isCustom = this.selectedPoints[format.label] === 'custom';
+      if (isCustom && (input <= 0 || input > 100000)) {
+        valid = false;
+        this.invalidCustomTricksMessage = 'The allowed range for trick points is between 1 and 100,000.'
+      }
+    });
+    return valid;
+  }
 
   get trumpSuitIcon(): string {
     const suitIcons = {
@@ -37,6 +112,20 @@ export class GameStatusComponent {
 
   get showSecondRow(): boolean {
     return this.gameFormat?.teamCount > 2;
+  }
+
+  toggleSettingsModal(open: boolean = true): void {
+    const modalElement = document.getElementById('pinochle-settings-modal');
+    if (!modalElement) {
+      console.error('Modal element not found!');
+      return;
+    }
+    const settingsModal = Modal.getOrCreateInstance(modalElement);
+    if (open) {
+      settingsModal.show();
+    } else {
+      settingsModal.hide();
+    }
   }
 
   getTeamSubInfo(team: Team, isName: boolean = false): string | number {

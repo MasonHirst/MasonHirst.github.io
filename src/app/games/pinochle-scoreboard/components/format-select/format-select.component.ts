@@ -4,7 +4,7 @@ import { GameFormat } from '../../interfaces/gameformat.interface';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameData } from '../../interfaces/gamedata.interface';
 import Swal from 'sweetalert2';
-import { isValidNumber } from 'src/app/games/games-helper-functions';
+import { getDefaultPinochleFormats, isValidNumber } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-format-select',
@@ -12,38 +12,7 @@ import { isValidNumber } from 'src/app/games/games-helper-functions';
   styleUrls: ['./format-select.component.css'],
 })
 export class FormatSelectComponent implements OnInit {
-  public gameFormats: GameFormat[] = [
-    {
-      label: '3-hand',
-      description: '3 teams of 1 player',
-      teamCount: 3,
-      possibleTrickPoints: 250,
-    },
-    {
-      label: '4-hand',
-      description: '2 teams of 2 players',
-      teamCount: 2,
-      possibleTrickPoints: 250,
-    },
-    {
-      label: '5-hand',
-      description: '5 teams of 1 player',
-      teamCount: 5,
-      possibleTrickPoints: 500,
-    },
-    {
-      label: '6-hand',
-      description: '2 teams of 3 players',
-      teamCount: 2,
-      possibleTrickPoints: 500,
-    },
-    {
-      label: '8-hand',
-      description: '4 teams of 2 players',
-      teamCount: 4,
-      possibleTrickPoints: 500,
-    },
-  ];
+  public gameFormats: GameFormat[] = getDefaultPinochleFormats();
 
   gamesFromIndexedDB: GameData[];
 

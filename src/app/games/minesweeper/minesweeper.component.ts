@@ -451,10 +451,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
         );
         break;
     }
-    // if (this.screen < 800) {
-    //   const { height, width, bombs } = size;
-    //   size = new Minesweeper(width, height, bombs);
-    // }
     this.changeSizeError = '';
     this.mineService.updateGameSize(size);
   }
