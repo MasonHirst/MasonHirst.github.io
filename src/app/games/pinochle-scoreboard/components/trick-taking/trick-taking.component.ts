@@ -208,7 +208,7 @@ export class TrickTakingComponent implements OnInit {
           }
           if (this.nonBidWinnerTeamIndices.includes(i)) {
             team.trickScore = primaryNonBidwinner.trickScore;
-          }
+        }
         });
       }
 

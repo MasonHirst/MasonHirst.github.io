@@ -6,6 +6,7 @@ import { formatSubScore } from 'src/app/games/games-helper-functions';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
 import Swal from 'sweetalert2';
+import { GameSettings } from '../../interfaces/gamesettings.interface';
 
 @Component({
   selector: 'app-round-summary',
@@ -15,6 +16,7 @@ import Swal from 'sweetalert2';
 export class RoundSummaryComponent implements OnInit {
   gameState: GameState;
   gameFormat: GameFormat;
+  gameSettings: GameSettings;
 
   constructor(
     private router: Router,
@@ -24,6 +26,10 @@ export class RoundSummaryComponent implements OnInit {
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
     this.gameFormat = this.gameStateService?.getGameFormat();
+    this.gameSettings = this.gameStateService?.getGameSettings();
+    this.gameStateService.gameSettingsEmit.subscribe((newVal) => {
+      this.gameSettings = newVal;
+    });
     if (
       !Array.isArray(this.gameState?.teams) ||
       !this.gameFormat ||
@@ -69,18 +75,7 @@ export class RoundSummaryComponent implements OnInit {
 
   startNewRound(): void {
     this.gameStateService.saveRoundToHistory();
-    this.gameState.trumpSuit = null;
-    this.gameState.bidWinningTeamIndices = null;
-    this.gameState.currentBid = null;
-    this.gameState.roundNumber++;
-    this.gameState.teams.forEach((team) => {
-      team.currentTotalScore += team.roundSubTotal;
-      team.meldScore = null;
-      team.trickScore = null;
-      team.roundSubTotal = null;
-    });
-
-    this.gameStateService.setCurrentGameState(this.gameState);
+    this.gameStateService?.resetCurrentGameStateForNewRound();
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
 
@@ -95,7 +90,9 @@ export class RoundSummaryComponent implements OnInit {
     });
     if (result.isConfirmed) {
       this.gameStateService?.setGameActiveStatus(false);
-      this.router.navigate(['/games/pinochle-scoreboard']);
+      this.gameStateService.saveRoundToHistory();
+      this.gameStateService?.resetCurrentGameStateForNewRound();
+      this.router.navigate(['/games/pinochle-scoreboard/game-review']);
     }
   }
 

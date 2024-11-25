@@ -7,6 +7,7 @@ import { TrickTakingComponent } from './components/trick-taking/trick-taking.com
 import { RoundSummaryComponent } from './components/round-summary/round-summary.component';
 import { PinochleScoreboardComponent } from './pinochle-scoreboard.component';
 import { FormatSelectComponent } from './components/format-select/format-select.component';
+import { GameReviewComponent } from './components/game-review/game-review.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'melding', component: MeldingComponent },
       { path: 'trick-taking', component: TrickTakingComponent },
       { path: 'round-summary', component: RoundSummaryComponent },
+      { path: 'game-review', component: GameReviewComponent },
       { path: '**', redirectTo: '' },
     ],
   },

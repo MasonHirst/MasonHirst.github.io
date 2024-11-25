@@ -5,7 +5,6 @@ import { GameFormat } from '../interfaces/gameformat.interface';
 import {
   getDeepCopy,
   getDefaultPinochleSettings,
-  isValidNumber,
 } from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
 import shortId from 'shortid';
@@ -39,7 +38,7 @@ export class PinochleStateService {
     return getDeepCopy(this.gameSettings);
   }
 
-  getSettingsFromLocalStorage(): GameSettings {
+  private getSettingsFromLocalStorage(): GameSettings {
     const settings = JSON.parse(
       localStorage.getItem('masonhirst_pinochle_settings')
     );
@@ -99,10 +98,6 @@ export class PinochleStateService {
 
   getGameFormat(): GameFormat {
     return this.gameData?.gameFormat;
-  }
-
-  clearCurrentGameState(): void {
-    this.gameData.currentGameState = null;
   }
 
   getCurrentGameState(): GameState {
@@ -172,6 +167,19 @@ export class PinochleStateService {
   setGameActiveStatus(status: boolean): void {
     this.gameData.gameIsActive = status;
     this.saveGameDataToDB();
+  }
+
+  resetCurrentGameStateForNewRound(): void {
+    this.gameData.currentGameState.trumpSuit = null;
+    this.gameData.currentGameState.bidWinningTeamIndices = null;
+    this.gameData.currentGameState.currentBid = null;
+    this.gameData.currentGameState.roundNumber++;
+    this.gameData.currentGameState.teams.forEach((team) => {
+      team.currentTotalScore += team.roundSubTotal;
+      team.meldScore = null;
+      team.trickScore = null;
+      team.roundSubTotal = null;
+    });
   }
 
   async setAllPastGamesToNotActiveInDB(): Promise<void> {

@@ -1,0 +1,32 @@
+.suit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2rem;
+  width: 1.6rem;
+  background-color: white;
+  border-color: 0.1rem solid black;
+  border-radius: 0.3rem;
+  font-size: 1.6rem;
+  margin-right: 0.7rem;
+}
+
+.black-shape-border {
+  -webkit-text-stroke: 0.08rem black;
+}
+
+.primary-bid-winner-highlight {
+  color: gold;
+}
+
+.status-label-text {
+  font-size: 1rem;
+}
+
+.trump-bid-text {
+  font-size: 1rem;
+}
+
+.game-status-team-text {
+  font-size: 1.2rem;
+}

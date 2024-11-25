@@ -1,5 +1,6 @@
 export interface GameSettings {
   autoCalculate: boolean;
+  showPrimaryBidWinnerForFiveHand: boolean;
   customTrickPoints: {
     '3-hand': number,
     '4-hand': number,
