@@ -89,7 +89,7 @@ export class RoundSummaryComponent implements OnInit {
       reverseButtons: true,
     });
     if (result.isConfirmed) {
-      // this.gameStateService?.setGameActiveStatus(false);
+      this.gameStateService?.setGameActiveStatus(false);
       this.gameStateService.saveRoundToHistory();
       this.gameStateService?.resetCurrentGameStateForNewRound();
       this.router.navigate(['/games/pinochle-scoreboard/game-review']);
