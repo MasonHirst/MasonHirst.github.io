@@ -1,0 +1,31 @@
+<div *ngIf="gameData?.roundHistory?.[0]?.currentBid" class="container my-5">
+  <!-- Winning Team Section -->
+  <div class="alert alert-success text-center mb-0">
+    <h4>
+      🎉 Congratulations to the winning team:
+      <strong class="text-primary">{{ getWinningTeam().name }}</strong> 🎉
+    </h4>
+    <p>
+      Final Score:
+      <span class="text-info" style="font-weight: bold;">{{ getWinningTeam().currentTotalScore }}</span>
+    </p>
+  </div>
+
+  <!-- Game History Tables -->
+  <div class="d-flex flex-column-reverse">
+    <div *ngFor="let round of roundHistory">
+      <app-round-summary-table
+        [gameState]="round"
+        [gameFormat]="gameData?.gameFormat"
+        [gameSettings]="gameSettings"
+      />
+    </div>
+  </div>
+
+  <app-nav-buttons
+    [goBackLabel]="'Exit'"
+    [goForwardLabel]="'Play Again'"
+    (backClicked)="exit()"
+    (forwardClicked)="playAgain()"
+  />
+</div>

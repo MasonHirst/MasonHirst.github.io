@@ -2,49 +2,15 @@
   [onlySettingsButton]="true"
 />
 
-<div *ngIf="gameState" class="container my-5">
-  <h2 class="text-center mb-4">
-    Round <span class="text-info">{{ gameState.roundNumber }}</span> Summary
-  </h2>
+<div *ngIf="gameState" class="container my-3">
 
-  <div class="mb-4">
-    <ul>
-      <li>
-        Winning Bid: {{ gameState.currentBid }} by Team
-        <strong>{{ getBidWinningTeamName }}</strong>
-      </li>
-      <li>
-        Trump Suit: <strong>{{ gameState.trumpSuit }}</strong>
-      </li>
-    </ul>
-  </div>
+  <app-round-summary-table
+    [gameState]="gameState"
+    [gameFormat]="gameFormat"
+    [gameSettings]="gameSettings"
+  />
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Team</th>
-        <th>Meld Points</th>
-        <th>Trick Points</th>
-        <th>Round Score</th>
-        <th>Total Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let team of gameState.teams">
-        <td>{{ team.name }}</td>
-        <td>{{ team.meldScore }}</td>
-        <td
-          [ngClass]="{
-            'text-danger': team.trickScore <= 0,
-          }"
-        >
-          {{ team.trickScore }}
-        </td>
-        <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
-        <td>{{ getTotalScoreWithRoundTotal(team) }}</td>
-      </tr>
-    </tbody>
-  </table>
+  
 
   <app-nav-buttons
     [goBackLabel]="'Back'"

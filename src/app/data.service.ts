@@ -22,7 +22,7 @@ export class DataService {
     ),
     new ExperienceModel(
       true,
-      'Software Engineer Intern',
+      'Junior Software Developer',
       'Sparkz Development',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657359/sparkz-logo_gqcisu.png',
       'Pleasant Grove, Utah',
@@ -144,7 +144,7 @@ export class DataService {
       'Kmail',
       'kmail',
       'A recreation of the Gmail web app, along with a messaging feature. Utilizes an express backend with a socket server for live chats.',
-      'I utilized Material UI with React to create a UI similar to google to practice professional and responsive design.',
+      'I utilized Material UI with React to create a UI similar to Google in order to practice professional and responsive design.',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689356433/Screenshot_2023-07-14_at_11.37.29_AM_j9nzmn.png',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689621804/Screenshot_2023-07-17_at_1.21.51_PM_qp6md9.png',
       'https://kmail.fly.dev/',

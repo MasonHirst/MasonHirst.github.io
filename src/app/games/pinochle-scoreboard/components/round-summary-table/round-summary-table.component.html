@@ -1,0 +1,80 @@
+<div *ngIf="gameState.currentBid" class="my-4">
+  <h3 class="text-center mb-3">
+    Round <span class="text-info">{{ gameState.roundNumber }}</span> Summary
+  </h3>
+
+  <div
+    *ngIf="trumpSuitIcon"
+    class="text-center d-flex align-items-end justify-content-evenly mb-2"
+    style="line-height: 1"
+  >
+    <span class="d-flex align-items-end gap-2">
+      <span class="text-muted">Trump suit: </span>
+      <span
+        class="suit-icon black-shape-border"
+        [ngStyle]="{ color: trumpSuitColor }"
+      >
+        {{ trumpSuitIcon }}
+      </span>
+    </span>
+    <span class="status-label-text">
+      <span class="text-muted">bid: </span>
+      <span style="font-size: 1.2rem; margin-right: 0.3rem">{{
+        gameState.currentBid
+      }}</span>
+      <i
+        class="bi"
+        [ngClass]="{
+          'bi-check-circle-fill text-primary': bidWasAchieved,
+          'bi-x-circle-fill text-danger': !bidWasAchieved,
+        }"
+        style="font-size: 1.3rem"
+      ></i>
+    </span>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Meld Points</th>
+        <th>Trick Points</th>
+        <th>Round Score</th>
+        <th>Total Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let team of gameState.teams; let i = index">
+        <td
+          [ngClass]="{
+            'primary-bid-winner-highlight':
+              gameState?.bidWinningTeamIndices?.includes(i)
+          }"
+        >
+          <i
+            *ngIf="isFiveHandPrimaryBidWinner(i) && gameSettings.showPrimaryBidWinnerForFiveHand"
+            class="bi bi-fire text-danger"
+          ></i>
+          {{ team.name }}
+        </td>
+        <td>{{ team.meldScore }}</td>
+        <td
+          [ngClass]="{
+          'text-danger': team.trickScore <= 0,
+        }"
+        >
+          {{ team.trickScore }}
+        </td>
+        <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
+        <td>
+          {{ getTotalScoreWithRoundTotal(team) }}
+          <i
+            *ngIf="isHighestScoreTeam(i)"
+            class="bi bi-trophy-fill"
+            style="color: gold"
+          ></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

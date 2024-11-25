@@ -58,6 +58,7 @@ export function getTeamComboName5Hand(
 export function getDefaultPinochleSettings(): GameSettings {
   return {
     autoCalculate: true,
+    showPrimaryBidWinnerForFiveHand: false,
     customTrickPoints: {
       '3-hand': null,
       '4-hand': null,
