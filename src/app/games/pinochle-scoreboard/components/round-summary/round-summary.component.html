@@ -1,16 +1,11 @@
-<app-game-status
-  [onlySettingsButton]="true"
-/>
+<app-game-status [onlySettingsButton]="true" />
 
 <div *ngIf="gameState" class="container my-3">
-
   <app-round-summary-table
     [gameState]="gameState"
     [gameFormat]="gameFormat"
     [gameSettings]="gameSettings"
   />
-
-  
 
   <app-nav-buttons
     [goBackLabel]="'Back'"
@@ -20,4 +15,14 @@
     (middleActionClicked)="endGame()"
     (forwardClicked)="startNewRound()"
   />
+
+  <div *ngIf="roundHistory.length > 0" class="d-flex flex-column-reverse mt-5">
+    <div *ngFor="let round of roundHistory">
+      <app-round-summary-table
+        [gameState]="round"
+        [gameFormat]="gameFormat"
+        [gameSettings]="gameSettings"
+      />
+    </div>
+  </div>
 </div>

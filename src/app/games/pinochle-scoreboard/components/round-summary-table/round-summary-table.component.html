@@ -33,48 +33,53 @@
     </span>
   </div>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Team</th>
-        <th>Meld Points</th>
-        <th>Trick Points</th>
-        <th>Round Score</th>
-        <th>Total Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let team of gameState.teams; let i = index">
-        <td
-          [ngClass]="{
-            'primary-bid-winner-highlight':
-              gameState?.bidWinningTeamIndices?.includes(i)
-          }"
-        >
-          <i
-            *ngIf="isFiveHandPrimaryBidWinner(i) && gameSettings.showPrimaryBidWinnerForFiveHand"
-            class="bi bi-fire text-danger"
-          ></i>
-          {{ team.name }}
-        </td>
-        <td>{{ team.meldScore }}</td>
-        <td
-          [ngClass]="{
-          'text-danger': team.trickScore <= 0,
-        }"
-        >
-          {{ team.trickScore }}
-        </td>
-        <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
-        <td>
-          {{ getTotalScoreWithRoundTotal(team) }}
-          <i
-            *ngIf="isHighestScoreTeam(i)"
-            class="bi bi-trophy-fill"
-            style="color: gold"
-          ></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div style="overflow-x: auto !important;">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Meld Points</th>
+          <th>Trick Points</th>
+          <th>Round Score</th>
+          <th>Total Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of gameState.teams; let i = index">
+          <td
+            [ngClass]="{
+              'primary-bid-winner-highlight':
+                gameState?.bidWinningTeamIndices?.includes(i)
+            }"
+          >
+            <i
+              *ngIf="
+                isFiveHandPrimaryBidWinner(i) &&
+                gameSettings.showPrimaryBidWinnerForFiveHand
+              "
+              class="bi bi-fire text-danger"
+            ></i>
+            {{ team.name }}
+          </td>
+          <td>{{ team.meldScore }}</td>
+          <td
+            [ngClass]="{
+        'text-danger': team.trickScore <= 0,
+      }"
+          >
+            {{ team.trickScore }}
+          </td>
+          <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
+          <td>
+            {{ getTotalScoreWithRoundTotal(team) }}
+            <i
+              *ngIf="isHighestScoreTeam(i)"
+              class="bi bi-trophy-fill"
+              style="color: gold"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

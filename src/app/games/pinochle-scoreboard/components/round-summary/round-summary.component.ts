@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameState } from '../../interfaces/gamestate.interface';
-import { formatSubScore } from 'src/app/games/games-helper-functions';
+import { formatSubScore, isValidNumber } from 'src/app/games/games-helper-functions';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
 import Swal from 'sweetalert2';
@@ -17,6 +17,7 @@ export class RoundSummaryComponent implements OnInit {
   gameState: GameState;
   gameFormat: GameFormat;
   gameSettings: GameSettings;
+  roundHistory: GameState[];
 
   constructor(
     private router: Router,
@@ -26,16 +27,18 @@ export class RoundSummaryComponent implements OnInit {
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
     this.gameFormat = this.gameStateService?.getGameFormat();
+    this.roundHistory = this.gameStateService?.getAllGameData()?.roundHistory;
     this.gameSettings = this.gameStateService?.getGameSettings();
     this.gameStateService.gameSettingsEmit.subscribe((newVal) => {
       this.gameSettings = newVal;
     });
+    
     if (
       !Array.isArray(this.gameState?.teams) ||
       !this.gameFormat ||
       !this.gameState?.currentBid ||
-      !this.gameState?.teams[0]?.trickScore ||
-      !this.gameState?.teams[0]?.meldScore
+      !isValidNumber(this.gameState?.teams?.[0]?.trickScore) ||
+      !this.gameState?.teams?.[0]?.meldScore
     ) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
@@ -90,9 +93,13 @@ export class RoundSummaryComponent implements OnInit {
     });
     if (result.isConfirmed) {
       this.gameStateService?.setGameActiveStatus(false);
-      this.gameStateService.saveRoundToHistory();
+      this.gameStateService?.saveRoundToHistory();
       this.gameStateService?.resetCurrentGameStateForNewRound();
-      this.router.navigate(['/games/pinochle-scoreboard/game-review']);
+      this.router.navigate([
+        `/games/pinochle-scoreboard/game-review/${
+          this.gameStateService.getAllGameData().id
+        }`,
+      ]);
     }
   }
 

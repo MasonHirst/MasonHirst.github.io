@@ -8,12 +8,27 @@
       track of round details during a game of Pinochle. It guides you through
       each stage of the game, and provides a summary after each round.
     </p>
+
+    <div
+      *ngIf="activeSavedGame?.gameFormat"
+      class="mb-4 text-center"
+      style="max-width: 300px; margin-right: auto; margin-left: auto"
+    >
+      <button
+        (click)="continueSavedActiveGame()"
+        class="btn btn-primary w-100 continue-btn my-3"
+      >
+        Continue Saved {{ activeSavedGame?.gameFormat?.label }} Game
+      </button>
+      <small class="">Started at {{ formattedTimeForSavedGame }}</small>
+    </div>
+
     <h2 class="text-center text-info mb-4">Choose a Game Format</h2>
 
     <div class="d-flex flex-column align-items-center">
       <div
         class="btn-group-vertical d-flex flex-column align-items-center w-100"
-        style="max-width: 240px"
+        style="max-width: 260px"
       >
         <div *ngFor="let format of gameFormats" class="mb-4 text-center">
           <button (click)="startNewGame(format)" class="btn btn-primary w-100">
@@ -23,6 +38,14 @@
         </div>
       </div>
     </div>
+
+    <button
+      class="btn btn-outline-info mt-4 mb-5"
+      (click)="togglePastGamesModal()"
+    >
+      View past games
+    </button>
+
     <p>
       This tool follows the standard rules for Partnership Pinochle, including
       bidding, melding, and scoring conventions. You can find an overview
@@ -36,3 +59,5 @@
     </p>
   </div>
 </div>
+
+<app-past-games-modal [savedGames]="pastEndedGames" (gameSelected)="handleOpenSavedGame($event)" />

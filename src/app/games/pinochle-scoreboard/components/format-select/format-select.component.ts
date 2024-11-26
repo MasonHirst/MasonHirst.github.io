@@ -4,7 +4,12 @@ import { GameFormat } from '../../interfaces/gameformat.interface';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { GameData } from '../../interfaces/gamedata.interface';
 import Swal from 'sweetalert2';
-import { getDefaultPinochleFormats, isValidNumber } from 'src/app/games/games-helper-functions';
+import { Modal } from 'bootstrap';
+import {
+  formatTimestampForPinochle,
+  getDefaultPinochleFormats,
+  isValidNumber,
+} from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-format-select',
@@ -13,8 +18,9 @@ import { getDefaultPinochleFormats, isValidNumber } from 'src/app/games/games-he
 })
 export class FormatSelectComponent implements OnInit {
   public gameFormats: GameFormat[] = getDefaultPinochleFormats();
-
-  gamesFromIndexedDB: GameData[];
+  public activeSavedGame: GameData;
+  public pastEndedGames: GameData[];
+  public gamesFromIndexedDB: GameData[];
 
   constructor(
     private router: Router,
@@ -23,6 +29,10 @@ export class FormatSelectComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.getGamesFromIndexedDB();
+  }
+
+  get formattedTimeForSavedGame(): string {
+    return formatTimestampForPinochle(this.activeSavedGame?.gameStartTime);
   }
 
   resumeGameFromDB(game: GameData): void {
@@ -62,20 +72,23 @@ export class FormatSelectComponent implements OnInit {
         (game) => game.gameIsActive
       );
 
+      this.pastEndedGames = this.gamesFromIndexedDB.filter(
+        (game) => !game.gameIsActive
+      );
+
       if (activeGame) {
-        const result = await Swal.fire({
-          title: 'Continue game?',
-          text: 'You have a game in progress. Would you like to continue?',
-          confirmButtonText: 'Continue game',
-          showCancelButton: true,
-          cancelButtonText: 'Close',
-          reverseButtons: true,
-        });
-        if (result.isConfirmed) {
-          this.resumeGameFromDB(activeGame);
-        }
+        this.activeSavedGame = activeGame;
+      } else {
+        this.activeSavedGame = null;
       }
     }
+  }
+
+  continueSavedActiveGame(): void {
+    if (!this.activeSavedGame?.gameFormat?.label) {
+      return console.error('No valid game to resume!');
+    }
+    this.resumeGameFromDB(this.activeSavedGame);
   }
 
   async startNewGame(format: GameFormat) {
@@ -99,5 +112,24 @@ export class FormatSelectComponent implements OnInit {
     this.gameStateService.startNewGameFormat(format);
     // Navigate to the new-game component
     this.router.navigate(['/games/pinochle-scoreboard/new-game']);
+  }
+
+  togglePastGamesModal(open: boolean = true): void {
+    const modalElement = document.getElementById('pinochle-past-games-modal');
+    if (!modalElement) {
+      console.error('Modal element not found!');
+      return;
+    }
+    const settingsModal = Modal.getOrCreateInstance(modalElement);
+    if (open) {
+      settingsModal.show();
+    } else {
+      settingsModal.hide();
+    }
+  }
+
+  handleOpenSavedGame(game: GameData): void {
+    this.togglePastGamesModal(false);
+    this.router.navigate(['/games/pinochle-scoreboard/game-review', game.id]);
   }
 }

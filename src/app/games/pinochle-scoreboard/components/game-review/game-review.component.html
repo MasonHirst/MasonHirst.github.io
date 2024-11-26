@@ -1,31 +1,49 @@
-<div *ngIf="gameData?.roundHistory?.[0]?.currentBid" class="container my-5">
-  <!-- Winning Team Section -->
-  <div class="alert alert-success text-center mb-0">
-    <h4>
-      🎉 Congratulations to the winning team:
-      <strong class="text-primary">{{ getWinningTeam().name }}</strong> 🎉
-    </h4>
-    <p>
-      Final Score:
-      <span class="text-info" style="font-weight: bold;">{{ getWinningTeam().currentTotalScore }}</span>
-    </p>
-  </div>
-
-  <!-- Game History Tables -->
-  <div class="d-flex flex-column-reverse">
-    <div *ngFor="let round of roundHistory">
-      <app-round-summary-table
-        [gameState]="round"
-        [gameFormat]="gameData?.gameFormat"
-        [gameSettings]="gameSettings"
-      />
+<div class="container fade-in my-5">
+  <ng-container *ngIf="gameData?.roundHistory?.[0]?.currentBid">
+    <!-- Winning Team Section -->
+    <div class="alert alert-success text-center mb-0">
+      <h4>
+        🎉 Congratulations to the winning team:
+        <strong class="text-primary">{{ getWinningTeam().name }}</strong> 🎉
+      </h4>
+      <p>
+        Final Score:
+        <span style="font-weight: bold; color: gold">{{
+          getWinningTeam().currentTotalScore + getWinningTeam().roundSubTotal
+        }}</span>
+      </p>
     </div>
-  </div>
 
-  <app-nav-buttons
-    [goBackLabel]="'Exit'"
-    [goForwardLabel]="'Play Again'"
-    (backClicked)="exit()"
-    (forwardClicked)="playAgain()"
-  />
+    <!-- Game History Tables -->
+    <div class="d-flex flex-column-reverse">
+      <div *ngFor="let round of roundHistory">
+        <app-round-summary-table
+          [gameState]="round"
+          [gameFormat]="gameData?.gameFormat"
+          [gameSettings]="gameSettings"
+        />
+      </div>
+    </div>
+  </ng-container>
+
+  <p
+    *ngIf="!gameData?.roundHistory?.[0]?.currentBid"
+    class="text-center"
+    style="color: yellow"
+  >
+    <span class="bi bi-x-circle"></span>
+    No game data was found with the provided ID.
+  </p>
+
+  <p *ngIf="gameData?.roundHistory?.[0]?.currentBid" class="text-center">
+    <span class="text-info bi bi-info-circle"></span> The most recent 25 games
+    are saved in your browser. You can view them anytime from the Pinochle
+    Scoreboard home page!
+  </p>
+
+  <div class="d-flex justify-content-between mt-4">
+    <button type="button" (click)="exit()" class="btn btn-outline-info">
+      Exit
+    </button>
+  </div>
 </div>
