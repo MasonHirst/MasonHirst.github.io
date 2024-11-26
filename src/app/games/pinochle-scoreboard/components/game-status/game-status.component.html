@@ -52,6 +52,7 @@
       <i
         *ngIf="
           getBidWinningStatus(team) === 'primary' &&
+          gameFormat.label === '5-hand' &&
           gameSettings.showPrimaryBidWinnerForFiveHand
         "
         class="bi bi-fire text-danger"
