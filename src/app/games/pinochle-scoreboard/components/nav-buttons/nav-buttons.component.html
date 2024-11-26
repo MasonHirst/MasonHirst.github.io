@@ -8,18 +8,18 @@
     {{ goForwardLabel }}
   </button>
   <button
-  *ngIf="middleActionLabel"
-  class="btn btn-outline-info"
-  (click)="onMiddleActionClicked()"
+    *ngIf="middleActionLabel"
+    class="btn btn-outline-info"
+    (click)="onMiddleActionClicked()"
   >
-  {{ middleActionLabel }}
-</button>
-<button
-  *ngIf="goBackLabel"
-  type="button"
-  (click)="onBackClicked()"
-  class="btn btn-outline-info"
->
-  {{ goBackLabel }}
-</button>
+    {{ middleActionLabel }}
+  </button>
+  <button
+    *ngIf="goBackLabel"
+    type="button"
+    (click)="onBackClicked()"
+    class="btn btn-outline-info"
+  >
+    {{ goBackLabel }}
+  </button>
 </div>

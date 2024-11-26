@@ -1,7 +1,6 @@
 ############### PINOCHLE SCOREBOARD ###############
-- Clean up the text and styling on the pages
-- Create a destination page for when the user ends the game. Should have stats and the winner scores
-- Create a modal or something that shows the full game round history
+- Make sure the game-review page is only operating from a provided id in the url.
+- Break the logic that adds each team's total into a separate function. It needs to be used differently for ending the game vs starting next round.
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -23,3 +22,6 @@
 - Add a max width to the whole pinochle game area
 - create a settings modal for pinochle to adjust possible trick points and other things
 - Fix problem where you can enter 0.00094837289472387498237498327
+- Create a modal or something that shows the full game round history
+- Create a destination page for when the user ends the game. Should have stats and the winner scores
+- Clean up the text and styling on the pages

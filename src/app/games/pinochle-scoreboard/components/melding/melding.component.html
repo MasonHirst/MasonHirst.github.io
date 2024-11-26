@@ -13,14 +13,12 @@
     >
   </div>
 
-  
-
   <form class="mb-3">
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
       <ng-container *ngIf="showTeamMeldingInput(i)">
         <label [for]="team.name"
-          ><strong>{{ getMeldingComboName(i) }}</strong
-          >'s meld points</label
+          ><strong class="text-primary">{{ getMeldingComboName(i) }}</strong>
+          <span class="text-muted">'s meld points</span></label
         >
         <input
           type="number"

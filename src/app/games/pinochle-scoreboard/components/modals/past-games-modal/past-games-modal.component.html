@@ -1,0 +1,67 @@
+<div
+  #pastGamesModal
+  class="modal fade"
+  id="pinochle-past-games-modal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="pinochle-past-games-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">Past Pinochle Games</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" style="overflow-x: auto">
+        <!-- start of modal body content -->
+
+        <div class="d-flex flex-column gap-5">
+          <div *ngFor="let game of orderedSavedGames">
+            <p class="mb-1">
+              <span class="text-muted"> Started at </span>
+              <span> {{ getFormattedDate(game.gameStartTime) }}</span>
+            </p>
+            <p class="mb-1">
+              Teams:
+              <span class="text-info"> {{ getTeamNames(game) }}</span>
+            </p>
+            <p class="mb-1">
+              Winner:
+              <span class="text-primary" style="font-weight: bold">
+                {{ getWinningTeam(game)?.name }}</span
+              >
+              with
+              <span style="color: gold; font-weight: bold">
+                {{
+                  getWinningTeam(game)?.currentTotalScore +
+                    getWinningTeam(game)?.roundSubTotal
+                }}</span
+              >
+              points
+            </p>
+
+            <button
+              class="btn btn-outline-primary"
+              (click)="openPastGameReview(game)"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+
+        <!-- end of modal body content -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

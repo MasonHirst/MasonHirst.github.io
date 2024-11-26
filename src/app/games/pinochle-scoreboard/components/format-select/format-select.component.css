@@ -1,0 +1,30 @@
+/* Apply styles to the button */
+.continue-btn {
+  padding-top: .6rem !important;
+  padding-bottom: .6rem !important;
+  position: relative; /* Required for shadow */
+  box-shadow: 0 0 10px 5px #73D9FF; /* Initial shadow */
+  animation: pulse-shadow 3s ease-in-out infinite; /* Infinite pulsing shadow */
+}
+
+/* Keyframes for the pulsing shadow */
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 0 13px 6.5px #73D9FF;
+  }
+  20% {
+    box-shadow: 0 0 18px 10px #73D9FF;
+  }
+  40% {
+    box-shadow: 0 0 15px 8px #73D9FF;
+  }
+  60% {
+    box-shadow: 0 0 23px 12px #73D9FF;
+  }
+  80% {
+    box-shadow: 0 0 18px 11px #73D9FF;
+  }
+  100% {
+    box-shadow: 0 0 13px 6.5px #73D9FF;
+  }
+}

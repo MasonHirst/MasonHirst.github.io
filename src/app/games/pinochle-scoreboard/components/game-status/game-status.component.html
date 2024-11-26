@@ -50,7 +50,10 @@
       }"
     >
       <i
-        *ngIf="getBidWinningStatus(team) === 'primary'"
+        *ngIf="
+          getBidWinningStatus(team) === 'primary' &&
+          gameSettings.showPrimaryBidWinnerForFiveHand
+        "
         class="bi bi-fire text-danger"
       ></i>
       {{ getTeamSubInfo(team, true) }}
@@ -180,6 +183,10 @@
               Enable Auto-Calculate
             </label>
           </div>
+          <p class="text-muted" style="font-style: italic">
+            The trick-taking page will try to auto-fill the other values based
+            on your input.
+          </p>
 
           <!-- showPrimaryBidWinnerForFiveHand setting -->
           <div class="form-check mt-4">
@@ -194,6 +201,10 @@
               Show Primary Bid Winner (5-hand)
             </label>
           </div>
+          <p class="text-muted" style="font-style: italic">
+            This shows a <i class="bi bi-fire text-danger"></i> icon next to the
+            primary bid winner.
+          </p>
         </form>
 
         <!-- end of modal body content -->

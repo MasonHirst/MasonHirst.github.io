@@ -19,6 +19,7 @@ export class PinochleStateService {
   private gameSettings: GameSettings = null;
   public gameSettingsEmit: EventEmitter<GameSettings> = new EventEmitter();
   private db: PinochleDatabase;
+  public numberOfSavedGamesToKeep: number = 25;
 
   constructor() {
     this.db = new PinochleDatabase();
@@ -32,6 +33,8 @@ export class PinochleStateService {
       );
       this.gameSettings = getDefaultPinochleSettings();
     }
+
+    this.removeGamesWithNoCompleteRoundsFromDB();
   }
 
   getGameSettings(): GameSettings {
@@ -94,6 +97,7 @@ export class PinochleStateService {
       roundHistory: [],
     };
     await this.setAllPastGamesToNotActiveInDB();
+    await this.removeGamesWithNoCompleteRoundsFromDB();
   }
 
   getGameFormat(): GameFormat {
@@ -158,10 +162,15 @@ export class PinochleStateService {
     return this.gameData?.currentGameState.bidWinningTeamIndices;
   }
 
+  getNumberOfSavedGamesToKeep(): number {
+    return this.numberOfSavedGamesToKeep;
+  }
+
   saveRoundToHistory(): void {
     this.gameData.roundHistory.push(
       getDeepCopy(this.gameData.currentGameState)
     );
+    this.saveGameDataToDB();
   }
 
   setGameActiveStatus(status: boolean): void {
@@ -190,17 +199,20 @@ export class PinochleStateService {
       }
       await this.db.gameData.bulkPut(savedGames);
 
-      // delete oldest games if there are more than 25
-      if (savedGames.length > 25) {
+      // delete oldest games if there are more than this.numberOfSavedGamesToKeep
+      if (savedGames.length > this.numberOfSavedGamesToKeep) {
         const sortedGames = savedGames.sort(
           (a, b) => a.gameStartTime - b.gameStartTime
         );
-        const gamesToDelete = sortedGames.slice(0, savedGames.length - 25);
+        const gamesToDelete = sortedGames.slice(
+          0,
+          savedGames.length - this.numberOfSavedGamesToKeep
+        );
         const idsToDelete = gamesToDelete.map((game) => game.id);
         await this.db.gameData.bulkDelete(idsToDelete);
 
         console.log(
-          `Deleted ${idsToDelete.length} oldest games to maintain a limit of 25.`
+          `Deleted ${idsToDelete.length} oldest games to maintain a limit of ${this.numberOfSavedGamesToKeep}.`
         );
       }
     } catch (error) {
@@ -209,5 +221,30 @@ export class PinochleStateService {
         error
       );
     }
+  }
+
+  async removeGamesWithNoCompleteRoundsFromDB(): Promise<void> {
+    try {
+      const savedGames = await this.db.gameData.toArray();
+      let idsToDelete = [];
+      for (const game of savedGames) {
+        if (!game?.roundHistory?.[0]?.roundNumber && !game.gameIsActive) {
+          idsToDelete.push(game.id);
+        }
+      }
+      if (idsToDelete.length > 0) {
+        await this.db.gameData.bulkDelete(idsToDelete);
+        console.log(
+          `Deleted ${idsToDelete.length} games that didn't have any completed rounds.`
+        );
+      }
+    } catch (error) {
+      console.error('Error removing games with no complete rounds: ', error);
+    }
+  }
+
+  async findSavedGameById(id: string): Promise<GameData> {
+    const matchingGame = await this.db.gameData.get(id);
+    return matchingGame;
   }
 }

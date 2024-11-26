@@ -103,3 +103,23 @@ export function getDefaultPinochleFormats(): GameFormat[] {
     },
   ];
 }
+
+export function formatTimestampForPinochle(timestamp: number): string {
+  const date = new Date(timestamp);
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  return `${formattedHours}:${formattedMinutes} ${ampm} on ${month} ${day}, ${year}`;
+}
