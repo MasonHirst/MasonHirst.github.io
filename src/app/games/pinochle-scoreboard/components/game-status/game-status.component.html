@@ -32,15 +32,16 @@
   </div>
 </div>
 
-<button
-  class="btn btn-outline-info settings-open-btn"
-  (click)="toggleSettingsModal()"
->
-  <i class="bi bi-gear-fill"></i>
-</button>
+<div class="d-flex justify-content-end w-100">
+  <button
+    class="btn btn-outline-info settings-open-btn"
+    (click)="toggleSettingsModal()"
+  >
+    <i class="bi bi-gear-fill"></i>
+  </button>
+</div>
 
 <!-- Templates -->
-
 <ng-template #teamSlot let-team="team">
   <div class="col text-center d-flex flex-column game-status-team-text">
     <span

@@ -35,7 +35,7 @@ export class TrickTakingComponent implements OnInit {
   ngOnInit(): void {
     this.gameState = this.gameStateService?.getCurrentGameState();
     this.teams = this.gameState?.teams;
-    if (!this.teams?.[0]?.meldScore) {
+    if (!isValidNumber(this.teams?.[0]?.meldScore)) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }
     this.gameFormat = this.gameStateService?.getGameFormat();

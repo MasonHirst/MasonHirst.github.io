@@ -1,15 +1,21 @@
-<div class="container fade-in my-5">
+<div class="container fade-in mb-5 mt-4">
   <ng-container *ngIf="gameData?.roundHistory?.[0]?.currentBid">
     <!-- Winning Team Section -->
     <div class="alert alert-success text-center mb-0">
-      <h4>
-        🎉 Congratulations to the winning team:
-        <strong class="text-primary">{{ getWinningTeam().name }}</strong> 🎉
-      </h4>
+      <h3 *ngIf="isTie">🎉 It's a tie! 🎉</h3>
+      <h5 class="my-3">Congratulations to the winning team{{ isTie ? "s" : "" }}:</h5>
+      <h3>
+        🎉 
+        <span *ngFor="let team of getWinningTeams(); let i = index">
+          <strong class="text-primary">{{ team.name }}</strong>
+          <span *ngIf="i < getWinningTeams().length - 1">, </span>
+        </span>
+        🎉 
+      </h3>
       <p>
         Final Score:
         <span style="font-weight: bold; color: gold">{{
-          getWinningTeam().currentTotalScore + getWinningTeam().roundSubTotal
+          getWinningTeamScore()
         }}</span>
       </p>
     </div>

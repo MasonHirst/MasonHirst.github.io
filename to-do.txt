@@ -1,6 +1,4 @@
 ############### PINOCHLE SCOREBOARD ###############
-- Make sure the game-review page is only operating from a provided id in the url.
-- Break the logic that adds each team's total into a separate function. It needs to be used differently for ending the game vs starting next round.
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -25,3 +23,6 @@
 - Create a modal or something that shows the full game round history
 - Create a destination page for when the user ends the game. Should have stats and the winner scores
 - Clean up the text and styling on the pages
+- Break the logic that adds each team's total into a separate function. It needs to be used differently for ending the game vs starting next round.
+- Handle a tie situation at game end
+- Make sure the game-review page is only operating from a provided id in the url.
