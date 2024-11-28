@@ -33,9 +33,12 @@
             </p>
             <p class="mb-1">
               Winner:
-              <span class="text-primary" style="font-weight: bold">
-                {{ getWinningTeam(game)?.name }}</span
-              >
+              <span>
+                <span *ngFor="let team of getWinningTeams(game); let i = index">
+                  <strong class="text-primary">{{ team.name }}</strong>
+                  <span *ngIf="i < getWinningTeams(game).length - 1">, </span>
+                </span> 
+              </span>
               with
               <span style="color: gold; font-weight: bold">
                 {{
