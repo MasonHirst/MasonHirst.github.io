@@ -123,3 +123,7 @@ export function formatTimestampForPinochle(timestamp: number): string {
 
   return `${formattedHours}:${formattedMinutes} ${ampm} on ${month} ${day}, ${year}`;
 }
+
+export function getPinochleAddedScore(team: Team): number {
+  return team.currentTotalScore + team.roundSubTotal;
+}

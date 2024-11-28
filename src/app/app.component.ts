@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import axios from 'axios';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     const { protocol, hostname } = document.location;
-    axios.defaults.baseURL = protocol + '//' + hostname + ':8080';
+    let baseUrl = protocol + '//' + hostname;
+    if (!environment.production) {
+      console.log('adding port 8080 to axios requests!')
+      baseUrl += ':8080';
+    }
+    axios.defaults.baseURL = baseUrl; 
   }
 }
