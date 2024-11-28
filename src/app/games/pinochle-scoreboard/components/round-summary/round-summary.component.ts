@@ -38,7 +38,7 @@ export class RoundSummaryComponent implements OnInit {
       !this.gameFormat ||
       !this.gameState?.currentBid ||
       !isValidNumber(this.gameState?.teams?.[0]?.trickScore) ||
-      !this.gameState?.teams?.[0]?.meldScore
+      !isValidNumber(this.gameState?.teams?.[0]?.meldScore)
     ) {
       this.router.navigate(['/games/pinochle-scoreboard']);
     }

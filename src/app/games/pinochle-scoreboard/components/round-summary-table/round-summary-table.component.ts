@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { GameState } from '../../interfaces/gamestate.interface';
-import { formatSubScore } from 'src/app/games/games-helper-functions';
+import {
+  formatSubScore,
+  getPinochleAddedScore,
+} from 'src/app/games/games-helper-functions';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
 import { GameSettings } from '../../interfaces/gamesettings.interface';
@@ -71,6 +74,8 @@ export class RoundSummaryTableComponent {
       return teamScore > highestScore ? index : highestIndex;
     }, 0);
 
-    return i === highestScoreIndex;
+    const highestTeamScore = getPinochleAddedScore(teams[highestScoreIndex]);
+    const thisTeamScore = getPinochleAddedScore(teams[i]);
+    return highestTeamScore === thisTeamScore;
   }
 }

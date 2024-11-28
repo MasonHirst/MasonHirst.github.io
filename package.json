@@ -6,9 +6,11 @@
     "start": "ng serve",
     "host": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
+    "build:docs": "ng build --output-path=docs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "server": "nodemon server/index.js",
+    "server:dev": "nodemon server/index.js",
+    "server": "node server/index.js",
     "server:wifi": "USE_LOCAL_IP=true nodemon server/index.js"
   },
   "private": true,
@@ -27,6 +29,7 @@
     "dexie": "^4.0.10",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
+    "sass": "^1.81.0",
     "shortid": "^2.2.16",
     "socket.io-client": "^4.7.2",
     "sweetalert2": "^11.14.5",
@@ -45,7 +48,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "node-sass": "^9.0.0",
     "typescript": "~5.4.5"
   }
 }
