@@ -1,4 +1,6 @@
 ############### PINOCHLE SCOREBOARD ###############
+- Redo the meld logic for 5-hand, as it is incorrect.
+- Add logic to allow github.io deployment to use the masonhirst.com server
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -26,3 +28,4 @@
 - Break the logic that adds each team's total into a separate function. It needs to be used differently for ending the game vs starting next round.
 - Handle a tie situation at game end
 - Make sure the game-review page is only operating from a provided id in the url.
+- Add team name generation logic

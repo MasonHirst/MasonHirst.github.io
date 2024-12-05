@@ -11,6 +11,7 @@ import {
 } from 'src/app/games/games-helper-functions';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
+const FIVE_HAND = '5-hand';
 
 @Component({
   selector: 'app-melding',
@@ -44,7 +45,7 @@ export class MeldingComponent implements OnInit {
 
     if (Array.isArray(teams)) {
       this.teams = teams;
-      if (this.gameFormat?.label === '5-hand') {
+      if (this.gameFormat?.label === FIVE_HAND) {
         this.nonBidWinnerTeamIndices =
           this.gameStateService.getNonBidWinnerIndices();
       }
@@ -64,7 +65,7 @@ export class MeldingComponent implements OnInit {
   submitMeld() {
     // Update the meld points for each team in the service
     try {
-      if (this.gameFormat?.label === '5-hand') {
+      if (this.gameFormat?.label === FIVE_HAND) {
         const primaryBidWinner =
           this.teams[this.gameState.bidWinningTeamIndices[0]];
         const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
@@ -97,7 +98,7 @@ export class MeldingComponent implements OnInit {
         if (hasDecimal(meldScore)) {
           this.setNotAllInputsFilledMessage(
             `Please enter a whole number for each ${
-              this.gameFormat?.label === '5-hand' ? 'alliance' : 'team'
+              this.gameFormat?.label === FIVE_HAND ? 'alliance' : 'team'
             }`
           );
           throw new Error('Meld amount must be a whole number');
@@ -128,12 +129,18 @@ export class MeldingComponent implements OnInit {
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
 
-  showTeamMeldingInput(i: number): boolean {
-    return showTeamInput5Hand(
-      i,
-      this.gameFormat,
-      this.gameState?.bidWinningTeamIndices,
-      this.nonBidWinnerTeamIndices
+  // showTeamMeldingInput(i: number): boolean {
+  //   return showTeamInput5Hand(
+  //     i,
+  //     this.gameFormat,
+  //     this.gameState?.bidWinningTeamIndices,
+  //     this.nonBidWinnerTeamIndices
+  //   );
+  // }
+
+  get filteredTeamInputs(): Team[] {
+    return this.teams.filter(
+      (team, i) => i !== this.nonBidWinnerTeamIndices[1]
     );
   }
 

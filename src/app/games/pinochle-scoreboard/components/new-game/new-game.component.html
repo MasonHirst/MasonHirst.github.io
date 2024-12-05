@@ -6,14 +6,16 @@
 <div class="container fade-in my-3">
   <h2 class="text-center mb-4">Name Your Teams</h2>
 
-  <form class="mb-3">
+  
+  <form class="mb-5">
     <p class="text-center text-muted">
       You are setting up a {{ formatLabel }} game. Please enter names for each team:
     </p>
 
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
-      <label [for]="'teamName' + i">Team {{ i + 1 }} Name</label>
-      <input
+      <label style="font-size: .9rem;" [for]="'teamName' + i">Team {{ i + 1 }} Name</label>
+      <div class="d-flex align-items-center gap-2">
+        <input
         type="text"
         [maxlength]="25"
         [id]="'teamName' + i"
@@ -24,6 +26,8 @@
         placeholder="Enter Team Name"
         required
       />
+      <button class="btn btn-outline-info" (click)="assignRandomTeamName(i)">Random</button>
+      </div>
     </div>
     <small *ngIf="noNameMessage" class="text-danger">{{ noNameMessage }}</small>
   </form>

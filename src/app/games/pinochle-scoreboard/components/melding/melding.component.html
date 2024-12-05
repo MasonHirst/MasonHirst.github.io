@@ -14,7 +14,7 @@
   </div>
 
   <form class="mb-3">
-    <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
+    <div *ngFor="let team of filteredTeamInputs; let i = index" class="form-group mb-3">
       <ng-container *ngIf="showTeamMeldingInput(i)">
         <label [for]="team.name"
           ><strong class="text-primary">{{ getMeldingComboName(i) }}</strong>
