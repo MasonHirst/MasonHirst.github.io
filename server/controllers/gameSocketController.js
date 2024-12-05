@@ -12,7 +12,11 @@ let io;
 
 async function attachSocketServer(server) {
   io = socketio(server, {
-    cors: "localhost:4200",
+    cors: {
+      origin: ["https://masonhirst.github.io", "http://localhost:4200"],
+      methods: ["GET", "POST", "PUT", "DELETE"], // HTTP methods allowed
+      credentials: true, // Allow cookies or authentication tokens, if needed
+    },
   });
   io.on("connection", (socket) => {
     const { token } = socket.handshake.query;
@@ -191,7 +195,7 @@ async function tryStackingCards(gameCode) {
       } else if (result.message === "pick-row") {
         return io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
       }
-    } 
+    }
     io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
     // else {
     //   io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
@@ -236,6 +240,7 @@ module.exports = {
   attachSocketServer,
   createNimmtRoom: async (req, res) => {
     try {
+      console.log("User is creating a new 6-nimmt room!");
       const existingRooms = Array.from(io.sockets.adapter.rooms.keys());
       let id = new4LetterId();
       // if id already exists, generate a new one

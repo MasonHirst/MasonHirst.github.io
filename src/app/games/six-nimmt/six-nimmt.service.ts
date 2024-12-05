@@ -6,6 +6,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
+const selfHostedServerUrl = 'wss://portfolio.masonhirst.com';
 
 @Injectable({
   providedIn: 'root',
@@ -44,8 +45,12 @@ export class SixNimmtService {
     }
     serverUrl = `${scheme}://${location.hostname}`;
 
+    console.log('jsdlkajfklsadjflas', location.hostname)
+    
     if (!environment.production) {
       serverUrl += ':8080';
+    } else if (location.hostname.includes('github.io')) {
+      serverUrl = selfHostedServerUrl;
     }
 
 

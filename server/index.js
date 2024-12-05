@@ -53,7 +53,7 @@ if (host) {
   server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-console.log('I LOVE YOU BRO v5')
+console.log('STARTING THE SERVER BRO! V1')
 
 function getLocalIPAddress() {
   const interfaces = os.networkInterfaces();

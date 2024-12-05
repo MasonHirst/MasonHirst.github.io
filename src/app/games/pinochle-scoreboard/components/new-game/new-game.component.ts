@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PinochleStateService } from '../../services/pinochle-state.service';
 import { Team } from '../../interfaces/team.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
+import { getRandomPinochleTeamName } from 'src/app/games/games-helper-functions';
 
 @Component({
   selector: 'app-new-game',
@@ -43,6 +44,14 @@ export class NewGameComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/games/pinochle-scoreboard']);
+  }
+
+  assignRandomTeamName(teamIndex: number): void {
+    const takenNames = [...this.teams].map((team) => team.name);
+    this.teams[teamIndex].name = getRandomPinochleTeamName(
+      this.gameFormat,
+      takenNames
+    );
   }
 
   startGame() {
