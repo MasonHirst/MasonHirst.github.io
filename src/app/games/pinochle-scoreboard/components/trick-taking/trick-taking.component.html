@@ -25,7 +25,13 @@
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
       <ng-container *ngIf="showTeamInput(i)">
         <label [for]="team.name">
-          <span class="text-primary" style="font-weight: bold">
+          <span
+            [ngClass]="{
+              'golden-text': bidWinners.includes(i),
+              'text-primary': !bidWinners.includes(i)
+            }"
+            style="font-weight: bold"
+          >
             {{ getTeamComboName(i) }}
           </span>
           <span class="text-muted">'s trick points</span>

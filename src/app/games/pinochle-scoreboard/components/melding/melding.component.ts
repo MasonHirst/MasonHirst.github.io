@@ -62,32 +62,50 @@ export class MeldingComponent implements OnInit {
     this.notAllInputsFilledMessage = val;
   }
 
+  get bidWinners(): number[] {
+    return this.gameState?.bidWinningTeamIndices;
+  }
+
   submitMeld() {
     // Update the meld points for each team in the service
     try {
       if (this.gameFormat?.label === FIVE_HAND) {
-        const primaryBidWinner =
-          this.teams[this.gameState.bidWinningTeamIndices[0]];
-        const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
-        if (
-          !isValidNumber(primaryBidWinner.meldScore) ||
-          !isValidNumber(primaryNonBidwinner.meldScore)
-        ) {
-          this.setNotAllInputsFilledMessage(
-            'Please enter a meld score for each alliance'
-          );
-          throw new Error(
-            'Meld score is required for each temporary alliance (5-hand)'
-          );
-        }
+        // const primaryBidWinner = this.teams[this.bidWinners[0]];
+        // const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
+
         this.teams.forEach((team, i) => {
-          if (this.gameState.bidWinningTeamIndices.includes(i)) {
-            team.meldScore = primaryBidWinner.meldScore;
-          }
-          if (this.nonBidWinnerTeamIndices.includes(i)) {
-            team.meldScore = primaryNonBidwinner.meldScore;
+          if (i !== this.bidWinners[1] && !isValidNumber(team.meldScore)) {
+            this.setNotAllInputsFilledMessage(
+              'Please enter a meld score for each alliance'
+            );
+            throw new Error(
+              'Meld score is required for each temporary alliance (5-hand)'
+            );
           }
         });
+
+        // if (
+        //   !isValidNumber(primaryBidWinner.meldScore) ||
+        //   !isValidNumber(primaryNonBidwinner.meldScore)
+        // ) {
+        //   this.setNotAllInputsFilledMessage(
+        //     'Please enter a meld score for each alliance'
+        //   );
+        //   throw new Error(
+        //     'Meld score is required for each temporary alliance (5-hand)'
+        //   );
+        // }
+
+        // this.teams.forEach((team, i) => {
+        //   if (this.gameState.bidWinningTeamIndices.includes(i)) {
+        //     team.meldScore = primaryBidWinner.meldScore;
+        //   }
+        //   if (this.nonBidWinnerTeamIndices.includes(i)) {
+        //     team.meldScore = primaryNonBidwinner.meldScore;
+        //   }
+        // });
+        this.teams[this.bidWinners[1]].meldScore =
+          this.teams[this.bidWinners[0]].meldScore;
       }
 
       this.teams.forEach(({ meldScore }) => {
@@ -138,19 +156,17 @@ export class MeldingComponent implements OnInit {
   //   );
   // }
 
-  get filteredTeamInputs(): Team[] {
-    return this.teams.filter(
-      (team, i) => i !== this.nonBidWinnerTeamIndices[1]
-    );
-  }
-
   getMeldingComboName(i: number): string {
-    return getTeamComboName5Hand(
-      i,
-      this.gameFormat,
-      this.gameState?.bidWinningTeamIndices,
-      this.nonBidWinnerTeamIndices,
-      this.teams
-    );
+    if (i === this.gameState.bidWinningTeamIndices[0]) {
+      return getTeamComboName5Hand(
+        i,
+        this.gameFormat,
+        this.gameState?.bidWinningTeamIndices,
+        this.nonBidWinnerTeamIndices,
+        this.teams
+      );
+    } else {
+      return this.teams[i]?.name;
+    }
   }
 }

@@ -14,11 +14,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const { protocol, hostname } = document.location;
     let baseUrl = protocol + '//' + hostname;
-    console.log({hostname})
     if (!environment.production) {
       console.log('adding port 8080 to axios requests!')
       baseUrl += ':8080';
     } else if (hostname.includes('github.io')) {
+      console.log('Redirecting requests to https://portfolio.masonhirst.com')
       baseUrl = selfHostedServerUrl;
     }
     axios.defaults.baseURL = baseUrl; 

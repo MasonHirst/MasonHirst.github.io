@@ -99,8 +99,15 @@ export class TrickTakingComponent implements OnInit {
     this.router.navigate(['/games/pinochle-scoreboard/melding']);
   }
 
+  get bidWinners(): number[] {
+    return this.gameState.bidWinningTeamIndices;
+  }
+
   onTrickInputChange(teamIndex: number, isBlurEvent: boolean = false): void {
     this.setNoTrickPointsMessage('');
+    if (!isValidNumber(this.teams?.[teamIndex]?.trickScore)) {
+      return;
+    }
     if (!this.gameSettings?.autoCalculate) {
       return;
     }
@@ -208,7 +215,7 @@ export class TrickTakingComponent implements OnInit {
           }
           if (this.nonBidWinnerTeamIndices.includes(i)) {
             team.trickScore = primaryNonBidwinner.trickScore;
-        }
+          }
         });
       }
 

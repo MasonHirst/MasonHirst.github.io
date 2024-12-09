@@ -192,3 +192,6 @@ button {
 .toast-warning {
   background-color: #d67d00 !important;
 }
+.golden-text {
+  color: gold !important;
+}

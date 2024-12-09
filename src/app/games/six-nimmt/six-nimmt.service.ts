@@ -45,11 +45,11 @@ export class SixNimmtService {
     }
     serverUrl = `${scheme}://${location.hostname}`;
 
-    console.log('jsdlkajfklsadjflas', location.hostname)
     
     if (!environment.production) {
       serverUrl += ':8080';
     } else if (location.hostname.includes('github.io')) {
+      console.log('Redirecting socket requests to https://portfolio.masonhirst.com')
       serverUrl = selfHostedServerUrl;
     }
 
@@ -201,7 +201,7 @@ export class SixNimmtService {
   }
 
   sendPlayerTookPointsToast(data: any) {
-    console.log('sendPlayerTookPointsToast: ', data);
+    // console.log('sendPlayerTookPointsToast: ', data);
     const { playerName, takenRow, totalPoints, quip } = data;
     const toastString = `<strong>${playerName}</strong> took row <strong>${this.getRowString(
       takenRow
