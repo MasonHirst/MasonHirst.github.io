@@ -15,9 +15,9 @@ export class DataService {
       'Salt Lake City, Utah',
       'Jul 2023',
       'Present',
-      'I am currently working on a team developing a user flow for onboarding new clients.',
+      'I am currently working on a team to improve and expand the money-transferring experience for web clients.',
       [
-        'I am currently working on a team developing a user flow for onboarding new clients',
+        'I am currently working on a team to improve and expand the money-transferring experience for web clients.',
       ]
     ),
     new ExperienceModel(

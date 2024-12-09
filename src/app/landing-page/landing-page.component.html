@@ -247,9 +247,9 @@
     </div>
 
     <ng-template #aboutMe1>
-      <p style="margin: 0; max-width: 400px">
-        I have been married to my awesome wife since 2022, and we are expecting
-        our first baby boy soon!
+      <p style="margin: 0; margin-left: 0.3rem; max-width: 400px">
+        I have been married to my awesome wife since 2022, and we have one cute
+        little boy!
       </p>
     </ng-template>
 
@@ -258,7 +258,7 @@
         class="rounded-2 about-me-img-1"
         src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689364252/wedding-photo-us_auwmkw.jpg"
         alt="Mason and his wife"
-        style="height: fit-content; margin-left: auto; margin-right: auto"
+        style="height: fit-content"
       />
     </ng-template>
 
@@ -266,33 +266,21 @@
       <h2 class="text-primary" style="font-weight: bold; margin-bottom: 20px">
         #About Me
       </h2>
-      <div
-        class="d-flex gap-3"
-        [ngClass]="{
-        'flex-col': screen < 600,
-      }"
-      >
+      <div class="d-flex gap-3 flex-col">
         <div
-          *ngIf="screen < 600"
-          class="d-flex align-items-center gap-1"
+          class="d-flex align-items-center gap-2 justify-content-between"
           style="width: 100%"
         >
           <ng-template *ngTemplateOutlet="aboutMe1"></ng-template>
           <ng-template *ngTemplateOutlet="aboutMeImg1"></ng-template>
         </div>
-        <div *ngIf="screen >= 600">
-          <ng-template *ngTemplateOutlet="aboutMeImg1"></ng-template>
-        </div>
         <section
           class="d-flex gap-3"
           [ngStyle]="{
-          flexDirection: screen < 600 ? 'column-reverse' : 'column',
-          justifyContent: screen < 600 ? 'flex-end' : 'flex-start',
-        }"
+            flexDirection: screen < 600 ? 'column-reverse' : 'column',
+            justifyContent: screen < 600 ? 'flex-end' : 'flex-start',
+          }"
         >
-          <div *ngIf="screen >= 600">
-            <ng-template *ngTemplateOutlet="aboutMe1"></ng-template>
-          </div>
           <img
             class="rounded-2"
             src="https://res.cloudinary.com/dk9vsivmu/image/upload/v1689365082/Screenshot_2023-07-14_at_2.03.53_PM_iapink.png"
@@ -317,7 +305,7 @@
         </section>
         <img
           class="rounded-2"
-          style="max-width: min(600px, 100%)"
+          style="max-width: 100%"
           src="https://cdn.vox-cdn.com/thumbor/YQ3Ylb7J0-xsAbWcCmmJheUMBwU=/0x60:1920x1020/fit-in/1200x600/cdn.vox-cdn.com/uploads/chorus_asset/file/13605680/Nov_SSB_scrn115.jpg"
           alt="smash bros cover"
         />
