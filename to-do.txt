@@ -1,6 +1,5 @@
 ############### PINOCHLE SCOREBOARD ###############
-- Redo the meld logic for 5-hand, as it is incorrect.
-- Add logic to allow github.io deployment to use the masonhirst.com server
+- Make sure that if you end a game by starting a new one, a completed round is added to gameHistory
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -29,3 +28,5 @@
 - Handle a tie situation at game end
 - Make sure the game-review page is only operating from a provided id in the url.
 - Add team name generation logic
+- Add logic to allow github.io deployment to use the masonhirst.com server
+- Redo the meld logic for 5-hand, as it is incorrect.

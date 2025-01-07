@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node index.js",
     "server:dev": "nodemon index.js",
-    "server": "node index.js"
+    "server:wifi": "USE_LOCAL_IP=true nodemon index.js"
   },
   "keywords": [],
   "author": "",
