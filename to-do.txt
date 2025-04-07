@@ -1,5 +1,9 @@
 ############### PINOCHLE SCOREBOARD ###############
 - Make sure that if you end a game by starting a new one, a completed round is added to gameHistory
+- On tricking page, have an indicator to show how many trick points you need to make the bid
+- Add an asterick to the trickscore on the review page to indicate if they took a trick. Something to communicate that
+- Change the selector for didTakeTrick to be custom radio buttons
+- Change the selector for the trump suit to be custom radio boxes
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page

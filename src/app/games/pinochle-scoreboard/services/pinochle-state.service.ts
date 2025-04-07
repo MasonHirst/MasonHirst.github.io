@@ -80,6 +80,7 @@ export class PinochleStateService {
       trickScore: null,
       roundSubTotal: null,
       currentTotalScore: 0,
+      didTakeTrick: null,
     }));
 
     this.gameData = {
@@ -188,6 +189,7 @@ export class PinochleStateService {
       team.meldScore = null;
       team.trickScore = null;
       team.roundSubTotal = null;
+      team.didTakeTrick = null;
     });
   }
 

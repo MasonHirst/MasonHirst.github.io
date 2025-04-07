@@ -6,6 +6,7 @@ import {
   getDeepCopy,
   getTeamComboName5Hand,
   hasDecimal,
+  isBoolean,
   isValidNumber,
   showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
@@ -25,6 +26,7 @@ export class TrickTakingComponent implements OnInit {
   gameFormat: GameFormat = null;
   private nonBidWinnerTeamIndices: number[] = null;
   noTrickPointsMessage: string;
+  noDidTakeTrickMessage: string;
   gameSettings: GameSettings;
 
   constructor(
@@ -51,6 +53,12 @@ export class TrickTakingComponent implements OnInit {
     val: string = 'Please enter a tricking score for each team'
   ) {
     this.noTrickPointsMessage = val;
+  }
+
+  setNoDidTakeTrickMessage(
+    val: string = 'Please indicate if this team won a trick'
+  ) {
+    this.noDidTakeTrickMessage = val;
   }
 
   showTeamInput(i: number): boolean {
@@ -95,6 +103,14 @@ export class TrickTakingComponent implements OnInit {
     return label !== '5-hand' && teamCount > 2;
   }
 
+  get primaryBidWinner(): Team {
+    return this.teams[this.gameState.bidWinningTeamIndices[0]];
+  }
+
+  get primaryNonBidwinner(): Team {
+    return this.teams[this.nonBidWinnerTeamIndices[0]];
+  }
+
   goBack(): void {
     this.router.navigate(['/games/pinochle-scoreboard/melding']);
   }
@@ -103,8 +119,13 @@ export class TrickTakingComponent implements OnInit {
     return this.gameState.bidWinningTeamIndices;
   }
 
-  onTrickInputChange(teamIndex: number, isBlurEvent: boolean = false): void {
+  resetForTrickPointsChange(i: number): void {
     this.setNoTrickPointsMessage('');
+    this.teams[i].didTakeTrick = null;
+  }
+
+  onTrickInputChange(teamIndex: number, isBlurEvent: boolean = false): void {
+    this.resetForTrickPointsChange(teamIndex);
     if (!isValidNumber(this.teams?.[teamIndex]?.trickScore)) {
       return;
     }
@@ -127,9 +148,11 @@ export class TrickTakingComponent implements OnInit {
     if (isBlurEvent) {
       const otherTeamPoints = this.teams[otherInputIndex].trickScore;
       this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamPoints;
+      this.teams[teamIndex].didTakeTrick = null;
     } else {
       this.teams[otherInputIndex].trickScore =
         this.possibleTricks - inputPoints;
+      this.teams[otherInputIndex].didTakeTrick = null;
     }
   }
 
@@ -190,17 +213,16 @@ export class TrickTakingComponent implements OnInit {
       }
     });
     this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamsTotal;
+    this.teams[teamIndex].didTakeTrick = null;
   }
 
   async submitTricks(): Promise<void> {
     try {
+      this.setNoDidTakeTrickMessage('');
       if (this.gameFormat?.label === '5-hand') {
-        const primaryBidWinner =
-          this.teams[this.gameState.bidWinningTeamIndices[0]];
-        const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
         if (
-          !isValidNumber(primaryBidWinner.trickScore) ||
-          !isValidNumber(primaryNonBidwinner.trickScore)
+          !isValidNumber(this.primaryBidWinner.trickScore) ||
+          !isValidNumber(this.primaryNonBidwinner.trickScore)
         ) {
           this.setNoTrickPointsMessage(
             'Please enter a tricking score for each alliance'
@@ -209,17 +231,33 @@ export class TrickTakingComponent implements OnInit {
             'Tricking score is required for each temporary alliance (5-hand)'
           );
         }
+
+        if (this.primaryBidWinner.trickScore > 0) {
+          this.teams[this.primaryBidWinnerIndex].didTakeTrick = true;
+        }
+        if (this.primaryNonBidwinner.trickScore > 0) {
+          this.teams[this.primaryNonBidWinnerIndex].didTakeTrick = true;
+        }
+
         this.teams.forEach((team, i) => {
           if (this.gameState.bidWinningTeamIndices.includes(i)) {
-            team.trickScore = primaryBidWinner.trickScore;
+            team.trickScore = this.primaryBidWinner.trickScore;
+            team.didTakeTrick = this.primaryBidWinner.didTakeTrick;
           }
           if (this.nonBidWinnerTeamIndices.includes(i)) {
-            team.trickScore = primaryNonBidwinner.trickScore;
+            team.trickScore = this.primaryNonBidwinner.trickScore;
+            team.didTakeTrick = this.primaryNonBidwinner.didTakeTrick;
+          }
+        });
+      } else {
+        this.teams.forEach((team) => {
+          if (team.trickScore > 0) {
+            team.didTakeTrick = true;
           }
         });
       }
 
-      this.teams.forEach(({ trickScore }) => {
+      this.teams.forEach(({ trickScore, didTakeTrick }) => {
         if (!isValidNumber(trickScore)) {
           this.setNoTrickPointsMessage();
           throw new Error('Trick score is required for each team or alliance');
@@ -231,6 +269,10 @@ export class TrickTakingComponent implements OnInit {
             }`
           );
           throw new Error('Trick amount must be a whole number');
+        }
+        if (!isBoolean(didTakeTrick)) {
+          this.setNoDidTakeTrickMessage();
+          throw new Error('Did take trick must be a boolean');
         }
         if (trickScore < 0 || trickScore > 100000) {
           this.setNoTrickPointsMessage(
@@ -266,6 +308,7 @@ export class TrickTakingComponent implements OnInit {
           return;
         }
       }
+
       // Update the trick scores for each team in the game state
       this.gameStateService.setTeamsData(this.teams);
 

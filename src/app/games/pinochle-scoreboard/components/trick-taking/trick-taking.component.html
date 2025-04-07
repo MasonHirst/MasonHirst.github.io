@@ -42,7 +42,7 @@
               type="number"
               [id]="team.name"
               [(ngModel)]="team.trickScore"
-              (ngModelChange)="setNoTrickPointsMessage('')"
+              (ngModelChange)="resetForTrickPointsChange(i)"
               [name]="team.name + 'TrickPoints'"
               class="form-control"
               placeholder="Enter Trick Points"
@@ -79,10 +79,35 @@
             required
           />
         </ng-template>
+        @if (teams[i].trickScore === 0) {
+        <div
+          class="form-group mt-2 d-flex align-items-center gap-2 justify-content-start"
+        >
+          <label
+            class="form-label mb-0"
+            for="{{ 'trickTakenTeam' + i }}"
+            style="font-size: 0.9rem"
+            >Did this team win a trick?</label
+          >
+          <select
+            id="{{ 'trickTakenTeam' + i }}"
+            [(ngModel)]="teams[i].didTakeTrick"
+            name="trickTaken"
+            class="form-select form-select-sm w-auto"
+            required
+          >
+            <option [ngValue]="null" disabled>Select an option</option>
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+          </select>
+        </div>
+        @if (noDidTakeTrickMessage && teams[i].didTakeTrick === null) {
+        <small class="text-danger">{{ noDidTakeTrickMessage }}</small>
+        } }
       </ng-container>
     </div>
 
-    <p class="mb-1">
+    <p class="mb-4 mt-4 text-center">
       <span class="text-muted">Trick points claimed: </span
       ><span
         [ngClass]="{

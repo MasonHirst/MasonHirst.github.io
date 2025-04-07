@@ -27,6 +27,10 @@ export function showTeamInput5Hand(
   return bidWinnerIndices[0] == i || nonBidWinnerIndices[0] == i;
 }
 
+export function isBoolean(val: any): boolean {
+  return typeof val === 'boolean';
+}
+
 export function hasDecimal(num: number): boolean {
   return num.toString().includes('.');
 }
