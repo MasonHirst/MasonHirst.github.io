@@ -6,7 +6,7 @@
 />
 
 <div class="container fade-in my-4">
-  <div class="d-flex flex-column align-items-center gap-2 mb-4">
+  <div class="d-flex flex-column align-items-center gap-2 mb-3">
     <h2 class="text-center mb-2">Trick-Taking Phase</h2>
     <sub class="text-center text-muted mb-3"
       >Remember the last trick is worth extra points!</sub
@@ -21,6 +21,19 @@
     </div>
   </div>
 
+  <div class="text-center mb-4" style="font-style: italic">
+    @if (pointsNeededToReachBid > 0) {
+    <h6>
+      Win
+      <span style="font-weight: bold; font-style: normal" class="golden-text">
+        {{ pointsNeededToReachBid }}
+      </span>
+      points to reach the bid
+    </h6>
+    } @else { Wow! <span class="golden-text">You</span> already have enough
+    points to reach the bid! }
+  </div>
+
   <form class="mb-3">
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
       <ng-container *ngIf="showTeamInput(i)">
@@ -28,7 +41,7 @@
           <span
             [ngClass]="{
               'golden-text': bidWinners.includes(i),
-              'text-primary': !bidWinners.includes(i)
+              'white-text': !bidWinners.includes(i)
             }"
             style="font-weight: bold"
           >
@@ -83,23 +96,57 @@
         <div
           class="form-group mt-2 d-flex align-items-center gap-2 justify-content-start"
         >
-          <label
-            class="form-label mb-0"
-            for="{{ 'trickTakenTeam' + i }}"
-            style="font-size: 0.9rem"
-            >Did this team win a trick?</label
-          >
-          <select
-            id="{{ 'trickTakenTeam' + i }}"
-            [(ngModel)]="teams[i].didTakeTrick"
-            name="trickTaken"
-            class="form-select form-select-sm w-auto"
-            required
-          >
-            <option [ngValue]="null" disabled>Select an option</option>
-            <option [ngValue]="true">Yes</option>
-            <option [ngValue]="false">No</option>
-          </select>
+          <p class="mb-0" style="font-size: 0.9rem">
+            <span
+              style="font-size: 1rem; margin-right: 5px"
+              class="text-info bi bi-info-circle"
+            ></span
+            >Did this team win a trick?
+          </p>
+
+          <div class="trick-taken-group" style="margin-left: 10px">
+            <label class="trick-taken-option yes">
+              <input
+                type="radio"
+                [name]="'trickTakenYes' + i"
+                [(ngModel)]="teams[i].didTakeTrick"
+                [value]="true"
+              />
+              <div class="option-box">
+                <span class="option-label"
+                  >Yes
+                  <i
+                    class="bi bi-check-circle-fill text-primary"
+                    [ngClass]="{
+                      'fade-in': teams[i].didTakeTrick === true,
+                      'opacity-zero': teams[i].didTakeTrick !== true,
+                    }"
+                  ></i>
+                </span>
+              </div>
+            </label>
+
+            <label class="trick-taken-option no">
+              <input
+                type="radio"
+                [name]="'trickTakenNo' + i"
+                [(ngModel)]="teams[i].didTakeTrick"
+                [value]="false"
+              />
+              <div class="option-box">
+                <span class="option-label"
+                  >No
+                  <i
+                    class="bi bi-x-circle-fill text-danger"
+                    [ngClass]="{
+                      'fade-in': teams[i].didTakeTrick === false,
+                      'opacity-zero': teams[i].didTakeTrick !== false,
+                    }"
+                  ></i>
+                </span>
+              </div>
+            </label>
+          </div>
         </div>
         @if (noDidTakeTrickMessage && teams[i].didTakeTrick === null) {
         <small class="text-danger">{{ noDidTakeTrickMessage }}</small>

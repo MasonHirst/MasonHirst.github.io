@@ -64,10 +64,18 @@
           <td>{{ team.meldScore }}</td>
           <td
             [ngClass]="{
-        'text-danger': team.trickScore <= 0,
-      }"
+              'text-danger': team.trickScore <= 0,
+            }"
           >
             {{ team.trickScore }}
+            @if (team.didTakeTrick === false) {
+              <sup>
+                <i
+                  class="bi bi-asterisk text-info"
+                  style="font-size: 0.55rem; margin-left: -2px"
+                ></i>
+              </sup>
+            }
           </td>
           <td>{{ formatSubtotal(team.roundSubTotal) }}</td>
           <td>
@@ -82,4 +90,11 @@
       </tbody>
     </table>
   </div>
+
+  @if (showNoTrickTakenAsterisk) {
+    <div class="no-trick-taken-text mb-2">
+      <i class="bi bi-asterisk text-info" style="font-size: 0.55rem"></i>
+      <span> Indicates a team did not win a trick. </span>
+    </div>
+  }
 </div>

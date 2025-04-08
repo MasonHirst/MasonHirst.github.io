@@ -119,6 +119,11 @@ export class TrickTakingComponent implements OnInit {
     return this.gameState.bidWinningTeamIndices;
   }
 
+  get pointsNeededToReachBid(): number {
+    const pointsNeeded = this.gameState?.currentBid - this.teams[this.bidWinners[0]]?.meldScore
+    return pointsNeeded;
+  }
+
   resetForTrickPointsChange(i: number): void {
     this.setNoTrickPointsMessage('');
     this.teams[i].didTakeTrick = null;
@@ -154,6 +159,7 @@ export class TrickTakingComponent implements OnInit {
         this.possibleTricks - inputPoints;
       this.teams[otherInputIndex].didTakeTrick = null;
     }
+    this.setNoDidTakeTrickMessage('');
   }
 
   get trickSubTotal(): number {
@@ -161,7 +167,7 @@ export class TrickTakingComponent implements OnInit {
     if (this.gameFormat?.label === '5-hand') {
       tricksTotal += this.teams?.[this.nonBidWinnerTeamIndices[0]]?.trickScore;
       tricksTotal +=
-        this.teams?.[this.gameState?.bidWinningTeamIndices[0]]?.trickScore;
+        this.teams?.[this.bidWinners?.[0]]?.trickScore;
     } else {
       this.teams?.forEach((team) => {
         tricksTotal += team.trickScore;
@@ -214,6 +220,7 @@ export class TrickTakingComponent implements OnInit {
     });
     this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamsTotal;
     this.teams[teamIndex].didTakeTrick = null;
+    this.setNoDidTakeTrickMessage('');
   }
 
   async submitTricks(): Promise<void> {

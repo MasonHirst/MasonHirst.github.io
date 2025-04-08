@@ -1,0 +1,73 @@
+.suit-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.suit-option {
+  cursor: pointer;
+  text-align: center;
+  display: block;
+}
+
+/* Hide the radio input */
+.suit-option input {
+  display: none;
+}
+
+.suit-box {
+  background-color: #fff; /* White background for card look */
+  border: 3px solid #fff;
+  border-radius: 12px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 80px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle card-like shadow */
+}
+
+.suit-icon {
+  font-size: 2.2rem;
+  display: block;
+}
+
+.suit-label {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: black;
+}
+
+.suit-option input:checked + .suit-box {
+  border-color: #0ae6b7; /* Your main color */
+  box-shadow: 0 0 12px 4px rgba(10, 230, 183, 0.8); /* Brighter, larger glow */
+}
+
+/* create a width watcher for 400 px to change the box size */
+@media (max-width: 400px) {
+  .suit-box {
+    width: 70px;
+    height: 105px;
+  }
+  .suit-label {
+    font-size: .75rem;
+  }
+}
+
+@media (max-width: 355px) {
+  .suit-selector {
+    max-width: 220px;
+  }
+  .suit-box {
+    width: 80px;
+    height: 120px;
+  }
+  .suit-label {
+    font-size: .9rem;
+  }
+}

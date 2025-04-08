@@ -23,6 +23,13 @@ export class BiddingComponent implements OnInit {
   noWinnerMessage: string = '';
   noSecondaryWinnerMessage: string = '';
   noTrumpSuitMessage: string = '';
+  suitOptions: string[] = ['Diamonds', 'Spades', 'Hearts', 'Clubs'];
+  suitIcons: { [key: string]: string } = {
+    'Hearts': '♥️',
+    'Spades': '♠️',
+    'Diamonds': '♦️',
+    'Clubs': '♣️'
+  };
 
   constructor(
     private router: Router,

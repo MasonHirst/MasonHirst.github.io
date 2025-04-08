@@ -195,3 +195,10 @@ button {
 .golden-text {
   color: gold !important;
 }
+.white-text {
+  color: white !important;
+}
+
+.opacity-zero {
+  opacity: 0 !important;
+}
