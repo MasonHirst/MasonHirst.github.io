@@ -30,3 +30,9 @@
 .game-status-team-text {
   font-size: 1.2rem;
 }
+
+.no-trick-taken-text {
+  display: flex;
+  font-size: .8rem;
+  gap: 5px;
+}

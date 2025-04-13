@@ -6,8 +6,10 @@ import {
   getDeepCopy,
   hasDecimal,
   isValidNumber,
+  scrollToElement,
 } from 'src/app/games/games-helper-functions';
 import { GameFormat } from '../../interfaces/gameformat.interface';
+import { Team } from '../../interfaces/team.interface';
 
 @Component({
   selector: 'app-bidding',
@@ -23,6 +25,14 @@ export class BiddingComponent implements OnInit {
   noWinnerMessage: string = '';
   noSecondaryWinnerMessage: string = '';
   noTrumpSuitMessage: string = '';
+  suitOptions: string[] = ['Diamonds', 'Spades', 'Hearts', 'Clubs'];
+
+  suitIcons = {
+    Hearts: '♥',
+    Diamonds: '♦',
+    Clubs: '♣',
+    Spades: '♠',
+  };
 
   constructor(
     private router: Router,
@@ -43,6 +53,16 @@ export class BiddingComponent implements OnInit {
     if (isValidNumber(this.gameState?.bidWinningTeamIndices?.[1])) {
       this.secondaryWinningTeamIndex =
         this.gameState.bidWinningTeamIndices?.[1];
+    }
+  }
+
+  getTrumpSuitColor(suit: string): string {
+    switch (suit) {
+      case 'Hearts':
+      case 'Diamonds':
+        return '#ff4500';
+      default:
+        return 'black';
     }
   }
 
@@ -81,6 +101,17 @@ export class BiddingComponent implements OnInit {
     );
   }
 
+  get secondaryTeamChoices(): Team[] {
+    const teams = this.gameState?.teams.filter(
+      (team, i) => i !== this.primaryWinningTeamIndex
+    );
+    return teams;
+  }
+
+  onTrumpSuitSelectionChange(): void {
+    this.setNoTrumpSuitMessage('');
+  }
+
   onPrimaryWinningTeamChange(): void {
     this.setNoWinnerMessage('');
     this.secondaryWinningTeamIndex = null;
@@ -112,13 +143,14 @@ export class BiddingComponent implements OnInit {
       const { currentBid } = this.gameState || {};
       if (!isValidNumber(currentBid) || currentBid <= 0) {
         this.setNoBidMessage();
+        scrollToElement(document.getElementById('bid-amount-input-label'));
         throw new Error(
           'Bid amount is required. If bid is 0, please re-shuffle and re-deal.'
         );
       }
-      if (currentBid > 100000) {
-        this.setNoBidMessage('Please enter a bid less than 100,000');
-        throw new Error('Bid amount must be less than 100,000');
+      if (currentBid > 999999) {
+        this.setNoBidMessage('Please enter a bid less than 999,999');
+        throw new Error('Bid amount must be less than 999,999');
       }
       if (hasDecimal(currentBid)) {
         this.setNoBidMessage('Please enter a whole number for the bid');
@@ -126,6 +158,7 @@ export class BiddingComponent implements OnInit {
       }
       if (!isValidNumber(this.primaryWinningTeamIndex)) {
         this.setNoWinnerMessage();
+        scrollToElement(document.getElementById('winning-team-select-label'));
         throw new Error('Must pick a team for the bid.');
       }
       if (
@@ -133,10 +166,14 @@ export class BiddingComponent implements OnInit {
         !isValidNumber(this.secondaryWinningTeamIndex)
       ) {
         this.setNoSecondaryWinnerMessage();
+        scrollToElement(
+          document.getElementById('select-secondary-select-label')
+        );
         throw new Error('Must pick a secondary team for the bid.');
       }
       if (!this.gameState?.trumpSuit) {
         this.setNoTrumpSuitMessage();
+        scrollToElement(document.getElementById('select-trump-suit-heading'));
         throw new Error('Must pick a declared trump suit.');
       }
       // Store the winning team and bid amount

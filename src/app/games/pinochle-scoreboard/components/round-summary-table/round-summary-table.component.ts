@@ -45,6 +45,13 @@ export class RoundSummaryTableComponent {
     return teams?.[bidWinningTeamIndices[0]]?.roundSubTotal >= currentBid;
   }
 
+  get showZeroPointTrickAsterisk(): boolean {
+    const shouldShow = this.gameState?.teams.some(
+      (team) => team.didTakeTrick === true && team.trickScore === 0
+    );
+    return shouldShow;
+  }
+
   formatSubtotal(val: number): string | number {
     return formatSubScore(val);
   }

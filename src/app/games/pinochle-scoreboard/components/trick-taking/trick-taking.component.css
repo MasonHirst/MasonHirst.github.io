@@ -1,0 +1,37 @@
+.trick-taken-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.trick-taken-option input {
+  display: none; /* Hide the native radio input */
+}
+
+.option-box {
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 5px 11px;
+  background-color: transparent;
+  transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-wrap: nowrap;
+}
+
+.option-label {
+  font-size: 0.9rem;
+}
+
+.trick-taken-option.yes input:checked + .option-box {
+  background-color: rgba(40, 167, 69, 0.2); /* Light green background */
+  border-color: #28a745; /* Green border */
+}
+
+.trick-taken-option.no input:checked + .option-box {
+  background-color: rgba(220, 53, 69, 0.2); /* Light red background */
+  border-color: #dc3545; /* Red border */
+}

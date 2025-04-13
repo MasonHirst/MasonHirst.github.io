@@ -46,7 +46,7 @@ export class GameStatusComponent implements OnInit {
     this.defaultGameFormats.forEach(format => {
       this.onCustomInputBlur(format);
     })
-    if (!this.checkSettingsValid()) {
+    if (!this.checkSettingsAreValid()) {
       return;
     }
     this.gameStateService?.updateGameSettings(this.gameSettings);
@@ -80,14 +80,14 @@ export class GameStatusComponent implements OnInit {
     }
   }
 
-  checkSettingsValid(): boolean {
+  checkSettingsAreValid(): boolean {
     let valid: boolean = true;
     this.defaultGameFormats.forEach(format => {
       const input = this.gameSettings.customTrickPoints[format.label]
       const isCustom = this.selectedPoints[format.label] === 'custom';
-      if (isCustom && (input <= 0 || input > 100000)) {
+      if (isCustom && (input <= 0 || input > 999999)) {
         valid = false;
-        this.invalidCustomTricksMessage = 'The allowed range for trick points is between 1 and 100,000.'
+        this.invalidCustomTricksMessage = 'The allowed range for trick points is between 1 and 999,999.'
       }
     });
     return valid;
