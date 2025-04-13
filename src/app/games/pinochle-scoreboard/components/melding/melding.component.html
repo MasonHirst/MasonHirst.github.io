@@ -16,18 +16,28 @@
   <form class="mb-3">
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
       <ng-container *ngIf="i !== bidWinners[1]">
-        <label [for]="team.name"
-          ><strong
-            [ngClass]="{
-              'golden-text': bidWinners.includes(i),
-              'white-text': !bidWinners.includes(i)
-            }"
-            >{{ getMeldingComboName(i) }}</strong
-          >
-          <span class="text-muted">'s meld points</span></label
-        >
+        <label [for]="team.name">
+          <span *ngFor="let name of getTeamNames(i); let k = index">
+            <strong
+              [ngClass]="{
+                'golden-text': bidWinners.includes(i),
+                'text-info': !bidWinners.includes(i)
+              }"
+            >
+              {{ name }}
+            </strong>
+            <span>
+              @if (k < getTeamNames(i).length - 1) {
+                <span> & </span>
+              }
+            </span>
+          </span>
+          <span class="text-muted">'s meld points</span>
+        </label>
         <input
           type="number"
+          inputmode="numeric"
+          enterKeyHint="done"
           [id]="team.name"
           [(ngModel)]="team.meldScore"
           (ngModelChange)="onMeldInputChange()"

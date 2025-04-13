@@ -38,14 +38,20 @@
     <div *ngFor="let team of teams; let i = index" class="form-group mb-3">
       <ng-container *ngIf="showTeamInput(i)">
         <label [for]="team.name">
-          <span
-            [ngClass]="{
-              'golden-text': bidWinners.includes(i),
-              'white-text': !bidWinners.includes(i)
-            }"
-            style="font-weight: bold"
-          >
-            {{ getTeamComboName(i) }}
+          <span *ngFor="let name of getTeamNames(i); let k = index">
+            <strong
+              [ngClass]="{
+                'golden-text': bidWinners.includes(i),
+                'text-info': !bidWinners.includes(i)
+              }"
+            >
+              {{ name }}
+            </strong>
+            <span>
+              @if (k < getTeamNames(i).length - 1) {
+              <span> & </span>
+              }
+            </span>
           </span>
           <span class="text-muted">'s trick points</span>
         </label>
@@ -53,6 +59,8 @@
           <div class="input-group">
             <input
               type="number"
+              inputmode="numeric"
+              enterKeyHint="done"
               [id]="team.name"
               [(ngModel)]="team.trickScore"
               (ngModelChange)="resetForTrickPointsChange(i)"
@@ -81,6 +89,8 @@
         <ng-template #soloInput>
           <input
             type="number"
+            inputmode="numeric"
+            enterKeyHint="done"
             [id]="team.name"
             [(ngModel)]="team.trickScore"
             (ngModelChange)="onTrickInputChange(i)"
@@ -98,6 +108,7 @@
         >
           <p class="mb-0" style="font-size: 0.9rem">
             <span
+              (click)="onDidWinTrickInfoClick()"
               style="font-size: 1rem; margin-right: 5px"
               class="text-info bi bi-info-circle"
             ></span
@@ -118,7 +129,6 @@
                   <i
                     class="bi bi-check-circle-fill text-primary"
                     [ngClass]="{
-                      'fade-in': teams[i].didTakeTrick === true,
                       'opacity-zero': teams[i].didTakeTrick !== true,
                     }"
                   ></i>
@@ -139,7 +149,6 @@
                   <i
                     class="bi bi-x-circle-fill text-danger"
                     [ngClass]="{
-                      'fade-in': teams[i].didTakeTrick === false,
                       'opacity-zero': teams[i].didTakeTrick !== false,
                     }"
                   ></i>

@@ -5,6 +5,7 @@ import { GameFormat } from '../interfaces/gameformat.interface';
 import {
   getDeepCopy,
   getDefaultPinochleSettings,
+  isValidNumber,
 } from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
 import shortId from 'shortid';
@@ -191,12 +192,57 @@ export class PinochleStateService {
       team.roundSubTotal = null;
       team.didTakeTrick = null;
     });
+    this.saveGameDataToDB();
   }
 
   async setAllPastGamesToNotActiveInDB(): Promise<void> {
     try {
       const savedGames = await this.db.gameData.toArray();
-      for (const game of savedGames) {
+      for (let game of savedGames) {
+        if (game.gameIsActive === true) {
+          //? Check for completed rounds that haven't been saved to roundHistory yet
+          const { teams, currentBid } = game.currentGameState;
+          let allTeamsMelded: boolean = true;
+          let allTeamsTricked: boolean = true;
+          let allTeamsHaveSubtotal: boolean = true;
+          teams.forEach((team) => {
+            if (!isValidNumber(team.meldScore)) {
+              allTeamsMelded = false;
+            }
+          });
+          teams.forEach((team) => {
+            if (!isValidNumber(team.trickScore)) {
+              allTeamsTricked = false;
+            }
+          });
+          teams.forEach((team) => {
+            if (!isValidNumber(team.roundSubTotal)) {
+              allTeamsHaveSubtotal = false;
+            }
+          });
+          if (
+            currentBid &&
+            allTeamsMelded &&
+            allTeamsTricked &&
+            allTeamsHaveSubtotal
+          ) {
+            //? Save the completed round to roundHistory
+            const roundCopy = getDeepCopy(game.currentGameState);
+            game.roundHistory.push(roundCopy);
+            //? Reset the game's currentGameState
+            game.currentGameState.trumpSuit = null;
+            game.currentGameState.bidWinningTeamIndices = null;
+            game.currentGameState.currentBid = null;
+            game.currentGameState.roundNumber++;
+            game.currentGameState.teams.forEach((team) => {
+              team.currentTotalScore += team.roundSubTotal;
+              team.meldScore = null;
+              team.trickScore = null;
+              team.roundSubTotal = null;
+              team.didTakeTrick = null;
+            });
+          }
+        }
         game.gameIsActive = false;
       }
       await this.db.gameData.bulkPut(savedGames);

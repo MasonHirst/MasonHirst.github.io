@@ -157,6 +157,8 @@
               <ng-template #customInput>
                 <input
                   type="number"
+                  inputmode="numeric"
+                  enterKeyHint="done"
                   [(ngModel)]="gameSettings.customTrickPoints[format.label]"
                   (blur)="onCustomInputBlur(format)"
                   [name]="format.label + '-custom-input'"

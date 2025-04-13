@@ -18,10 +18,14 @@
   </div>
 
   <form *ngIf="gameState" class="mb-3">
-    <div class="form-group mb-3">
-      <label for="bidAmount">Enter Winning Bid Amount</label>
+    <div class="form-group mb-4">
+      <label for="bidAmount" id="bid-amount-input-label"
+        >Enter Winning Bid Amount</label
+      >
       <input
         type="number"
+        inputmode="numeric"
+        enterKeyHint="done"
         id="bidAmount"
         step="1"
         [(ngModel)]="gameState.currentBid"
@@ -35,42 +39,62 @@
       <small *ngIf="noBidMessage" class="text-danger">{{ noBidMessage }}</small>
     </div>
 
-    <div class="form-group mb-4 d-flex flex-column gap-1">
-      <label>Select Winning Team</label>
-      <div
-        *ngFor="let team of gameState.teams; let i = index"
-        class="form-check d-flex gap-2"
-      >
-        <input
-          type="radio"
-          [id]="'team' + i"
-          [(ngModel)]="primaryWinningTeamIndex"
-          (ngModelChange)="onPrimaryWinningTeamChange()"
-          [value]="i"
-          name="winningTeam"
-          class="form-check-input"
-          required
-          style="transform: scale(1.35)"
-        />
-        <label [for]="'team' + i" class="form-check-label">{{
-          team.name
-        }}</label>
+    <div class="form-group mb-4 d-flex flex-column gap-2 align-items-center">
+      <label id="winning-team-select-label">Select Winning Team</label>
+
+      <!-- start -->
+      <div class="winning-team-inputs-container">
+        <div
+          *ngFor="let team of gameState.teams; let i = index"
+          class="winning-team-option"
+        >
+          <!-- Hidden radio input -->
+          <input
+            type="radio"
+            [id]="'team' + i"
+            [(ngModel)]="primaryWinningTeamIndex"
+            (ngModelChange)="onPrimaryWinningTeamChange()"
+            [value]="i"
+            name="winningTeam"
+            required
+            class="hidden-radio"
+          />
+          <!-- Custom Box -->
+          <label
+            [for]="'team' + i"
+            class="custom-box"
+            style="font-weight: bold"
+          >
+            <i
+              class="bi bi-fire text-danger fire-icon"
+              [ngStyle]="{
+                opacity: primaryWinningTeamIndex === i ? 1 : 0,
+              }"
+            ></i>
+            {{ team.name }}
+          </label>
+        </div>
+        <small *ngIf="noWinnerMessage" class="text-danger">
+          {{ noWinnerMessage }}
+        </small>
       </div>
-      <small *ngIf="noWinnerMessage" class="text-danger">{{
-        noWinnerMessage
-      }}</small>
+      <!-- end -->
     </div>
 
     <div
       *ngIf="shouldShowSecondaryWinnerChoice"
-      class="form-group mb-4 d-flex flex-column gap-1"
+      class="form-group mb-4 d-flex flex-column gap-2 align-items-center"
     >
-      <label>Select Secondary Winning Team</label>
-      <ng-container *ngFor="let team of gameState.teams; let i = index">
+      <label id="select-secondary-select-label"
+        >Select Secondary Winning Team</label
+      >
+
+      <div class="winning-team-inputs-container">
         <div
-          *ngIf="i !== primaryWinningTeamIndex"
-          class="form-check d-flex gap-2"
+          *ngFor="let team of secondaryTeamChoices; let i = index"
+          class="winning-team-option"
         >
+          <!-- Hidden radio input -->
           <input
             type="radio"
             [id]="'secondary-team' + i"
@@ -78,27 +102,50 @@
             (ngModelChange)="onSecondaryWinningTeamChange()"
             [value]="i"
             name="secondaryWinningTeam"
-            class="form-check-input"
             required
-            style="transform: scale(1.35)"
+            class="hidden-radio"
           />
-          <label [for]="'secondary-team' + i" class="form-check-label">{{
-            team.name
-          }}</label>
+          <!-- Custom Box -->
+          <label
+            [for]="'secondary-team' + i"
+            class="custom-box"
+            style="font-weight: bold"
+          >
+            <i
+              class="bi bi-fire text-danger fire-icon"
+              [ngStyle]="{
+                opacity: secondaryWinningTeamIndex === i ? 1 : 0,
+              }"
+            ></i>
+            {{ team.name }}
+          </label>
         </div>
-      </ng-container>
-      <small *ngIf="noSecondaryWinnerMessage" class="text-danger">{{
-        noSecondaryWinnerMessage
-      }}</small>
+        <small *ngIf="noSecondaryWinnerMessage" class="text-danger">{{
+          noSecondaryWinnerMessage
+        }}</small>
+      </div>
+
     </div>
 
-    <p class="text-center">Select trump suit</p>
+    <p class="text-center" id="select-trump-suit-heading">Select trump suit</p>
 
     <div class="suit-selector">
       <label class="suit-option" *ngFor="let suit of suitOptions">
-        <input type="radio" name="suit" [value]="suit" [(ngModel)]="gameState.trumpSuit" />
+        <input
+          type="radio"
+          name="suit"
+          [value]="suit"
+          [(ngModel)]="gameState.trumpSuit"
+          (ngModelChange)="onTrumpSuitSelectionChange()"
+        />
         <div class="suit-box">
-          <span class="suit-icon">{{ suitIcons[suit] }}</span>
+          <span
+            class="suit-icon black-shape-border"
+            [ngStyle]="{
+              color: getTrumpSuitColor(suit)
+            }"
+            >{{ suitIcons[suit] }}</span
+          >
           <span class="suit-label">{{ suit }}</span>
         </div>
       </label>
@@ -107,7 +154,6 @@
     <small *ngIf="noTrumpSuitMessage" class="text-danger text-center">{{
       noTrumpSuitMessage
     }}</small>
-    
   </form>
 
   <app-nav-buttons

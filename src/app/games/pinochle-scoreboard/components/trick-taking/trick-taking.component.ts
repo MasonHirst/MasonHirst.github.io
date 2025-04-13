@@ -4,7 +4,7 @@ import { PinochleStateService } from '../../services/pinochle-state.service';
 import { Team } from '../../interfaces/team.interface';
 import {
   getDeepCopy,
-  getTeamComboName5Hand,
+  getTeamNameArray,
   hasDecimal,
   isBoolean,
   isValidNumber,
@@ -70,14 +70,14 @@ export class TrickTakingComponent implements OnInit {
     );
   }
 
-  getTeamComboName(i: number): string {
-    return getTeamComboName5Hand(
+  getTeamNames(i: number): string[] {
+    return getTeamNameArray(
       i,
       this.gameFormat,
-      this.gameState?.bidWinningTeamIndices,
+      this.bidWinners,
       this.nonBidWinnerTeamIndices,
       this.teams
-    );
+    )
   }
 
   getDataForStatus(): GameState {
@@ -91,7 +91,7 @@ export class TrickTakingComponent implements OnInit {
   }
 
   get primaryBidWinnerIndex(): number {
-    return this.gameState.bidWinningTeamIndices[0];
+    return this.gameState?.bidWinningTeamIndices[0];
   }
   get primaryNonBidWinnerIndex(): number {
     return this.nonBidWinnerTeamIndices[0];
@@ -104,7 +104,7 @@ export class TrickTakingComponent implements OnInit {
   }
 
   get primaryBidWinner(): Team {
-    return this.teams[this.gameState.bidWinningTeamIndices[0]];
+    return this.teams[this.gameState?.bidWinningTeamIndices[0]];
   }
 
   get primaryNonBidwinner(): Team {
@@ -116,12 +116,24 @@ export class TrickTakingComponent implements OnInit {
   }
 
   get bidWinners(): number[] {
-    return this.gameState.bidWinningTeamIndices;
+    return this.gameState?.bidWinningTeamIndices;
   }
 
   get pointsNeededToReachBid(): number {
-    const pointsNeeded = this.gameState?.currentBid - this.teams[this.bidWinners[0]]?.meldScore
+    if (!this.gameState?.currentBid) {
+      return;
+    }
+    const pointsNeeded =
+      this.gameState?.currentBid - this.teams[this.bidWinners?.[0]]?.meldScore;
     return pointsNeeded;
+  }
+
+  onDidWinTrickInfoClick(): void {
+    Swal.fire({
+      title: 'Did this team take a trick?',
+      text: "If a team wins no tricks, they don't keep their meld points.",
+      confirmButtonText: 'Done',
+    });
   }
 
   resetForTrickPointsChange(i: number): void {
@@ -166,8 +178,7 @@ export class TrickTakingComponent implements OnInit {
     let tricksTotal: number = 0;
     if (this.gameFormat?.label === '5-hand') {
       tricksTotal += this.teams?.[this.nonBidWinnerTeamIndices[0]]?.trickScore;
-      tricksTotal +=
-        this.teams?.[this.bidWinners?.[0]]?.trickScore;
+      tricksTotal += this.teams?.[this.bidWinners?.[0]]?.trickScore;
     } else {
       this.teams?.forEach((team) => {
         tricksTotal += team.trickScore;
@@ -281,12 +292,12 @@ export class TrickTakingComponent implements OnInit {
           this.setNoDidTakeTrickMessage();
           throw new Error('Did take trick must be a boolean');
         }
-        if (trickScore < 0 || trickScore > 100000) {
+        if (trickScore < 0 || trickScore > 999999) {
           this.setNoTrickPointsMessage(
-            'Allowed range for trick scores is between 0 and 100,000'
+            'Allowed range for trick scores is between 0 and 999,999'
           );
           throw new Error(
-            'Allowed range for trick scores is between 0 and 100,000'
+            'Allowed range for trick scores is between 0 and 999,999'
           );
         }
       });

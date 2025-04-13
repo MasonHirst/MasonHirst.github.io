@@ -68,10 +68,10 @@
             }"
           >
             {{ team.trickScore }}
-            @if (team.didTakeTrick === false) {
+            @if (team.didTakeTrick === true && team.trickScore === 0) {
               <sup>
                 <i
-                  class="bi bi-asterisk text-info"
+                  class="bi bi-asterisk white-text"
                   style="font-size: 0.55rem; margin-left: -2px"
                 ></i>
               </sup>
@@ -91,10 +91,10 @@
     </table>
   </div>
 
-  @if (showNoTrickTakenAsterisk) {
+  @if (showZeroPointTrickAsterisk) {
     <div class="no-trick-taken-text mb-2">
-      <i class="bi bi-asterisk text-info" style="font-size: 0.55rem"></i>
-      <span> Indicates a team did not win a trick. </span>
+      <i class="bi bi-asterisk" style="font-size: 0.55rem"></i>
+      <span> Indicates a team won a trick worth zero points.</span>
     </div>
   }
 </div>

@@ -45,8 +45,10 @@ export class RoundSummaryTableComponent {
     return teams?.[bidWinningTeamIndices[0]]?.roundSubTotal >= currentBid;
   }
 
-  get showNoTrickTakenAsterisk(): boolean {
-    const shouldShow = this.gameState?.teams.some((team) => team.didTakeTrick === false);
+  get showZeroPointTrickAsterisk(): boolean {
+    const shouldShow = this.gameState?.teams.some(
+      (team) => team.didTakeTrick === true && team.trickScore === 0
+    );
     return shouldShow;
   }
 

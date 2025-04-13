@@ -33,7 +33,7 @@
 }
 
 .suit-icon {
-  font-size: 2.2rem;
+  font-size: 2.8rem;
   display: block;
 }
 
@@ -70,4 +70,51 @@
   .suit-label {
     font-size: .9rem;
   }
+}
+
+.black-shape-border {
+  -webkit-text-stroke: 0.05rem black;
+}
+
+.winning-team-inputs-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  gap: 8px;
+}
+
+
+/* Hide the actual radio input */
+.hidden-radio {
+  display: none;
+}
+
+/* Style the label to look like a custom box */
+.custom-box {
+  border: 1.5px solid #73D9FF;   /* white border */
+  padding: 7px 12px;
+  border-radius: 7px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Optional: change background on hover */
+.custom-box:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Fire icon styles: hidden by default */
+.fire-icon {
+  margin-right: 6px;
+  font-size: 1.2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hidden-radio:checked + .custom-box {
+  border-color: gold;                /* Gold border */
+  background-color: rgba(212, 175, 55, 0.2); /* Subtle gold tint for the background */
 }
