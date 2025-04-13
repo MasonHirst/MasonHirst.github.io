@@ -2,13 +2,15 @@
 
 A simple portfolio site built with Angular and Bootstrap
 
+## Steps to deploy to docker
+Once your work is complete, run the command "ng build" in the root folder of the repo. This will place the build folder in the server.
 
 ## Steps to deploy on github pages
-Once your work is complete, run the command "ng build" in the root folder of the repo. 
+Once your work is complete, run the command "ng build:docs" in the root folder of the repo.
 Your build should go into a folder called "docs", also in the root folder of the repo.
 Go into the docs folder, and create a file called "404.html" at the same level as the "index.html" file.
 Copy everything from the index.html file, and paste it into the new 404.html file.
-The 404.html folder is a hack to make github pages work with angular routing.
+The 404.html file is a hack to make github pages work with angular routing.
 Commit and push your changes (your commit should include the docs folder).
 Github will host your docs folder from the "main" branch.
 
