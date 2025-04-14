@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     if (!environment.production) {
       console.log('Adding port 8080 to axios requests!')
       baseUrl += ':8080';
-    } else if (hostname.includes('github.io')) {
+    } else if (hostname.includes('github.io') || hostname.includes('masonhirst.com')) {
       console.log('Redirecting requests to https://portfolio.masonhirst.com')
       baseUrl = selfHostedServerUrl;
     }

@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node index.js",
     "server:dev": "nodemon index.js",
-    "server:wifi": "USE_LOCAL_IP=true nodemon index.js"
+    "server:wifi": "USE_LOCAL_IP=true nodemon index.js",
+    "docker-deploy": "sh -c './docker-deploy.sh'"
   },
   "keywords": [],
   "author": "",
