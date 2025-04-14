@@ -13,7 +13,12 @@ let io;
 async function attachSocketServer(server) {
   io = socketio(server, {
     cors: {
-      origin: ["https://masonhirst.github.io", "http://localhost:4200"],
+      origin: [
+        "https://masonhirst.github.io",
+        "http://localhost:4200",
+        "https://masonhirst.com",
+        "https://www.masonhirst.com",
+      ],
       methods: ["GET", "POST", "PUT", "DELETE"], // HTTP methods allowed
       credentials: true, // Allow cookies or authentication tokens, if needed
     },
