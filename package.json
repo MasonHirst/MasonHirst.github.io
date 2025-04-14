@@ -8,9 +8,10 @@
     "build": "ng build",
     "build:docs": "ng build --output-path=dist --base-href=/",
     "prepare-404": "cp dist/index.html dist/404.html",
-    "deploy": "npm run build:docs && npm run prepare-404 && npx gh-pages -d dist",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "server:dev": "nodemon server/index.js",
+    "server:wifi": "USE_LOCAL_IP=true nodemon server/index.js"
   },
   "private": true,
   "dependencies": {
