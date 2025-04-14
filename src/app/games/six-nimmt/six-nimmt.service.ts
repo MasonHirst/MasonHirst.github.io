@@ -48,7 +48,7 @@ export class SixNimmtService {
     
     if (!environment.production) {
       serverUrl += ':8080';
-    } else if (location.hostname.includes('github.io')) {
+    } else if (location.hostname.includes('github.io') || location.hostname.includes('masonhirst.com')) {
       console.log('Redirecting socket requests to https://portfolio.masonhirst.com')
       serverUrl = selfHostedServerUrl;
     }

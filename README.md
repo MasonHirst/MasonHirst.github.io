@@ -3,7 +3,10 @@
 A simple portfolio site built with Angular and Bootstrap
 
 ## Steps to deploy to docker
-Once your work is complete, run the command "ng build" in the root folder of the repo. This will place the build folder in the server.
+Enter terminal and navigate to /server
+Run command "npm run docker-deploy".
+This will build the Angular app, start docker, create a new docker image, and push the image to docker hub.
+Watchtower should automatically update the image (on the dedicated server) if a new version is available.
 
 ## Steps to deploy on github pages
 .github/workflows/deploy.yml contains the github actions workflow instructions.
