@@ -39,6 +39,7 @@ export class FormatSelectComponent implements OnInit {
     if (!game) {
       return;
     }
+    
     this.gameStateService?.setGameData(game);
     const { teams, currentBid } = game.currentGameState;
     let allTeamsMelded: boolean = true;

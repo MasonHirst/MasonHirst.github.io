@@ -1,5 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
-import { PinochleStateService } from './services/pinochle-state.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-pinochle-scoreboard',

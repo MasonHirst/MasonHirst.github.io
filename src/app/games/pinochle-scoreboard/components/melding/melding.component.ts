@@ -5,9 +5,9 @@ import { Team } from '../../interfaces/team.interface';
 import {
   getDeepCopy,
   getTeamComboName5Hand,
+  getTeamNameArray,
   hasDecimal,
   isValidNumber,
-  showTeamInput5Hand,
 } from 'src/app/games/games-helper-functions';
 import { GameState } from '../../interfaces/gamestate.interface';
 import { GameFormat } from '../../interfaces/gameformat.interface';
@@ -66,13 +66,23 @@ export class MeldingComponent implements OnInit {
     return this.gameState?.bidWinningTeamIndices;
   }
 
+  getTeamNames(i: number): string[] {
+    if (this.gameFormat?.label === FIVE_HAND && !this.bidWinners?.includes(i)) {
+      return [this.teams?.[i].name];
+    }
+    return getTeamNameArray(
+      i,
+      this.gameFormat,
+      this.bidWinners,
+      this.nonBidWinnerTeamIndices,
+      this.teams
+    );
+  }
+
   submitMeld() {
     // Update the meld points for each team in the service
     try {
       if (this.gameFormat?.label === FIVE_HAND) {
-        // const primaryBidWinner = this.teams[this.bidWinners[0]];
-        // const primaryNonBidwinner = this.teams[this.nonBidWinnerTeamIndices[0]];
-
         this.teams.forEach((team, i) => {
           if (i !== this.bidWinners[1] && !isValidNumber(team.meldScore)) {
             this.setNotAllInputsFilledMessage(
@@ -104,6 +114,7 @@ export class MeldingComponent implements OnInit {
         //     team.meldScore = primaryNonBidwinner.meldScore;
         //   }
         // });
+        //? The above block has been commented for awhile. Today is April 13, 2025. Can remove if still commented in a long time
         this.teams[this.bidWinners[1]].meldScore =
           this.teams[this.bidWinners[0]].meldScore;
       }
@@ -121,12 +132,12 @@ export class MeldingComponent implements OnInit {
           );
           throw new Error('Meld amount must be a whole number');
         }
-        if (meldScore < 0 || meldScore > 100000) {
+        if (meldScore < 0 || meldScore > 999999) {
           this.setNotAllInputsFilledMessage(
-            'Allowed range for meld scores is between 0 and 100,000'
+            'Allowed range for meld scores is between 0 and 999,999'
           );
           throw new Error(
-            'Allowed range for meld scores is between 0 and 100,000'
+            'Allowed range for meld scores is between 0 and 999,999'
           );
         }
       });
@@ -146,15 +157,6 @@ export class MeldingComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/games/pinochle-scoreboard/bidding']);
   }
-
-  // showTeamMeldingInput(i: number): boolean {
-  //   return showTeamInput5Hand(
-  //     i,
-  //     this.gameFormat,
-  //     this.gameState?.bidWinningTeamIndices,
-  //     this.nonBidWinnerTeamIndices
-  //   );
-  // }
 
   getMeldingComboName(i: number): string {
     if (i === this.gameState.bidWinningTeamIndices[0]) {

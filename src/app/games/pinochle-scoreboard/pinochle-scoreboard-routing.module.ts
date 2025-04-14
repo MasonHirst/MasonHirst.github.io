@@ -21,7 +21,6 @@ const routes: Routes = [
       { path: 'trick-taking', component: TrickTakingComponent },
       { path: 'round-summary', component: RoundSummaryComponent },
       { path: 'game-review/:id', component: GameReviewComponent },
-      // { path: 'game-review', component: GameReviewComponent },
       { path: '**', redirectTo: '' },
     ],
   },

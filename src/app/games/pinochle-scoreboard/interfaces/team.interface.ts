@@ -4,4 +4,5 @@ export interface Team {
   trickScore: number;
   roundSubTotal: number;
   currentTotalScore: number;
+  didTakeTrick: boolean;
 }

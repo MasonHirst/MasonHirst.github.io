@@ -1,5 +1,4 @@
 ############### PINOCHLE SCOREBOARD ###############
-- Make sure that if you end a game by starting a new one, a completed round is added to gameHistory
 
 --------------- finished ---------------
 - Add a nav component to replace the buttons on each page
@@ -30,3 +29,10 @@
 - Add team name generation logic
 - Add logic to allow github.io deployment to use the masonhirst.com server
 - Redo the meld logic for 5-hand, as it is incorrect.
+- Change the selector for the trump suit to be custom radio boxes
+- Change the selector for didTakeTrick to be custom radio buttons
+- Add an asterick to the trickscore on the review page to indicate if they took a trick. Something to communicate that
+- On tricking page, have an indicator to show how many trick points you need to make the bid
+- Make sure that if you end a game by starting a new one, a completed round is added to gameHistory
+- Rounds are being saved multiple times if you refresh on the bidding page after starting a new round
+- Make the inputs very specific (number)

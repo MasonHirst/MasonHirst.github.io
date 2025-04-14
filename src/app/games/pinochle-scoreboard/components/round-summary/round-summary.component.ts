@@ -64,8 +64,8 @@ export class RoundSummaryComponent implements OnInit {
   calculateTeamScores(): void {
     this.gameState?.teams.forEach((team, i) => {
       const isBidWinning = this.gameState?.bidWinningTeamIndices?.includes(i);
-      const pointsEarned =
-        team.trickScore > 0 ? team.meldScore + team.trickScore : 0;
+      // if didTakeTrick is false, they don't get meld points
+      const pointsEarned = team.didTakeTrick ? team.meldScore + team.trickScore : 0;
 
       if (isBidWinning && pointsEarned < this.gameState.currentBid) {
         team.roundSubTotal = -this.gameState?.currentBid;
