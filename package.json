@@ -6,12 +6,9 @@
     "start": "ng serve",
     "host": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
-<<<<<<< Updated upstream
-=======
     "build:docs": "ng build --output-path=dist --base-href=/",
     "prepare-404": "cp dist/index.html dist/404.html",
     "deploy": "npm run build:docs && npm run prepare-404 && npx gh-pages -d dist",
->>>>>>> Stashed changes
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
