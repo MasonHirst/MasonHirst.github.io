@@ -18,16 +18,17 @@ const server = http.createServer(app);
 //! Endpoints
 const {
   attachSocketServer,
-  createNimmtRoom,
-  checkNimmtGameCode,
   handlePlayerSelectRow,
   checkGameCodeExists,
+  createGameRoom,
 } = require("./controllers/gameSocketController");
 
-app.get("/api/games/:gameCode", checkGameCodeExists);
-app.post("/api/nimmt/create", createNimmtRoom);
-app.get("/api/nimmt/check-game-code/:gameCode", checkNimmtGameCode);
+app.post("/api/games/:gameCode", checkGameCodeExists);
+app.post("/api/game/create", createGameRoom);
+// app.get("/api/nimmt/check-game-code/:gameCode", checkNimmtGameCode);
 app.post("/api/nimmt/player/choose-row", handlePlayerSelectRow);
+
+app.post("/api/bank/create");
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, ".", "build", "index.html"));

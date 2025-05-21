@@ -40,6 +40,7 @@ import { GameReviewPageComponent } from './games/six-nimmt/host-screen/game-revi
 import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-review-client/game-review-client.component';
 import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
 import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-scoreboard.module';
+import { BankComponent } from './games/bank/bank.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-s
     GameReviewPageComponent,
     GameReviewClientComponent,
     PinochleScoreboardComponent,
+    BankComponent,
   ],
   imports: [
     CommonModule,

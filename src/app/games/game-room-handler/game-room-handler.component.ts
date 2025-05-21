@@ -24,9 +24,10 @@ export class GameRoomHandlerComponent {
     }
     if (!this.gameCodeInput) return alert('Please enter a game code');
     if (!this.playerNameInput && !isHost)
-      return this.playerNameInputError = "Please enter a player name"
+      return (this.playerNameInputError = 'Please enter a player name');
     if (this.playerNameInput.length > 15)
-      return this.playerNameInputError = "Player name must be 15 characters or less"
+      return (this.playerNameInputError =
+        'Player name must be 15 characters or less');
     this.submitGameCode.emit({
       code: this.gameCodeInput,
       isHost,
@@ -49,6 +50,8 @@ export class GameRoomHandlerComponent {
         .catch((err) => {
           console.error(err);
         });
-    } else this.enableJoinBtn = false;
+    } else {
+      this.enableJoinBtn = false;
+    }
   }
 }

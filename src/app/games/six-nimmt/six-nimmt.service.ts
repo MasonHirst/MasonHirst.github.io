@@ -99,9 +99,6 @@ export class SixNimmtService {
 
     });
     socket.on('game-updated', (data: any) => {
-      // this.toastr.info(`<strong>${'Jackson'}</strong> took row <strong>${this.getRowString(
-      //   0
-      // )}</strong> for <strong>${21}</strong> points!<p>${'What a loser!'}</p>`)
       this.updateGameData(data);
     });
     socket.on('counting-down', (data: boolean) => {
@@ -156,9 +153,11 @@ export class SixNimmtService {
       if (codeToCheck.length !== 4) {
         return false;
       }
-      const response = await axios.get(
-        '/api/nimmt/check-game-code/' + codeToCheck
+      const response = await axios.post(
+        '/api/games/' + codeToCheck
       );
+      console.log("🚀 ~ SixNimmtService ~ checkGameExists ~ response:", response)
+      
       const { status, data } = response;
       if (status !== 200 || !data.code) {
         this.router.navigate(['/games/6-nimmt!']);

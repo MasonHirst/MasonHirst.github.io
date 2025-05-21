@@ -24,6 +24,11 @@ export class GameSelectComponent {
       'https://benefitsofaclassicaleducation.wordpress.com/wp-content/uploads/2014/04/pinochle_meld.jpg'
     ),
     new PreviewCard(
+      'Bank',
+      'bank',
+      'https://www.sciencing.com/img/gallery/how-to-calculate-dice-probabilities/l-intro-1737134818.jpg'
+    ),
+    new PreviewCard(
       '6 Nimmt! (Take 5!)',
       '6-nimmt!',
       'https://www.ultraboardgames.com/img/slideshow/6-nimmt.jpg'

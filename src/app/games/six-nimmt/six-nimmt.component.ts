@@ -17,7 +17,7 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
     code: string;
     isHost: boolean;
     playerName: string;
-  }) {
+  }) { 
     const { code, isHost, playerName } = data;
     this.nimmtService.checkGameExists(code).then((res) => {
       if (res) {
@@ -32,7 +32,7 @@ export class SixNimmtComponent implements OnInit, OnDestroy {
 
   handleHostGame() {
     axios
-      .post('/api/nimmt/create', {})
+      .post('/api/game/create', { game: '6-nimmt' })
       .then(({ data, status }) => {
         if (status !== 200 || !data.code) {
           return alert('Something went wrong, please try again');
