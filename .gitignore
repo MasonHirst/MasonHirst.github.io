@@ -44,3 +44,8 @@ testem.log
 Thumbs.db
 docs/
 dist/
+
+# Playwright artifacts
+test-results/
+playwright-report/
+*.zip

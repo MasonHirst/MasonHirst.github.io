@@ -12,7 +12,10 @@ export class ProjectsPageComponent implements OnInit {
   screen: number;
   projects: Project[];
 
-  constructor(private dataService: DataService, private styleService: StylingService) {}
+  constructor(
+    private dataService: DataService,
+    private styleService: StylingService
+  ) {}
 
   ngOnInit() {
     this.projects = this.dataService.getProjects();

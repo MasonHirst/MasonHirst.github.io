@@ -18,25 +18,27 @@ import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-sc
 import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
 
 const routes: Routes = [
-  { path: 'home', component: LandingPageComponent },
+  { path: 'home', component: LandingPageComponent, data: { title: 'Portfolio' } },
   {
     path: 'projects',
     component: ProjectsPageComponent,
+    data: { title: 'Projects' },
     children: [
       { path: ':name', component: ProjectComponent },
       { path: '**', redirectTo: 'pokerface' }
     ],
   },
-  { path: 'resume', component: WorkHistoryComponent },
+  { path: 'resume', component: WorkHistoryComponent, data: { title: 'Resume' } },
   {
     path: 'games',
     component: GamesComponent,
     children: [
-      { path: '', component: GameSelectComponent },
-      { path: 'minesweeper', component: MinesweeperComponent },
-      { path: 'state-guesser', component: StateGuesserComponent },
+      { path: '', component: GameSelectComponent, data: { title: 'Games' } },
+      { path: 'minesweeper', component: MinesweeperComponent, data: { title: 'Minesweeper' } },
+      { path: 'state-guesser', component: StateGuesserComponent, data: { title: 'State Guesser' } },
       {
         path: '6-nimmt!',
+        data: { title: '6 Nimmt!' },
         children: [
           { path: '', component: SixNimmtComponent },
           {
@@ -51,6 +53,7 @@ const routes: Routes = [
       },
       {
         path: 'pinochle-scoreboard',
+        data: { title: 'Pinochle Scoreboard' },
         loadChildren: () => import('./games/pinochle-scoreboard/pinochle-scoreboard.module').then(m => m.PinochleScoreboardModule)
       },
       { path: '**', redirectTo: '' },
@@ -60,9 +63,9 @@ const routes: Routes = [
     path: 'extras',
     component: ExtrasComponent,
     children: [
-      { path: '', component: SelectExtraComponent },
-      { path: 'poké-search', component: PokeSearchComponent },
-      { path: 'audio-library', component: AudioLibraryComponent },
+      { path: '', component: SelectExtraComponent, data: { title: 'Extras' } },
+      { path: 'poké-search', component: PokeSearchComponent, data: { title: 'Pokédex' } },
+      { path: 'audio-library', component: AudioLibraryComponent, data: { title: 'Music Player' } },
       { path: '**', redirectTo: '' },
     ],
   },
