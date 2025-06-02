@@ -10,37 +10,39 @@ import { DataService } from '../data.service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  experiences : ExperienceModel[]
-  projects: Project[]
-  screen: number
+  experiences: ExperienceModel[];
+  projects: Project[];
+  screen: number;
 
   filterRelevantExps(exps: ExperienceModel[]) {
-    return exps.filter((exp) => exp.relevant)
+    return exps.filter((exp) => exp.relevant);
   }
 
-  constructor(private styleService: StylingService, private dataService: DataService) {}
-
+  constructor(
+    private styleService: StylingService,
+    private dataService: DataService
+  ) {}
 
   ngOnInit() {
     this.styleService.screenSize$.subscribe((size) => {
       this.screen = size;
-    })
+    });
 
-    this.projects = this.dataService.getProjects()
-    this.experiences = this.dataService.getExperiences()
+    this.projects = this.dataService.getProjects();
+    this.experiences = this.dataService.getExperiences();
   }
 
   calcWorkCardMargin(index: number) {
     if (this.screen >= 700) {
-      return index * 25 + 'px'
+      return index * 25 + 'px';
     } else if (this.screen >= 400) {
       if (index % 2 !== 0) {
-        return '10px'
+        return '10px';
       } else {
-        return '-10px'
+        return '-10px';
       }
     } else {
-      return '0px'
+      return '0px';
     }
   }
 }

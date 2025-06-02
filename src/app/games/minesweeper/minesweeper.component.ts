@@ -25,9 +25,9 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   pocketOpened: boolean = false;
   squaresRevealed: number = 0;
   noPocketRestart: boolean =
-    JSON.parse(localStorage.getItem('minesweeperNoPocketRestart')) || true;
+    JSON.parse(localStorage.getItem('minesweeperNoPocketRestart')) || false;
   firstSquareRestart: boolean =
-    JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart')) || true;
+    JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart')) || false;
   lStorage: any = localStorage;
 
   onNewGame(

@@ -8,8 +8,6 @@ import { MinesweeperService } from './minesweeper.service';
   providers: [MinesweeperService],
 })
 export class GamesComponent implements OnInit {
- 
-
   constructor() {}
 
   ngOnInit(): void {}
