@@ -1,4 +1,7 @@
-<div class="d-flex align-items-center justify-content-between mt-3 mb-3" style="max-width: 600px; margin: 0 auto;">
+<div
+  class="d-flex align-items-center justify-content-between mt-3 mb-3"
+  style="max-width: 600px; margin: 0 auto"
+>
   <!-- Triggers the modal in games.component.html -->
   <div class="d-flex align-items-center gap-2">
     <i
@@ -30,11 +33,11 @@
 
 <div
   class="w-100 d-flex justify-content-between align-items-center mb-2"
-  style="padding: 0 5px; max-width: 600px; margin: 0 auto;"
+  style="padding: 0 5px; max-width: 600px; margin: 0 auto"
 >
   <code
     class="mb-0"
-    style="color: white;"
+    style="color: white"
     [ngStyle]="{ 'font-size': screen < 400 ? '1rem' : '1.4rem' }"
   >
     {{ getTimerValue(timer) }}
@@ -64,9 +67,8 @@
     overflow-x: auto;
   "
 >
-
   <!-- start of minesweeper game -->
-  <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto;">
+  <div id="mine-sweeper-game" class="minesweeper-border" style="margin: 0 auto">
     <div class="d-flex" *ngFor="let row of gameRows; let i = index">
       <div
         *ngFor="let cell of row; let k = index"
@@ -192,9 +194,6 @@
   </div>
 </div>
 
-
-
-
 <!-- minesweeper victory modal -->
 <div
   #settingsModal
@@ -218,34 +217,38 @@
       <div class="modal-body" style="overflow-x: auto">
         <!-- start of modal body content -->
         <div
-            class="mt-3"
-            style="width: fit-content; position: relative; margin: 12px auto"
-          >
-            <img
-              src="../../../assets/golden-emphasis.png"
-              alt="decoration lines"
-              class="golden-emphasis-left"
-            />
-            <h3 class="text-info mb-0" style="font-weight: bold">You win!</h3>
-            <img
-              src="../../../assets/golden-emphasis.png"
-              alt="decoration lines"
-              class="golden-emphasis-right"
-            />
-          </div>
+          class="mt-3"
+          style="width: fit-content; position: relative; margin: 12px auto"
+        >
+          <img
+            src="../../../assets/golden-emphasis.png"
+            alt="decoration lines"
+            class="golden-emphasis-left"
+          />
+          <h3 class="text-info mb-0" style="font-weight: bold">You win!</h3>
+          <img
+            src="../../../assets/golden-emphasis.png"
+            alt="decoration lines"
+            class="golden-emphasis-right"
+          />
+        </div>
 
-          <div>
-            <p class="mb-1">Your time: <code class="text-primary" style="font-size: 1rem;">{{ getTimerValue(timer) }}</code></p>
-            <p class="capitalize">Difficulty: <span class="text-primary">{{ minesweeperDifficulty }}</span></p>
-          </div>
+        <div>
+          <p class="mb-1">
+            Your time:
+            <code class="text-primary" style="font-size: 1rem">{{
+              getTimerValue(timer)
+            }}</code>
+          </p>
+          <p class="capitalize">
+            Difficulty:
+            <span class="text-primary">{{ minesweeperDifficulty }}</span>
+          </p>
+        </div>
         <!-- end of modal body content -->
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          data-bs-dismiss="modal"
-        >
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Close
         </button>
       </div>
@@ -253,8 +256,6 @@
   </div>
 </div>
 <!-- end of minesweeper victory modal -->
-
-
 
 <!-- minesweeper settings modal -->
 <div
@@ -407,7 +408,11 @@
             </div>
           </div>
         </div>
-        <p *ngIf="minesweeperDifficulty === 'custom'" class="remove-p-margin text-danger" style="text-align: end;">
+        <p
+          *ngIf="minesweeperDifficulty === 'custom'"
+          class="remove-p-margin text-danger"
+          style="text-align: end"
+        >
           {{ changeSizeError }}
         </p>
 
@@ -434,6 +439,7 @@
               the same starting cell.</i
             >
           </p>
+
           <div class="form-check form-switch">
             <input
               class="form-check-input"
@@ -455,6 +461,25 @@
               >If you explode before any pockets open up, the game will restart
               with the cell last opened.</i
             >
+          </p>
+
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckChecked"
+              [(ngModel)]="informativeMode"
+            />
+            <label class="form-check-label" for="flexSwitchCheckChecked"
+              >Informative mode</label
+            >
+          </div>
+          <p style="margin-top: -5px">
+            <span class="text-info bi bi-info-circle"></span>
+            <i style="opacity: 0.7; margin-left: 7px">
+              The game will give you affirmations for your actions.
+            </i>
           </p>
         </div>
         <!-- end of modal body content -->

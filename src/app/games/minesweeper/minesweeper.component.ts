@@ -3,6 +3,7 @@ import { Minesweeper } from './minesweeper.model';
 import { MinesweeperService } from '../minesweeper.service';
 import { StylingService } from 'src/app/styling.service';
 import { Modal } from 'bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-minesweeper',
@@ -19,7 +20,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   stopWatch: any;
   timer: number = 0;
   gameState: string = 'new';
-  // settings variables
+  //? settings variables
   settingsModal: boolean = false;
   gameSize: Minesweeper;
   pocketOpened: boolean = false;
@@ -29,27 +30,18 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   firstSquareRestart: boolean =
     JSON.parse(localStorage.getItem('minesweeperFirstSquareRestart')) || false;
   lStorage: any = localStorage;
+  informativeMode: boolean = false;
 
-  onNewGame(
-  ) {
+  onNewGame() {
     const { height, width, bombs } = this.gameSize;
-
     // unless user is using custom sizes, switch between landscape and portrait depending on screen width
     if (this.minesweeperDifficulty !== 'custom') {
       if (this.screen < 900 && width > height) {
-        this.gameSize = new Minesweeper(
-          width,
-          height,
-          bombs,
-        );
+        this.gameSize = new Minesweeper(width, height, bombs);
         this.onNewGame();
         return;
       } else if (this.screen >= 900 && width < height) {
-        this.gameSize = new Minesweeper(
-          width,
-          height,
-          bombs,
-        );
+        this.gameSize = new Minesweeper(width, height, bombs);
         this.onNewGame();
         return;
       }
@@ -61,7 +53,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     this.gameStarted = false;
     this.toggleTimer(false);
     this.timer = 0;
-
 
     // Generate rows and columns based on height and width
     this.gameRows = [];
@@ -161,26 +152,60 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   onRightClick(row: number, col: number, event: any) {
-    if (this.isScrolling) return;
+    if (this.isScrolling) {
+      return;
+    }
     if (event) {
       event.preventDefault();
     }
-    if (this.gameState !== 'new') return;
+    if (this.gameState !== 'new') {
+      return;
+    }
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
-    if (cell.revealed) return;
+    if (cell.revealed) {
+      return;
+    }
 
     if (cell.flagged) {
       if (cell.question) {
+        if (this.informativeMode) {
+          Swal.fire({
+            icon: 'info',
+            title: 'You reset a cell!',
+            confirmButtonText: 'Amazing!',
+          });
+        }
         cell.question = false;
         cell.flagged = false;
       } else {
+        if (this.informativeMode) {
+          Swal.fire({
+            icon: 'info',
+            title: 'You placed a question mark!',
+            confirmButtonText: 'Wonderful!',
+          });
+        }
         cell.flagged = false;
         cell.question = true;
       }
     } else if (cell.question) {
+      if (this.informativeMode) {
+        Swal.fire({
+          icon: 'info',
+          title: 'You reset a cell!',
+          confirmButtonText: 'Amazing!',
+        });
+      }
       cell.question = false;
     } else {
+      if (this.informativeMode) {
+        Swal.fire({
+          icon: 'info',
+          title: 'You flagged a cell!',
+          confirmButtonText: 'Nice!',
+        });
+      }
       cell.flagged = true;
       cell.question = false;
     }
@@ -192,8 +217,12 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   onClickCell(row: number, col: number) {
-    if (this.isLongClick || this.isScrolling) return;
-    if (this.gameState !== 'new') return;
+    if (this.isLongClick || this.isScrolling) {
+      return;
+    }
+    if (this.gameState !== 'new') {
+      return;
+    }
     this.toggleTimer(true);
     const cell = this.gameRows[row][col];
     const game = this.gameRows;
@@ -201,6 +230,15 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     if (!cell.flagged && !cell.question) {
       cell.revealed = true;
       this.squaresRevealed++;
+
+      if (this.informativeMode) {
+        const isBomb = cell.value === 'bomb';
+        Swal.fire({
+          icon: isBomb ? 'error' : 'success',
+          title: isBomb ? 'You blew up!' : "You didn't blow up!",
+          confirmButtonText: isBomb ? 'Dang it!' : 'Yay!',
+        });
+      }
     } else {
       return;
     }
@@ -268,7 +306,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   isLongClick: boolean;
   isScrolling: boolean = false;
   pressDown: number;
-// todo: 
   onMouseDown(row: number, col: number, event: any, holdTime: number = 230) {
     if (event.type === 'touchstart') {
       holdTime = 380;
@@ -443,7 +480,9 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
         size = new Minesweeper(20, 35, 142);
         break;
       case 'custom':
-        if (!this.checkCustomSize()) return;
+        if (!this.checkCustomSize()) {
+          return;
+        }
         size = new Minesweeper(
           this.minesweeperHeight,
           this.minesweeperWidth,
