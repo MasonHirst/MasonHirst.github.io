@@ -5,4 +5,5 @@ export interface Team {
   roundSubTotal: number;
   currentTotalScore: number;
   didTakeTrick: boolean;
+  teamIndex: number;
 }

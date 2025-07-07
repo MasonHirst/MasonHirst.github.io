@@ -75,13 +75,14 @@ export class PinochleStateService {
   }
 
   async startNewGameFormat(format: GameFormat): Promise<void> {
-    const teams = Array.from({ length: format.teamCount }, () => ({
+    const teams = Array.from({ length: format.teamCount }, (_, index) => ({
       name: '',
       meldScore: null,
       trickScore: null,
       roundSubTotal: null,
       currentTotalScore: 0,
       didTakeTrick: null,
+      teamIndex: index,
     }));
 
     this.gameData = {
