@@ -78,6 +78,17 @@ export class FormatSelectComponent implements OnInit {
       );
 
       if (activeGame) {
+        //? --------------------------------------------------------------------------------
+        //? This block is being added July 2025. It makes sure old game saves are updated to include "teamIndex" field.
+        if (activeGame.currentGameState.teams.length > 0) {
+          activeGame.currentGameState.teams.forEach((team, i) => {
+            if (typeof team.teamIndex !== 'number') {
+              team.teamIndex = i;
+            }
+          });
+        }
+        //? End of block. This block can be deleted in 2026
+        //? --------------------------------------------------------------------------------
         this.activeSavedGame = activeGame;
       } else {
         this.activeSavedGame = null;

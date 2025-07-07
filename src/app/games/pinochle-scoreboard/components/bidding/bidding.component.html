@@ -45,30 +45,30 @@
       <!-- start -->
       <div class="winning-team-inputs-container">
         <div
-          *ngFor="let team of gameState.teams; let i = index"
+          *ngFor="let team of gameState.teams"
           class="winning-team-option"
         >
           <!-- Hidden radio input -->
           <input
             type="radio"
-            [id]="'team' + i"
+            [id]="'team' + team.teamIndex"
             [(ngModel)]="primaryWinningTeamIndex"
             (ngModelChange)="onPrimaryWinningTeamChange()"
-            [value]="i"
+            [value]="team.teamIndex"
             name="winningTeam"
             required
             class="hidden-radio"
           />
           <!-- Custom Box -->
           <label
-            [for]="'team' + i"
+            [for]="'team' + team.teamIndex"
             class="custom-box"
             style="font-weight: bold"
           >
             <i
               class="bi bi-fire text-danger fire-icon"
               [ngStyle]="{
-                opacity: primaryWinningTeamIndex === i ? 1 : 0,
+                opacity: primaryWinningTeamIndex === team.teamIndex ? 1 : 0,
               }"
             ></i>
             {{ team.name }}
@@ -91,30 +91,30 @@
 
       <div class="winning-team-inputs-container">
         <div
-          *ngFor="let team of secondaryTeamChoices; let i = index"
+          *ngFor="let team of secondaryTeamChoices"
           class="winning-team-option"
         >
           <!-- Hidden radio input -->
           <input
             type="radio"
-            [id]="'secondary-team' + i"
+            [id]="'secondary-team' + team.teamIndex"
             [(ngModel)]="secondaryWinningTeamIndex"
             (ngModelChange)="onSecondaryWinningTeamChange()"
-            [value]="i"
+            [value]="team.teamIndex"
             name="secondaryWinningTeam"
             required
             class="hidden-radio"
           />
           <!-- Custom Box -->
           <label
-            [for]="'secondary-team' + i"
+            [for]="'secondary-team' + team.teamIndex"
             class="custom-box"
             style="font-weight: bold"
           >
             <i
               class="bi bi-fire text-danger fire-icon"
               [ngStyle]="{
-                opacity: secondaryWinningTeamIndex === i ? 1 : 0,
+                opacity: secondaryWinningTeamIndex === team.teamIndex ? 1 : 0,
               }"
             ></i>
             {{ team.name }}
