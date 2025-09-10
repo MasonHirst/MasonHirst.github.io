@@ -24,6 +24,8 @@ export class MeldingComponent implements OnInit {
   gameFormat: GameFormat = null;
   nonBidWinnerTeamIndices: number[] = [];
   notAllInputsFilledMessage: string;
+  multiplyByTen: boolean;
+  hasMultiplied: { [key: number]: boolean } = {};
 
   constructor(
     private router: Router,
@@ -34,6 +36,11 @@ export class MeldingComponent implements OnInit {
     const teams = this.gameStateService?.getCurrentGameState()?.teams;
     this.gameFormat = this.gameStateService?.getGameFormat();
     this.gameState = this.gameStateService?.getCurrentGameState();
+    this.multiplyByTen =
+      this.gameStateService?.getGameSettings()?.multiplyByTen;
+    this.gameStateService.gameSettingsEmit.subscribe(({ multiplyByTen }) => {
+      this.multiplyByTen = multiplyByTen;
+    });
     if (
       !this.gameState ||
       !this.gameFormat ||
@@ -52,8 +59,20 @@ export class MeldingComponent implements OnInit {
     }
   }
 
-  onMeldInputChange(): void {
+  onMeldInputChange(team: Team): void {
+    this.hasMultiplied[team.teamIndex] = false;
     this.setNotAllInputsFilledMessage('');
+  }
+
+  onMeldInputBlur(team: Team): void {
+    if (
+      this.multiplyByTen &&
+      isValidNumber(team.meldScore) &&
+      this.hasMultiplied[team.teamIndex] === false
+    ) {
+      team.meldScore = team.meldScore * 10;
+      this.hasMultiplied[team.teamIndex] = true;
+    }
   }
 
   setNotAllInputsFilledMessage(
@@ -80,7 +99,7 @@ export class MeldingComponent implements OnInit {
   }
 
   submitMeld() {
-    // Update the meld points for each team in the service
+    //? Update the meld points for each team in the service
     try {
       if (this.gameFormat?.label === FIVE_HAND) {
         this.teams.forEach((team, i) => {

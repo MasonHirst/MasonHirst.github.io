@@ -30,6 +30,7 @@
         step="1"
         [(ngModel)]="gameState.currentBid"
         (ngModelChange)="onBidAmountChange()"
+        (blur)="onBidAmountBlur()"
         name="bidAmount"
         class="form-control"
         placeholder="Enter Bid Amount"

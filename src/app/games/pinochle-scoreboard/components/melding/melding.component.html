@@ -8,9 +8,9 @@
 <div class="container fade-in my-3">
   <div class="d-flex flex-column align-items-center gap-2 mb-4">
     <h2 class="text-center mb-2">Melding Phase</h2>
-    <sub class="text-center text-muted mb-3"
-      >Enter the total meld points for each team.</sub
-    >
+    <sub class="text-center text-muted mb-3">
+      Enter the total meld points for each team.
+    </sub>
   </div>
 
   <form class="mb-3">
@@ -40,7 +40,8 @@
           enterKeyHint="done"
           [id]="team.name"
           [(ngModel)]="team.meldScore"
-          (ngModelChange)="onMeldInputChange()"
+          (ngModelChange)="onMeldInputChange(team)"
+          (blur)="onMeldInputBlur(team)"
           [name]="team.name + 'MeldPoints'"
           class="form-control"
           placeholder="Enter Meld Points"

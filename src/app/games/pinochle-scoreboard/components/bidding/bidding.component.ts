@@ -26,6 +26,8 @@ export class BiddingComponent implements OnInit {
   noSecondaryWinnerMessage: string = '';
   noTrumpSuitMessage: string = '';
   suitOptions: string[] = ['Diamonds', 'Spades', 'Hearts', 'Clubs'];
+  bidHasMultipled: boolean;
+  multiplyByTen: boolean;
 
   suitIcons = {
     Hearts: '♥',
@@ -43,6 +45,11 @@ export class BiddingComponent implements OnInit {
     // Retrieve the list of teams from the game state service
     this.gameState = this.gameStateService.getCurrentGameState();
     this.gameFormat = this.gameStateService?.getGameFormat();
+    this.multiplyByTen =
+      this.gameStateService?.getGameSettings()?.multiplyByTen;
+    this.gameStateService.gameSettingsEmit.subscribe(({ multiplyByTen }) => {
+      this.multiplyByTen = multiplyByTen;
+    });
 
     if (!this.gameState?.teams || !this.gameFormat) {
       this.router.navigate(['/games/pinochle-scoreboard']);
@@ -130,12 +137,24 @@ export class BiddingComponent implements OnInit {
   }
 
   onBidAmountChange() {
+    this.bidHasMultipled = false;
     // Display a message if bid amount is zero
     this.setNoBidMessage(
       this.gameState?.currentBid <= 0
         ? 'If no team bids, please reshuffle and redeal.'
         : ''
     );
+  }
+
+  onBidAmountBlur() {
+    if (
+      this.multiplyByTen &&
+      isValidNumber(this.gameState?.currentBid) &&
+      this.bidHasMultipled === false
+    ) {
+      this.gameState.currentBid = this.gameState.currentBid * 10;
+      this.bidHasMultipled = true;
+    }
   }
 
   submitBids() {

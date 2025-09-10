@@ -64,6 +64,7 @@
               [id]="team.name"
               [(ngModel)]="team.trickScore"
               (ngModelChange)="resetForTrickPointsChange(i)"
+              (blur)="onTrickInputBlur(team, i)"
               [name]="team.name + 'TrickPoints'"
               class="form-control"
               placeholder="Enter Trick Points"
