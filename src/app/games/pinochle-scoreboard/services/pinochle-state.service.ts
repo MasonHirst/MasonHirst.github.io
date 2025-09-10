@@ -27,12 +27,14 @@ export class PinochleStateService {
     const storedSettings = this.getSettingsFromLocalStorage();
     if (storedSettings) {
       this.gameSettings = storedSettings;
+      if (!('multiplyByTen' in storedSettings)) {
+        this.updateGameSettings({
+          ...(storedSettings as object),
+          multiplyByTen: getDefaultPinochleSettings().multiplyByTen
+        } as GameSettings);
+      }
     } else {
-      localStorage.setItem(
-        'masonhirst_pinochle_settings',
-        JSON.stringify(getDefaultPinochleSettings())
-      );
-      this.gameSettings = getDefaultPinochleSettings();
+      this.updateGameSettings(getDefaultPinochleSettings());
     }
 
     this.removeGamesWithNoCompleteRoundsFromDB();

@@ -28,6 +28,7 @@ export class TrickTakingComponent implements OnInit {
   noTrickPointsMessage: string;
   noDidTakeTrickMessage: string;
   gameSettings: GameSettings;
+  hasMultiplied: { [key: number]: boolean } = {};
 
   constructor(
     private router: Router,
@@ -77,7 +78,7 @@ export class TrickTakingComponent implements OnInit {
       this.bidWinners,
       this.nonBidWinnerTeamIndices,
       this.teams
-    )
+    );
   }
 
   getDataForStatus(): GameState {
@@ -139,9 +140,25 @@ export class TrickTakingComponent implements OnInit {
   resetForTrickPointsChange(i: number): void {
     this.setNoTrickPointsMessage('');
     this.teams[i].didTakeTrick = null;
+    this.hasMultiplied[i] = false;
   }
 
-  onTrickInputChange(teamIndex: number, isBlurEvent: boolean = false): void {
+  onTrickInputBlur(team: Team, i: number): void {
+    if (
+      this.gameSettings.multiplyByTen &&
+      isValidNumber(team.trickScore) &&
+      this.hasMultiplied[i] === false
+    ) {
+      team.trickScore = team.trickScore * 10;
+      this.hasMultiplied[i] = true;
+    }
+  }
+
+  onTrickInputChange(
+    teamIndex: number,
+    isBlurEvent: boolean = false,
+    isRecursive: boolean = false
+  ): void {
     this.resetForTrickPointsChange(teamIndex);
     if (!isValidNumber(this.teams?.[teamIndex]?.trickScore)) {
       return;
@@ -163,10 +180,23 @@ export class TrickTakingComponent implements OnInit {
       return;
     }
     if (isBlurEvent) {
-      const otherTeamPoints = this.teams[otherInputIndex].trickScore;
-      this.teams[teamIndex].trickScore = this.possibleTricks - otherTeamPoints;
+      if (
+        this.gameSettings.multiplyByTen &&
+        this.hasMultiplied[teamIndex] === false
+      ) {
+        this.hasMultiplied[teamIndex] = true;
+        this.teams[teamIndex].trickScore = inputPoints * 10;
+        this.onTrickInputChange(teamIndex, false, true);
+      } else {
+        const otherTeamPoints = this.teams[otherInputIndex].trickScore;
+        this.teams[teamIndex].trickScore =
+          this.possibleTricks - otherTeamPoints;
+      }
       this.teams[teamIndex].didTakeTrick = null;
     } else {
+      if (!isRecursive) {
+        this.hasMultiplied[teamIndex] = false;
+      }
       this.teams[otherInputIndex].trickScore =
         this.possibleTricks - inputPoints;
       this.teams[otherInputIndex].didTakeTrick = null;
@@ -204,7 +234,14 @@ export class TrickTakingComponent implements OnInit {
         if (!isValidNumber(team.trickScore)) {
           otherTeamsAllFilled = false;
         } else {
-          otherTeamsTotal += team.trickScore;
+          if (
+            this.gameSettings.multiplyByTen &&
+            this.hasMultiplied[i] === false
+          ) {
+            otherTeamsTotal += team.trickScore * 10;
+          } else {
+            otherTeamsTotal += team.trickScore;
+          }
         }
       }
     });

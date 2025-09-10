@@ -7,5 +7,6 @@ export interface GameSettings {
     '5-hand': number,
     '6-hand': number,
     '8-hand': number,
-  }
+  },
+  multiplyByTen: boolean
 }

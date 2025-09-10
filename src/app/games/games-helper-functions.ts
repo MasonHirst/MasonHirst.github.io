@@ -129,6 +129,7 @@ export function getDefaultPinochleSettings(): GameSettings {
       '6-hand': null,
       '8-hand': null,
     },
+    multiplyByTen: false
   };
 }
 
