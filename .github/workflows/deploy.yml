@@ -40,6 +40,12 @@ jobs:
           publish_dir: ./dist
           cname: masonhirst.com
 
+      - name: Copy Angular build into server
+        run: cp -r dist server/build
+
+      - name: Install server dependencies
+        run: npm install --prefix server
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
