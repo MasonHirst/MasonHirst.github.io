@@ -9,30 +9,36 @@ export class DataService {
   experiences: ExperienceModel[] = [
     new ExperienceModel(
       true,
-      'Full Stack Developer',
+      'Software Engineer',
       'Fidelity Investments',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689656944/Screenshot_2023-07-17_at_11.08.01_PM_vueaa4.png',
       'Salt Lake City, Utah',
-      'Jul 2023',
+      'Jun 2023',
       'Present',
-      'I am currently working on a team to improve and expand the money-transferring experience for web clients.',
+      'Primary owner of the legacy Ember.js transfer web application — the main brokerage transfer product used by millions of Fidelity customers — managing feature delivery, on-call reliability, and production deployments end-to-end.',
       [
-        'I am currently working on a team to improve and expand the money-transferring experience for web clients.',
+        'Built the Copy-Bank feature enabling customers to copy standing EFT instructions across linked bank accounts and Fidelity accounts, now accessible to the majority of brokerage customers.',
+        'Developed an EFT intent detection flow that evaluates a user\'s saved standing instructions on transfer entry and intelligently redirects to the bank-linking app when none exist, improving customer onboarding completion.',
+        'Refactored the tax withholding page using a factory pattern for state-specific rule management, resolving several state-behavior bugs and dramatically reducing complexity — the new pattern is being adopted as a reference for the next-generation Angular platform rebuild.',
+        'Designed and maintained the team\'s on-call process: authored Confluence runbooks, created a reusable Jira story template for on-call rotations, and led training sessions for the team and neighboring teams.',
+        'Became the subject-matter expert (SME) for the legacy transfer app, representing the team in cross-functional meetings and fielding capability questions from external stakeholders and partner teams.',
+        'Onboarded and mentored 2 new associate engineers through the codebase, development workflows, and their first independent feature stories.',
+        'Maintained and debugged Jenkins CI/CD pipelines; monitored deployed container health and triaged production issues using Argo CD and Splunk.',
+        'Wrote comprehensive test coverage using Playwright (E2E) and Mocha/QUnit (unit), leveraging GitHub Copilot to evaluate coverage gaps and generate edge-case tests.',
       ]
     ),
     new ExperienceModel(
       true,
-      'Junior Software Developer',
-      'Sparkz Development',
+      'Software Engineer',
+      'Sparkz Systems',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657359/sparkz-logo_gqcisu.png',
       'Pleasant Grove, Utah',
-      'Jan 2023',
-      'Jul 2023',
-      'I participated in an agile development team, developing a web platform for building and hosting client websites.',
+      'Nov 2022',
+      'Jun 2023',
+      'Contributed features to Sparkz Cloud, a Vue.js/FeathersJS SaaS website builder, and built client sites to surface UX bugs and validate workflows.',
       [
-        'Contributed to the development of Sparkz Cloud (web application for building / managing websites) in order to add features for a better/optimized user experience.',
-        'Built several websites for different clients using Sparkz Cloud and CSS to help find bugs in the software and transition clients to our services.',
-        'Optimized and updated the code in several websites to be mobile-friendly and look presentable on all screen sizes to ensure all website visitors have a professional experience.',
+        'Contributed features to Sparkz Cloud, a Vue.js/FeathersJS SaaS website builder, and built client sites to surface UX bugs and validate workflows.',
+        'Improved mobile responsiveness across multiple client websites using CSS and Quasar framework.',
       ]
     ),
     new ExperienceModel(
