@@ -11,7 +11,7 @@
     >
       <h4>{{ i + 1 }}</h4>
       <app-nimmt-card
-        *ngFor="let card of stack.reverse(); let i = index"
+        *ngFor="let card of [...stack].reverse(); let i = index"
         [key]="i"
         height="135"
         [card]="card"
