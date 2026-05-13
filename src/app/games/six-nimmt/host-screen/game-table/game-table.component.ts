@@ -71,5 +71,9 @@ export class GameTableComponent implements OnInit, OnDestroy {
     return this.nimmtService.getRoundScore(player);
   }
 
+  reversedStack(stack: any[]): any[] {
+    return [...stack].reverse();
+  }
+
   ngOnDestroy(): void {}
 }
