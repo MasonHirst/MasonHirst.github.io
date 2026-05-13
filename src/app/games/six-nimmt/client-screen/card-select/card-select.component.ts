@@ -75,5 +75,9 @@ export class CardSelectComponent implements OnInit, OnDestroy, OnChanges {
     else return height * 0.6;
   }
 
+  trackByCardNumber(_index: number, card: any): number {
+    return card.number;
+  }
+
   ngOnDestroy(): void {}
 }

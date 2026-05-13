@@ -12,7 +12,7 @@
     }"
   >
     <app-nimmt-card
-      *ngFor="let card of getMyCards(); let i = index"
+      *ngFor="let card of getMyCards(); let i = index; trackBy: trackByCardNumber"
       key="{{ i }}"
       [card]="card"
       [height]="determineCardHeight(110)"
