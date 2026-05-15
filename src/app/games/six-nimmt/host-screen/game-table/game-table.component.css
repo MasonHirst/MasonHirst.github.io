@@ -1,39 +1,268 @@
-.stack {
+.table-layout {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.card-row {
-  display: flex;
-  gap: 5px;
-}
-
-.name-card-duo {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
+  gap: 40px;
+  align-items: flex-start;
   width: 100%;
 }
 
-h4,
-p {
-  margin: 0;
+/* ── State bar ─────────────────────────────── */
+.state-bar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.player-cards-wrapper {
+.state-label {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: #f1c40f;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* ── Stacks (left column) ──────────────────── */
+.stacks-section {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  padding-top: 48px;
+}
+
+.stack-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-height: 148px;
+  width: fit-content;
+  transition: box-shadow 0.3s;
+  position: relative;
+  overflow: visible;
+}
+
+/* Glow effect triggered by flashScore */
+.stack-row.row-flash {
+  box-shadow: 0 0 24px rgba(231, 76, 60, 0.7), inset 0 0 12px rgba(231, 76, 60, 0.2);
+}
+
+.row-number {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f1c40f;
+  min-width: 24px;
+  text-align: center;
+}
+
+.stack-cards {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+/* Five fixed-size slots per row visualize the 5-card cap.
+   Card height = 120 → width = 120 * 0.65 ≈ 78. Slot matches that exactly. */
+.stack-slot {
+  width: 78px;
+  height: 120px;
+  border-radius: 8px;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stack-slot.filled {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* ── Player panels (right column, wraps into multi-column for 6-10 players) ─────────── */
+.players-section {
+  display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 5px;
-  max-height: 100vh;
+  align-content: flex-start;
+  gap: 10px 14px;
+  max-height: calc(100vh - 110px);
+  flex-shrink: 0;
+  padding-top: 48px;
 }
 
-.card-select-wrapper {
+.player-panel {
+  width: 260px;
+  position: relative;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 50px;
-  width: 100%;
+  gap: 12px;
+  background: #0d2218;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.player-panel.active {
+  border-color: #d4af37;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
+}
+
+/* Pulsing highlight while the sequence is paused waiting on this player to pick a row */
+.player-panel.awaiting-row-pick {
+  border-color: #f1c40f;
+  animation: awaiting-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes awaiting-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(241, 196, 15, 0.35); }
+  50%       { box-shadow: 0 0 22px rgba(241, 196, 15, 0.8); }
+}
+
+/* Score flash: triggered when a player takes points */
+.player-panel.score-flash {
+  animation: score-flash-anim 0.65s ease;
+}
+
+/* Floating "+N" popup that drops on the player panel after the row-sweep arrives */
+.score-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Lilita One', 'Cinzel', serif;
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: #ffd633;
+  -webkit-text-stroke: 3px #1a1a1a;
+  paint-order: stroke fill;
+  text-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.85),
+    0 0 28px rgba(255, 214, 51, 0.9),
+    0 0 60px rgba(255, 214, 51, 0.55);
+  pointer-events: none;
+  z-index: 10;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@keyframes score-flash-anim {
+  0%   { box-shadow: 0 0 0 rgba(231, 76, 60, 0); }
+  30%  { box-shadow: 0 0 22px rgba(231, 76, 60, 0.8); border-color: #e74c3c; }
+  100% { box-shadow: 0 0 0 rgba(231, 76, 60, 0); }
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.player-name {
+  color: #f0f0f0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-score-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.round-score {
+  color: #f1c40f;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.round-score.hot {
+  color: #e74c3c;
+}
+
+/* Inline bull icon — inherits color from the surrounding text via currentColor. */
+.bull-icon-inline {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  background-color: currentColor;
+  -webkit-mask: url('/assets/bullhead.svg') no-repeat center / contain;
+  mask: url('/assets/bullhead.svg') no-repeat center / contain;
+  flex-shrink: 0;
+}
+
+.total-score {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+}
+
+/* ── Card slot ──────────────────────────────
+   Sized to exactly match the 42×65 selected card (card height 65 × 0.65 = 42 wide).
+   Same dashed-border / 8px radius pattern as .stack-slot in the table rows. */
+.player-card-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 65px;
+  border-radius: 8px;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  flex-shrink: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.waiting-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.3); }
+}
+
+.pick-row-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f1c40f;
+  color: #1a3a2a;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 3px 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(241, 196, 15, 0.5);
+  animation: pick-row-pulse 1.2s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes pick-row-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50%       { transform: translateX(-50%) scale(1.08); }
 }

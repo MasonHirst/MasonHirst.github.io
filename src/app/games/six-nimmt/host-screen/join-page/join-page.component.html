@@ -1,42 +1,31 @@
-<div class="join-page-wrapper mt-5">
-  <h2 style="color: orange">6 Nimmt!</h2>
-  <!-- <h3 style="opacity: 0.8">Waiting for players</h3> -->
-  <section class="game-code-wrapper">
-    <p>Game code:</p>
-    <h2 class="" style="color: aqua; font-size: 4rem" (click)="copyGameCode()">
-      {{ gameCode }}
-    </h2>
-  </section>
-  <h4 class="mb-3">Hosts: {{ gameData?.hosts.length }}</h4>
+<div class="join-wrapper">
+  <h1 class="game-title">6-Nimmt!</h1>
 
-  <h4>Players:</h4>
-  <ul class="mb-4">
-    <p
-      *ngFor="let player of getPlayersList(); let i = index"
-      [key]="i"
-      style="color: orange"
-    >
-      <a (click)="kickPlayer(player)">
-        <span aria-hidden="true" class="kick-player-btn"> &times; </span>
-      </a>
-      {{ player.playerName }}
-    </p>
-  </ul>
+  <div class="code-block" (click)="copyCode()" title="Click to copy">
+    <span class="code-label">Game Code</span>
+    <span class="code-value">{{ gameData()?.code }}</span>
+    <span class="code-hint">click to copy</span>
+  </div>
 
-  <section
-    class="d-flex flex-col align-items-center"
-    style="max-width: 200px; text-align: center"
+  <div class="players-section">
+    <h3 class="section-heading">Players ({{ players().length }}/10)</h3>
+    <div class="player-list">
+      <div class="player-row" *ngFor="let player of players()">
+        <span class="player-name">{{ player.playerName }}</span>
+        <button class="kick-btn" (click)="kickPlayer(player.userToken)">✕</button>
+      </div>
+      <div class="empty-hint" *ngIf="players().length === 0">
+        Waiting for players to join…
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="start-btn"
+    [disabled]="!canStart()"
+    (click)="startGame()"
   >
-    <p class="mb-2 text-info" *ngIf="!canStartGame()">
-      This game requires at least 2 players!
-    </p>
-    <button
-      class="btn btn-lg btn-primary"
-      color="primary"
-      (click)="startFreshGame()"
-      [disabled]="!canStartGame()"
-    >
-      Start Game
-    </button>
-  </section>
+    Start Game
+  </button>
+  <p class="min-players-hint" *ngIf="!canStart()">Need at least 2 players</p>
 </div>

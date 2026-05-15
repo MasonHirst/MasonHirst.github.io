@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SixNimmtService } from '../six-nimmt.service';
 
@@ -7,57 +7,26 @@ import { SixNimmtService } from '../six-nimmt.service';
   templateUrl: './host-screen.component.html',
   styleUrls: ['./host-screen.component.css'],
 })
-export class HostScreenComponent implements OnInit, OnDestroy {
-  routeGameCode: string = '';
-  gameData: any;
-  countdown: number = 3;
-  countingDown: boolean = false;
-  countdownInterval: any;
+export class HostScreenComponent implements OnInit {
+  readonly gameData = this.nimmtService.gameData;
+
+  // Lock the view to 'table' while the animation queue is running so we never
+  // switch away from GameTableComponent mid-animation.
+  readonly view = computed(() => {
+    if (this.nimmtService.isAnimating()) return 'table';
+    const state = this.gameData()?.gameState;
+    if (state === 'WAITING_FOR_PLAYERS') return 'join';
+    if (state === 'GAME_REVIEW') return 'review';
+    return 'table';
+  });
 
   constructor(
+    private nimmtService: SixNimmtService,
     private route: ActivatedRoute,
-    private nimmtService: SixNimmtService
   ) {}
 
-  ngOnInit(): void {
-    this.nimmtService
-      .checkGameExists(this.routeGameCode || location.href.split('/').pop())
-      .then((res) => {
-        if (res) {
-          this.nimmtService.sendSocketMessage('join-game', { isHost: true })
-        }
-      });
-
-    this.route.params.subscribe((params) => {
-      this.routeGameCode = params['gameCode'];
-    });
-
-    this.nimmtService.gameDataEmit.subscribe((data) => {
-      this.gameData = data;
-    });
-
-    this.nimmtService.countdownEmit.subscribe((counting: boolean) => {
-      this.countingDown = counting;
-      clearInterval(this.countdownInterval);
-      this.countdown = 3;
-      if (counting) {
-        this.countdown = 3;
-        this.countdownInterval = setInterval(() => {
-          this.countdown--;
-          if (this.countdown === 0) {
-            this.countingDown = false;
-            clearInterval(this.countdownInterval);
-          }
-        }, 1000);
-      }
-    })
-  }
-
-  getData() {
-    this.nimmtService.sendSocketMessage('get-game');
-  }
-
-  ngOnDestroy(): void {
-    clearInterval(this.countdownInterval);
+  ngOnInit() {
+    const gameCode = this.route.snapshot.params['gameCode'];
+    this.nimmtService.sendSocketMessage('join-game', { gameCode, isHost: true });
   }
 }

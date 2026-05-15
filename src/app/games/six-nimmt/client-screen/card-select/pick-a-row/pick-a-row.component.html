@@ -1,12 +1,27 @@
-<p>Pick a row to take</p>
-
-<div class="pick-row-btns-wrapper">
-  <button
-    class="btn btn-lg btn-info"
-    *ngFor="let row of gameData?.tableStacks; let i = index"
-    (click)="handleSelectRow(i)"
-    [disabled]="!canPickRow"
-  >
-    {{ i + 1 }}
-  </button>
+<div class="sheet-backdrop">
+  <div class="sheet">
+    <h3 class="sheet-title">Your card is lower than every row.<br>Choose a row to take.</h3>
+    <div class="row-options">
+      <button
+        *ngFor="let stack of stacks; let i = index"
+        class="row-option"
+        [class.cheapest]="stackCost(stack) === minCost()"
+        [disabled]="submitting"
+        (click)="pickRow(i)"
+      >
+        <span class="row-label">Row {{ i + 1 }}</span>
+        <div class="row-cards">
+          <app-nimmt-card
+            *ngFor="let card of stack"
+            [card]="card"
+            [height]="60"
+            [selectable]="false"
+          ></app-nimmt-card>
+        </div>
+        <span class="row-cost" [class.low-cost]="stackCost(stack) === minCost()">
+          {{ stackCost(stack) }} 🐂
+        </span>
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,5 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
 
 @Component({
@@ -7,79 +6,45 @@ import { SixNimmtService } from '../../six-nimmt.service';
   templateUrl: './game-review-page.component.html',
   styleUrls: ['./game-review-page.component.css'],
 })
-export class GameReviewPageComponent implements OnInit, OnDestroy {
-  @Input() gameData: any;
-  @Input() gameCode: string;
-  myToken: string = localStorage.getItem('userToken');
+export class GameReviewPageComponent {
+  readonly gameData = this.nimmtService.gameData;
 
-  constructor(private router: Router, private nimmtService: SixNimmtService) {}
+  readonly players = computed(() => {
+    return Object.values<any>(this.gameData()?.players ?? {}).sort(
+      (a, b) => this.nimmtService.getTotalScore(a) - this.nimmtService.getTotalScore(b),
+    );
+  });
 
-  ngOnInit(): void {}
+  readonly rounds = computed(() => {
+    const p = this.players();
+    if (!p.length) return [];
+    return Array.from({ length: p[0].roundScores.length }, (_, i) => i);
+  });
 
-  getPlayers(orderedByScore: boolean = false) {
-    if (orderedByScore) {
-      return Object.values(this.gameData?.players).sort((a: any, b: any) => {
-        return this.getTotalScore(a) - this.getTotalScore(b);
-      });
-    }
-    return Object.values(this.gameData?.players);
-  }
+  readonly gameOver = computed(() =>
+    this.players().some(p => this.nimmtService.getTotalScore(p) >= 66),
+  );
 
-  getRoundScores(score: any[]): number {
-    let total = 0;
-    score.forEach((s: { number: number; bullHeads: number }) => {
-      total += s.bullHeads;
-    });
-    return total;
+  constructor(private nimmtService: SixNimmtService) {}
+
+  getRoundScore(player: any, round: number): number {
+    return (player.roundScores[round] ?? []).reduce((s: number, c: any) => s + c.bullHeads, 0);
   }
 
   getTotalScore(player: any): number {
     return this.nimmtService.getTotalScore(player);
   }
 
-  sendMessage(message: string) {
-    this.nimmtService.sendSocketMessage(message);
+  startNextRound() {
+    this.nimmtService.sendSocketMessage('start-next-round', {});
   }
 
-  navigateToGames() {
-    this.router.navigate(['/games/6-nimmt!']);
+  startFreshGame() {
+    this.nimmtService.sendSocketMessage('start-fresh-game', {});
   }
 
-  isFirstPlayer(): boolean {
-    return this.nimmtService.isFirstPlayer();
+  endGame() {
+    this.nimmtService.sendSocketMessage('end-game', {});
+    window.location.href = '/games/6-nimmt!';
   }
-
-  gameIsOver(): boolean {
-    // if any player has 66 or more points, the game is over
-    let gameOver = false;
-    Object.values(this.gameData?.players).forEach((player: any) => {
-      if (this.getTotalScore(player) >= 66) {
-        gameOver = true;
-      }
-    });
-    return gameOver;
-  }
-
-  getLosersStatement(): string {
-    // if any player has 66 or more points, add their name to a string
-    let losersArr = [];
-    Object.values(this.gameData?.players).forEach((player: any) => {
-      if (this.getTotalScore(player) >= 66) {
-        losersArr.push(player.playerName);
-      }
-    });
-    let losersStr = '';
-    losersArr.forEach((loser, i) => {
-      if (i === 0) {
-        losersStr += loser;
-      } else if (i === losersArr.length - 1) {
-        losersStr += ' and ' + loser;
-      } else {
-        losersStr += ', ' + loser;
-      }
-    });
-    return losersStr
-  }
-
-  ngOnDestroy(): void {}
 }

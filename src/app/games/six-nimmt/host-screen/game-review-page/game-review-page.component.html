@@ -1,43 +1,37 @@
-<div *ngIf="gameIsOver()">
-  <h1>Game over!</h1>
-  <h6>
-    Looks like
-    <strong class="text-primary">{{ getLosersStatement() }}</strong> got at
-    least 66 points. Let's be nice guys - they probably feel bad already.
-  </h6>
-  <h2>Final scores:</h2>
+<div class="review-wrapper">
+  <h2 class="review-title">{{ gameOver() ? 'Game Over' : 'Round Complete' }}</h2>
+
+  <!-- Score table -->
+  <div class="score-table-wrap">
+    <table class="score-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th *ngFor="let r of rounds()">R{{ r + 1 }}</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players()">
+          <td class="player-col">{{ player.playerName }}</td>
+          <td *ngFor="let r of rounds()" [class.bad-round]="getRoundScore(player, r) >= 10">
+            {{ getRoundScore(player, r) }}
+          </td>
+          <td class="total-col" [class.loser]="gameOver() && getTotalScore(player) >= 66">
+            {{ getTotalScore(player) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="game-over-msg" *ngIf="gameOver()">
+    <p>Anyone reaching 66 🐂 loses. Start a fresh game!</p>
+  </div>
+
+  <div class="actions">
+    <button class="btn-gold" *ngIf="!gameOver()" (click)="startNextRound()">Next Round</button>
+    <button class="btn-outline" (click)="startFreshGame()">New Game</button>
+    <button class="btn-danger" (click)="endGame()">End Game</button>
+  </div>
 </div>
-
-<div class="review-table-container" [ngClass]="{
-  'mt-4': !gameIsOver(),
-}">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col"></th>
-        <th
-          scope="col"
-          *ngFor="let _ of [].constructor(gameData?.gameNumber); let i = index"
-        >
-          round {{ i + 1 }}
-        </th>
-        <th scope="col">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let player of getPlayers(true)">
-        <th scope="row">{{ player.playerName }}</th>
-        <td *ngFor="let score of player.roundScores">
-          {{ getRoundScores(score) }}
-        </td>
-        <td>{{ getTotalScore(player) }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<button class="btn btn-primary m-2" (click)="sendMessage('start-next-round')">
-  {{ gameIsOver() ? "New game" : "Next round" }}
-</button>
-
-<button class="btn btn-info" (click)="navigateToGames()">End this game</button>

@@ -1,0 +1,49 @@
+.review-client-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 20px;
+}
+
+.prompt {
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.btn-gold {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 14px 48px;
+  background: linear-gradient(135deg, #d4af37, #a8861e);
+  border: none;
+  border-radius: 8px;
+  color: #0f2016;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-gold:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-gold:hover:not(:disabled) { opacity: 0.88; }
+
+.spinner-ring {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(212, 175, 55, 0.2);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.waiting-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}

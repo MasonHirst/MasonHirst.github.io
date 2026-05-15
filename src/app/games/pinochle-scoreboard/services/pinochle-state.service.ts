@@ -8,7 +8,7 @@ import {
   isValidNumber,
 } from '../../games-helper-functions';
 import { GameData } from '../interfaces/gamedata.interface';
-import shortId from 'shortid';
+import { generate as shortId } from 'shortid';
 import { GameSettings } from '../interfaces/gamesettings.interface';
 import { PinochleDatabase } from './pinochle-database.service';
 

@@ -1,70 +1,78 @@
-<section>
-  <h3 style="color: aqua; margin-bottom: 15px">{{ showGameState() }}</h3>
-</section>
+<div class="table-layout">
 
-<div class="card-select-wrapper">
-  <section class="stack">
+  <!-- ── Game state label ── -->
+  <div class="state-bar">
+    <span class="state-label">{{ showGameState() }}</span>
+  </div>
+
+  <!-- ── Table stacks (left) ── -->
+  <section class="stacks-section">
     <div
-      *ngFor="let stack of gameData?.tableStacks; let i = index"
-      class="card-row d-flex align-items-center"
-      [key]="i"
+      *ngFor="let stack of localStacks(); let i = index"
+      class="stack-row"
+      [id]="'stack-row-' + i"
     >
-      <h4>{{ i + 1 }}</h4>
-      <app-nimmt-card
-        *ngFor="let card of reversedStack(stack); let i = index"
-        [key]="i"
-        height="135"
-        [card]="card"
-        [selectable]="false"
-      ></app-nimmt-card>
-    </div>
-  </section>
-
-  <section class="player-cards-wrapper">
-    <div *ngFor="let player of getPlayers()" class="name-card-duo">
-      <div>
-        <div style="display: flex; gap: 10px; align-items: center">
-          <div
-            *ngIf="showPlayerNeedsToPick(player)"
-            class="spinner-border spinner-border-md"
-            style="color: yellow !important"
-            role="status"
-          >
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <h4>
-            {{ player.playerName }}
-            <span style="color: white"
-              >(<span
-                [ngStyle]="{
-                  color: getRoundScores(player) > 0 ? 'yellow' : 'white'
-                }"
-                >{{ getRoundScores(player) }}</span
-              >)</span
-            >
-          </h4>
-        </div>
-        <div>
-          <p style="font-size: 12px">
-            Total Score: {{ getScoreboardScore(player) }}
-          </p>
+      <span class="row-number">{{ i + 1 }}</span>
+      <div class="stack-cards">
+        <div
+          *ngFor="let slotIdx of slotIndices"
+          class="stack-slot"
+          [class.filled]="isSlotSettled(stack, slotIdx)"
+        >
+          <app-nimmt-card
+            *ngIf="getSlotCard(stack, slotIdx) as card"
+            [id]="'card-' + card.number"
+            [card]="card"
+            [height]="120"
+            [selectable]="false"
+          ></app-nimmt-card>
         </div>
       </div>
-      <app-nimmt-card
-        *ngIf="showPlayerCard(player); else noCard"
-        [key]="i"
-        height="60"
-        [card]="player?.selectedCard"
-        [selectable]="false"
-      />
-      <ng-template #noCard>
-        <app-nimmt-card
-          height="60"
-          [selectable]="false"
-          [borderColor]="player.selectedCard ? 'black' : 'white'"
-          [backgroundColor]="!player.selectedCard ? 'transparent' : 'white'"
-        />
-      </ng-template>
     </div>
   </section>
+
+  <!-- ── Player panels (right) ── -->
+  <section class="players-section">
+    <div
+      *ngFor="let player of sortedPlayers(); trackBy: trackByToken"
+      class="player-panel"
+      [id]="'player-panel-' + player.userToken"
+      [class.active]="activeToken() === player.userToken"
+      [class.awaiting-row-pick]="pausedForToken() === player.userToken"
+    >
+      <!-- Floating indicator: this player must choose a row -->
+      <div class="pick-row-badge" *ngIf="pausedForToken() === player.userToken">
+        Choosing row…
+      </div>
+      <!-- Player info -->
+      <div class="player-info">
+        <span class="player-name">{{ player.playerName }}</span>
+        <span class="player-score-row">
+          <span class="round-score" [class.hot]="getRoundScore(player) >= 5">
+            {{ getRoundScore(player) }}<span class="bull-icon-inline"></span>
+          </span>
+          <span class="total-score">Total: {{ getTotalScore(player) }}</span>
+        </span>
+      </div>
+
+      <!-- Selected card slot -->
+      <div class="player-card-slot" [id]="'player-slot-' + player.userToken">
+        <ng-container *ngIf="player.selectedCard && !player.cardIsStacked">
+          <app-nimmt-card
+            [id]="'card-' + player.selectedCard.number"
+            [card]="player.selectedCard"
+            [height]="65"
+            [selectable]="false"
+            [faceDown]="!cardsRevealed()"
+          ></app-nimmt-card>
+        </ng-container>
+        <!-- Waiting indicator: player hasn't selected yet -->
+        <div
+          class="waiting-dot"
+          *ngIf="!player.selectedCard && !player.cardIsStacked && gameState() === 'PICKING_CARDS'"
+        ></div>
+      </div>
+    </div>
+  </section>
+
 </div>

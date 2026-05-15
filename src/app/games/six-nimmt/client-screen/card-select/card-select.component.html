@@ -1,25 +1,32 @@
-<div class="card-select-wrapper">
-  <app-pick-a-row
-    *ngIf="showPickRowComponent()"
-    [gameData]="gameData"
-    [gameCode]="gameCode"
-  />
+<div class="card-select-root">
 
-  <div
-    class="player-cards-wrapper"
-    [ngStyle]="{
-      opacity: gameData?.gameState !== 'PICKING_CARDS' ? 0.6 : 1
-    }"
-  >
-    <app-nimmt-card
-      *ngFor="let card of getMyCards(); let i = index; trackBy: trackByCardNumber"
-      key="{{ i }}"
-      [card]="card"
-      [height]="determineCardHeight(110)"
-      [cardIndex]="i"
-      (cardClick)="handleCardClick(card)"
-      [selected]="isSelected(card)"
-      [selectable]="gameData?.gameState === 'PICKING_CARDS'"
-    />
+  <!-- Round score -->
+  <div class="round-score-bar" *ngIf="roundScore() > 0">
+    <span class="round-score-label">This round: <strong>{{ roundScore() }}</strong> 🐂</span>
   </div>
+
+  <!-- Status message when stacking -->
+  <div class="stacking-msg" *ngIf="!isPicking() && !needsToPickRow()">
+    <div class="spinner-ring"></div>
+    <p>Cards are being played…</p>
+  </div>
+
+  <!-- Hand of cards -->
+  <div class="hand-area" [class.locked]="!isPicking()">
+    <app-nimmt-card
+      *ngFor="let card of hand()"
+      [card]="card"
+      [height]="130"
+      [selectable]="isPicking()"
+      [selected]="isSelected(card)"
+      (cardClick)="selectCard(card)"
+    ></app-nimmt-card>
+  </div>
+
+  <!-- Pick-a-row sheet -->
+  <app-pick-a-row
+    *ngIf="needsToPickRow()"
+    [stacks]="stacks()"
+  ></app-pick-a-row>
+
 </div>

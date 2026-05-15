@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
 
 @Component({
@@ -8,17 +7,15 @@ import { SixNimmtService } from '../../six-nimmt.service';
   styleUrls: ['./game-review-client.component.css'],
 })
 export class GameReviewClientComponent {
-  constructor(private router: Router, private nimmtService: SixNimmtService) {}
+  readonly isFirst = computed(() => this.nimmtService.isFirstPlayer());
+  readonly playerCount = computed(() =>
+    Object.keys(this.nimmtService.gameData()?.players ?? {}).length,
+  );
+  readonly canStart = computed(() => this.playerCount() >= 2);
 
-  navigateToGames() {
-    this.router.navigate(['/games/6-nimmt!']);
-  }
+  constructor(private nimmtService: SixNimmtService) {}
 
-  sendMessage(message: string) {
-    this.nimmtService.sendSocketMessage(message);
-  }
-
-  isFirstPlayer() {
-    return this.nimmtService.isFirstPlayer();
+  nextRound() {
+    this.nimmtService.sendSocketMessage('start-next-round', {});
   }
 }

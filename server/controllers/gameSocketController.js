@@ -1,53 +1,58 @@
-const socketio = require("socket.io");
+const socketio = require('socket.io');
 const {
   new4LetterId,
   dealNimmtHands,
   nimmtAllowJoin,
-  nimmtStackCards,
-} = require("../utility/helperFunctions");
+  computeStackingSequence,
+} = require('../utility/helperFunctions');
 
 const nimmtRooms = {};
-const clients = {};
+
+// Countdown state stored per game code so multiple simultaneous games don't interfere.
+// { [gameCode]: { interval: Timeout, value: number } }
+const countdowns = {};
+
 let io;
 
-async function attachSocketServer(server) {
+function attachSocketServer(server) {
   io = socketio(server, {
     cors: {
       origin: [
-        "https://masonhirst.github.io",
-        "http://localhost:4200",
-        "https://masonhirst.com",
-        "https://www.masonhirst.com",
+        'https://masonhirst.github.io',
+        'http://localhost:4200',
+        'https://masonhirst.com',
+        'https://www.masonhirst.com',
+        'https://portfolio.masonhirst.com',
       ],
-      methods: ["GET", "POST", "PUT", "DELETE"], // HTTP methods allowed
-      credentials: true, // Allow cookies or authentication tokens, if needed
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      credentials: true,
     },
   });
-  io.on("connection", (socket) => {
+
+  io.on('connection', (socket) => {
     const { token } = socket.handshake.query;
-    if (!token) console.error("----- NO TOKEN PROVIDED BY CLIENT");
+    if (!token) console.error('NO TOKEN PROVIDED BY CLIENT');
     else socket.userToken = token;
 
-    socket.on("join-game", (data) => {
-      const { gameCode, userToken, isHost, playerName } = data;
-      const allowJoin = nimmtAllowJoin(
-        nimmtRooms[gameCode],
-        isHost,
-        userToken,
-        playerName
-      );
-      if (!allowJoin.canJoin) {
-        socket.send({ type: "not-allowing-join", message: allowJoin.error });
-        return console.error(allowJoin.error);
+    socket.on('join-game', ({ gameCode, userToken, isHost, playerName }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room) {
+        return socket.send({ type: 'not-allowing-join', message: 'game-not-found' });
       }
+
+      const allowJoin = nimmtAllowJoin(room, isHost, userToken, playerName);
+      if (!allowJoin.canJoin) {
+        return socket.send({ type: 'not-allowing-join', message: allowJoin.error });
+      }
+
       socket.currentGameCode = gameCode;
       socket.join(gameCode);
-      if (isHost && !nimmtRooms[gameCode].hosts.includes(userToken)) {
-        nimmtRooms[gameCode].hosts.push(userToken);
-      } else if (!isHost) {
-        // if the players object already includes an object with the same userToken, purge the first one
-        if (!nimmtRooms[gameCode].players[userToken]) {
-          const playerObj = {
+
+      if (isHost) {
+        if (!room.hosts.includes(userToken)) room.hosts.push(userToken);
+      } else {
+        if (!room.players[userToken]) {
+          room.players[userToken] = {
             userToken,
             socketId: socket.id,
             playerName,
@@ -59,212 +64,175 @@ async function attachSocketServer(server) {
             pointCards: [],
             roundScores: [],
           };
-          nimmtRooms[gameCode].players[userToken] = playerObj;
+        } else {
+          // Reconnecting player — refresh socket id
+          room.players[userToken].socketId = socket.id;
         }
       }
-      io.to(gameCode).emit("someone-joined-game", nimmtRooms[gameCode]);
+
+      io.to(gameCode).emit('someone-joined-game', room);
     });
 
-    socket.on("start-fresh-game", (data) => {
-      // for new games and fresh data
-      const { gameCode } = data;
-      if (!nimmtRooms[gameCode]) return console.error("game not found");
-      nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode], true);
-      nimmtRooms[gameCode].gameState = "PICKING_CARDS";
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    socket.on('start-fresh-game', ({ gameCode }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room) return;
+      dealNimmtHands(room, true);
+      room.gameState = 'PICKING_CARDS';
+      io.to(gameCode).emit('game-updated', room);
     });
 
-    socket.on("start-next-round", (data) => {
-      // for continuing games
-      const { gameCode } = data;
-      if (!nimmtRooms[gameCode]) return console.error("game not found");
-      nimmtRooms[gameCode] = dealNimmtHands(nimmtRooms[gameCode], false);
-      nimmtRooms[gameCode].gameState = "PICKING_CARDS";
-      nimmtRooms[gameCode].gameNumber++;
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    socket.on('start-next-round', ({ gameCode }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room) return;
+      dealNimmtHands(room, false);
+      room.gameState = 'PICKING_CARDS';
+      room.gameNumber++;
+      io.to(gameCode).emit('game-updated', room);
     });
 
-    socket.on("kick-player", (data) => {
-      const { gameCode, playerId } = data;
-      if (!nimmtRooms[gameCode]) return console.error("game not found");
-      if (!nimmtRooms[gameCode].players[playerId]) {
-        return console.error("player not found");
-      }
-      console.log(
-        "kicking player socketId: ",
-        nimmtRooms[gameCode].players[playerId].socketId
-      );
-      io.to(nimmtRooms[gameCode].players[playerId].socketId).emit(
-        "kicked-from-game"
-      );
-      delete nimmtRooms[gameCode].players[playerId];
-      // send a message just to the kicked player
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    socket.on('kick-player', ({ gameCode, playerId }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room || !room.players[playerId]) return;
+      io.to(room.players[playerId].socketId).emit('kicked-from-game');
+      delete room.players[playerId];
+      io.to(gameCode).emit('game-updated', room);
     });
 
-    // when a player picks a card, validate their choice. then if all players have a card picked,
-    // start a countdown. If a player changes their card, reset the countdown. If the countdown
-    // reaches 0, move to the next game state
-    let interval;
-    let countdown = 3;
-    socket.on("select-card", (data) => {
-      const { gameCode, userToken, card } = data;
-      if (!nimmtRooms[gameCode]) return console.error("game not found");
-      if (nimmtRooms[gameCode].gameState !== "PICKING_CARDS") {
-        return console.error("game state not correct");
-      }
-      const player = nimmtRooms[gameCode].players[userToken];
-      if (!player) return console.error("player not found");
-      const hasCard = player.cards.some(
-        (handCard) => handCard.number === card.number
-      );
-      if (!hasCard) {
-        return console.error("player does not have that card");
-      }
-      if (player.selectedCard && player.selectedCard.number === card.number) {
+    socket.on('select-card', ({ gameCode, userToken, card }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room || room.gameState !== 'PICKING_CARDS') return;
+      const player = room.players[userToken];
+      if (!player) return;
+
+      const hasCard = player.cards.some((c) => c.number === card.number);
+      if (!hasCard) return;
+
+      // Toggle: selecting the same card deselects it
+      if (player.selectedCard?.number === card.number) {
         player.selectedCard = null;
       } else {
         player.selectedCard = card;
       }
-      const allPlayersHaveSelectedCard = Object.values(
-        nimmtRooms[gameCode].players
-      ).every((player) => player.selectedCard);
-      startCountdown(gameCode, allPlayersHaveSelectedCard);
-      io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+
+      const allSelected = Object.values(room.players).every((p) => p.selectedCard);
+      manageCountdown(gameCode, allSelected);
+      io.to(gameCode).emit('game-updated', room);
     });
 
-    function startCountdown(gameCode, start) {
-      io.to(gameCode).emit("counting-down", start);
-      if (interval) {
-        clearInterval(interval);
-        countdown = 3;
-      }
-      if (start) {
-        interval = setInterval(() => {
-          countdown--;
-          if (countdown <= 0) {
-            nimmtRooms[gameCode].gameState = "STACKING_CARDS";
-            io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-            tryStackingCards(gameCode);
-            clearInterval(interval);
-            countdown = 3;
-          }
-        }, 1000);
-      }
-    }
-
-    // socket.join("roomNumber 3");
-    // io.to("roomNumber 3").emit("message", "hello from roomNumber 3");
-
-    socket.on("get-game", (data) => {
-      socket.send(nimmtRooms[data.gameCode]);
+    // Host emits this once its stacking-sequence animation queue empties.
+    // Triggers the next round's countdown if all players are already selected
+    // (currently only true when 1-card auto-select fired on the last round).
+    socket.on('animation-complete', ({ gameCode }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room || room.gameState !== 'PICKING_CARDS') return;
+      const players = Object.values(room.players);
+      if (players.length === 0) return;
+      const allSelected = players.every((p) => p.selectedCard);
+      if (allSelected) manageCountdown(gameCode, true);
     });
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       const { currentGameCode } = socket;
-      if (currentGameCode) {
-        socket.leave(currentGameCode);
-        const { hosts, players } = nimmtRooms[currentGameCode];
-        const hostIndex = hosts.indexOf(socket.userToken);
-        if (hostIndex > -1) {
-          hosts.splice(hostIndex, 1);
-          io.to(currentGameCode).emit(
-            "someone-left-game",
-            nimmtRooms[currentGameCode]
-          );
-        }
-        if (players[socket.userToken]) {
-          if (nimmtRooms[currentGameCode].gameState === "WAITING_FOR_PLAYERS") {
-            delete nimmtRooms[currentGameCode].players[socket.userToken];
-          }
-          io.to(currentGameCode).emit(
-            "someone-left-game",
-            nimmtRooms[currentGameCode]
-          );
-        }
+      if (!currentGameCode || !nimmtRooms[currentGameCode]) return;
+      const room = nimmtRooms[currentGameCode];
+
+      const hostIndex = room.hosts.indexOf(socket.userToken);
+      if (hostIndex > -1) room.hosts.splice(hostIndex, 1);
+
+      // Only remove a player from the room while in the lobby; mid-game they stay in the data
+      if (room.players[socket.userToken] && room.gameState === 'WAITING_FOR_PLAYERS') {
+        delete room.players[socket.userToken];
       }
+
+      io.to(currentGameCode).emit('someone-left-game', room);
     });
   });
 }
 
-async function tryStackingCards(gameCode) {
-  const filteredPlayers = Object.values(nimmtRooms[gameCode].players)
-    .filter((player) => player.cardIsStacked === false)
-    .sort((a, b) => a.selectedCard.number - b.selectedCard.number);
-  for (const player of filteredPlayers) {
-    await sleep(1500);
-    const result = nimmtStackCards(nimmtRooms[gameCode], player);
-    if (result) {
-      if (result.message === "player-took-row") {
-        io.to(gameCode).emit("player-took-row", result.data);
-      } else if (result.message === "pick-row") {
-        return io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+// Starts or clears the 3-second countdown before the stacking phase.
+// Emits `counting-down` with the current value (3/2/1) while ticking, or null when cancelled.
+// Idempotent when `start=true` and a countdown is already running (no-op).
+function manageCountdown(gameCode, start) {
+  if (start && countdowns[gameCode]) return;
+
+  if (countdowns[gameCode]) {
+    clearInterval(countdowns[gameCode].interval);
+    delete countdowns[gameCode];
+  }
+
+  io.to(gameCode).emit('counting-down', start ? 3 : null);
+  if (!start) return;
+
+  let value = 3;
+  countdowns[gameCode] = {
+    value,
+    interval: setInterval(() => {
+      value--;
+      if (value > 0) {
+        io.to(gameCode).emit('counting-down', value);
+      } else {
+        clearInterval(countdowns[gameCode].interval);
+        delete countdowns[gameCode];
+        io.to(gameCode).emit('counting-down', null);
+        runStackingPhase(gameCode);
       }
-    }
-    io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    // else {
-    //   io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    // }
-  }
-  // if all players have stacked their cards, move to next round
-  const allPlayersHaveStackedCards = Object.values(
-    nimmtRooms[gameCode].players
-  ).every((player) => player.cardIsStacked);
-  if (allPlayersHaveStackedCards) {
-    handleMoveNextRound(gameCode);
-  }
+    }, 1000),
+  };
 }
 
-function sleep(ms = 2000) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+// Called once the countdown reaches zero.
+// Computes the full sequence of card placements and emits it for the client to animate.
+// Also applies the resolved (or intermediate) state to the real room object.
+function runStackingPhase(gameCode) {
+  const room = nimmtRooms[gameCode];
+  if (!room) return;
+
+  room.gameState = 'STACKING_CARDS';
+
+  const result = computeStackingSequence(room);
+  applySequenceResult(gameCode, result);
+
+  io.to(gameCode).emit('stacking-sequence', {
+    moves: result.moves,
+    pausedForPlayer: result.pausedForPlayer,
+    finalGameState: result.finalGameState,
+  });
+
+  // game-updated keeps late-joining clients in sync with actual room state
+  io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
 }
 
-function handleMoveNextRound(gameCode) {
-  playerCardCount = Object.values(nimmtRooms[gameCode].players)[0].cards.length;
-  if (playerCardCount === 0) {
-    // TODO: calculate round scores
-    Object.values(nimmtRooms[gameCode].players).forEach((player) => {
-      player.roundScores.push([...player.pointCards]);
-    });
-    nimmtRooms[gameCode].gameState = "GAME_REVIEW";
-    setTimeout(() => {
-      return io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
-    }, 3000);
+// Applies a computeStackingSequence result to the live room.
+function applySequenceResult(gameCode, result) {
+  if (result.finalGameState) {
+    nimmtRooms[gameCode] = result.finalGameState;
   } else {
-    nimmtRooms[gameCode].gameState = "PICKING_CARDS";
-    // reset all players' cardIsStacked to false
-    Object.values(nimmtRooms[gameCode].players).forEach((player) => {
-      player.cardIsStacked = false;
-      player.selectedCard = null;
-    });
-    io.to(gameCode).emit("game-updated", nimmtRooms[gameCode]);
+    // Paused — reflect the intermediate state (needsToPickRow set on the blocked player)
+    nimmtRooms[gameCode].players = result.intermediateState.players;
+    nimmtRooms[gameCode].tableStacks = result.intermediateState.tableStacks;
   }
 }
 
 module.exports = {
   attachSocketServer,
-  createNimmtRoom: async (req, res) => {
-    try {
-      console.log("User is creating a new 6-nimmt room!");
-      const existingRooms = Array.from(io.sockets.adapter.rooms.keys());
-      let id = new4LetterId();
-      // if id already exists, generate a new one
-      while (existingRooms.includes(id)) {
-        id = new4LetterId();
-      }
 
-      const newRoom = {
-        code: id,
+  createNimmtRoom: async (_req, res) => {
+    try {
+      const existingCodes = Array.from(io.sockets.adapter.rooms.keys());
+      let code = new4LetterId();
+      while (existingCodes.includes(code)) code = new4LetterId();
+
+      nimmtRooms[code] = {
+        code,
         players: {},
         hosts: [],
         tableStacks: [],
-        gameState: "WAITING_FOR_PLAYERS",
+        gameState: 'WAITING_FOR_PLAYERS',
         gameNumber: 1,
         lastAction: Date.now(),
       };
 
-      nimmtRooms[id] = newRoom;
-      res.status(200).send(nimmtRooms[id]);
+      res.status(200).send(nimmtRooms[code]);
     } catch (err) {
       console.error(err);
       res.status(503).send(err);
@@ -274,11 +242,7 @@ module.exports = {
   checkNimmtGameCode: async (req, res) => {
     try {
       const { gameCode } = req.params;
-      if (!nimmtRooms[gameCode]) {
-        console.error("game not found");
-        return res.status(202).send("Game not found");
-      }
-
+      if (!nimmtRooms[gameCode]) return res.status(404).send('Game not found');
       res.status(200).send(nimmtRooms[gameCode]);
     } catch (err) {
       console.error(err);
@@ -286,11 +250,29 @@ module.exports = {
     }
   },
 
+  // Player submits which row to take when their card was lower than all stack tops.
+  // Resumes the stacking sequence from the point it was paused.
   handlePlayerSelectRow: async (req, res) => {
     try {
       const { gameCode, userToken, rowIndex } = req.body;
-      nimmtRooms[gameCode].players[userToken].pickedRow = rowIndex;
-      tryStackingCards(gameCode);
+      const room = nimmtRooms[gameCode];
+      if (!room) return res.status(404).send('Game not found');
+      const player = room.players[userToken];
+      if (!player) return res.status(404).send('Player not found');
+
+      player.pickedRow = rowIndex;
+
+      const result = computeStackingSequence(room);
+      applySequenceResult(gameCode, result);
+
+      // Continuation event — same shape as stacking-sequence but for the remaining moves
+      io.to(gameCode).emit('stacking-sequence-continuation', {
+        moves: result.moves,
+        pausedForPlayer: result.pausedForPlayer,
+        finalGameState: result.finalGameState,
+      });
+
+      io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
       res.status(200).send(true);
     } catch (err) {
       console.error(err);
@@ -301,12 +283,7 @@ module.exports = {
   checkGameCodeExists: async (req, res) => {
     try {
       const { gameCode } = req.params;
-      if (!nimmtRooms[gameCode]) {
-        console.error("game room not found");
-        return res.status(202).send(false);
-      } else {
-        res.status(200).send(true);
-      }
+      res.status(200).send(!!nimmtRooms[gameCode]);
     } catch (err) {
       console.error(err);
       res.status(503).send(err);

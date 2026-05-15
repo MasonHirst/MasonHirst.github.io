@@ -1,55 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-join-page',
   templateUrl: './join-page.component.html',
   styleUrls: ['./join-page.component.css'],
 })
-export class JoinPageComponent implements OnInit {
-  @Input() gameCode: string;
-  @Input() gameData: any;
+export class JoinPageComponent {
+  readonly gameData = this.nimmtService.gameData;
+  readonly players = computed(() => Object.values<any>(this.gameData()?.players ?? {}));
+  readonly canStart = computed(() => this.players().length >= 2);
 
   constructor(private nimmtService: SixNimmtService) {}
 
-  ngOnInit() {}
-
-  startFreshGame() {
-    this.nimmtService.sendSocketMessage('start-fresh-game');
+  copyCode() {
+    const code = this.gameData()?.code;
+    if (code) navigator.clipboard.writeText(code);
   }
 
-  getPlayersList() {
-    return Object.values(this.gameData.players);
+  kickPlayer(token: string) {
+    this.nimmtService.sendSocketMessage('kick-player', { playerId: token });
   }
 
-  async copyGameCode() {
-    try {
-      await navigator.clipboard.writeText(this.gameCode);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  }
-
-  kickPlayer(player: any) {
-    Swal.fire({
-      title: `Are you sure you want to kick <strong>${player.playerName}</strong>?`,
-      text: 'This will remove them from the game',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Kick',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.nimmtService.sendSocketMessage('kick-player', {
-          playerId: player.userToken,
-        });
-      }
-    });
-  }
-
-  canStartGame() {
-    return Object.values(this.gameData?.players).length >= 2;
+  startGame() {
+    this.nimmtService.sendSocketMessage('start-fresh-game', {});
   }
 }

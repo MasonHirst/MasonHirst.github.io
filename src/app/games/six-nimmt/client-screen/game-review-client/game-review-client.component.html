@@ -1,10 +1,12 @@
-<p>game-review-client works!</p>
-
-<button
-  *ngIf="isFirstPlayer()"
-  class="btn btn-info"
-  (click)="sendMessage('start-next-round')"
->
-  Another round
-</button>
-<!-- <button class="btn btn-info" (click)="navigateToGames()">Back to games home</button> -->
+<div class="review-client-wrapper">
+  <ng-container *ngIf="isFirst(); else waiting">
+    <p class="prompt">Round complete! Start the next one?</p>
+    <button class="btn-gold" [disabled]="!canStart()" (click)="nextRound()">
+      Next Round
+    </button>
+  </ng-container>
+  <ng-template #waiting>
+    <div class="spinner-ring"></div>
+    <p class="waiting-text">Waiting for host to start next round…</p>
+  </ng-template>
+</div>

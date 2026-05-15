@@ -1,59 +1,73 @@
 <div
-  class="nimmt-card"
-  (click)="handleCardClick()"
-  [ngStyle]="{
-    height: height + 'px',
-    width: .6 * height + 'px',
-    border: borderWidth + 'px solid ' + borderColor,
-    cursor: selectable ? 'pointer' : 'default',
-    bottom: selected ? .2 * height + 'px' : '',
-    marginLeft: cardIndex > 0 ? -.2 * height + 'px' : '',
-    backgroundColor: backgroundColor,
-  }"
+  class="card-scene"
+  [style.width.px]="width"
+  [style.height.px]="height"
+  (click)="handleClick()"
+  [class.selectable]="selectable"
+  [class.selected]="selected"
 >
-  <p
-    *ngFor="let index of [0, 1, 2, 3]"
-    class="card-number"
-    [ngClass]="{
-      'top-left': index === 0,
-      'top-right': index === 1,
-      'bottom-left': index === 2,
-      'bottom-right': index === 3,
-    }"
-    [ngStyle]="{
-      fontSize: .10 * height + 'px',
-      fontWeight: 'bold',
-    }"
-  >
-    {{ card.number }}
-  </p>
+  <div class="card-inner" [class.flipped]="faceDown">
 
-  <p
-    [ngStyle]="{
-      fontSize: .33 * height + 'px',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-    }"
-  >
-    {{ card.number }}
-  </p>
+    <!-- Front face -->
+    <div
+      class="card-face card-front"
+      *ngIf="card"
+      [attr.data-bullheads]="card.bullHeads"
+    >
+      <!-- Top row: number top-left, mini bulls top-right -->
+      <div class="card-corner top">
+        <span class="corner-number" [style.font-size.px]="height * 0.12">
+          {{ card.number }}
+        </span>
+        <div
+          class="corner-bulls"
+          [style.width.px]="cornerBullsWidth"
+        >
+          <span
+            *ngFor="let _ of bullHeads"
+            class="mini-bull"
+            [style.width.px]="miniBullSize"
+            [style.height.px]="miniBullSize"
+          ></span>
+        </div>
+      </div>
 
-  <p *ngIf="showPlayerName()">{{ showPlayerName() }}</p>
+      <!-- Center: big bull silhouette with large number overlaid -->
+      <div class="card-center">
+        <div class="big-bull"></div>
+        <span
+          class="big-number"
+          [style.font-size.px]="height * 0.38"
+          [style.-webkit-text-stroke-width.px]="height * 0.025"
+        >{{ card.number }}</span>
+      </div>
 
-  <p>{{card.bullheads}}</p>
-  <section
-    *ngIf="card.bullHeads"
-    class="bullheads-wrapper"
-    
-  >
-    <img
-      *ngFor="let _ of [].constructor(card.bullHeads)"
-      src="../../../../assets/bullhead.svg"
-      alt="bullhead-icon"
-      [ngStyle]="{
-        width: .1 * height + 'px',
-      }"
-    />
-  </section>
+      <!-- Bottom row (rotated 180): bulls become bottom-left, number becomes bottom-right -->
+      <div class="card-corner bottom">
+        <span class="corner-number" [style.font-size.px]="height * 0.12">
+          {{ card.number }}
+        </span>
+        <div
+          class="corner-bulls"
+          [style.width.px]="cornerBullsWidth"
+        >
+          <span
+            *ngFor="let _ of bullHeads"
+            class="mini-bull"
+            [style.width.px]="miniBullSize"
+            [style.height.px]="miniBullSize"
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty card face (no card data) -->
+    <div class="card-face card-front card-empty" *ngIf="!card"></div>
+
+    <!-- Back face -->
+    <div class="card-face card-back">
+      <div class="card-back-pattern"></div>
+    </div>
+
+  </div>
 </div>
