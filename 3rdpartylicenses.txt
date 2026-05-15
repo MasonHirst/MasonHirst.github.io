@@ -471,6 +471,9 @@ engine.io-client
 
 engine.io-parser
 
+gsap
+Standard 'no charge' license: https://gsap.com/standard-license.
+
 nanoid
 MIT
 The MIT License (MIT)
