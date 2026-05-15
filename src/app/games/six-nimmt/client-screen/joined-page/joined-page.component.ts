@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, computed } from '@angular/core';
 import { SixNimmtService } from '../../six-nimmt.service';
 
 @Component({
@@ -7,34 +6,16 @@ import { SixNimmtService } from '../../six-nimmt.service';
   templateUrl: './joined-page.component.html',
   styleUrls: ['./joined-page.component.css'],
 })
-export class JoinedPageComponent implements OnInit {
-  @Input() gameCode: string;
-  @Input() gameData: any;
-  myToken: string = localStorage.getItem('userToken');
+export class JoinedPageComponent {
+  readonly isFirst = computed(() => this.nimmtService.isFirstPlayer());
+  readonly playerCount = computed(() =>
+    Object.keys(this.nimmtService.gameData()?.players ?? {}).length,
+  );
+  readonly canStart = computed(() => this.playerCount() >= 2);
 
-  urlGameCode: string = '';
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private nimmtService: SixNimmtService
-  ) {}
+  constructor(private nimmtService: SixNimmtService) {}
 
-  ngOnInit() {
-    this.nimmtService.checkGameExists(location.href.split('/').pop());
-
-    this.activatedRoute.params.subscribe((params) => {
-      this.urlGameCode = params['gameCode'];
-    });
-  }
-
-  isFirstPlayer() {
-    return this.nimmtService.isFirstPlayer();
-  }
-
-  startFreshGame() {
-    this.nimmtService.sendSocketMessage('start-fresh-game')
-  }
-  
-  canStartGame() {
-    return Object.values(this.gameData?.players).length >= 2;
+  startGame() {
+    this.nimmtService.sendSocketMessage('start-fresh-game', {});
   }
 }

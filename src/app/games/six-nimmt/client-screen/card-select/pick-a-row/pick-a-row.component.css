@@ -1,5 +1,94 @@
-.pick-row-btns-wrapper {
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sheet {
+  width: 100%;
+  background: #0d2218;
+  border-top: 2px solid #d4af37;
+  border-radius: 16px 16px 0 0;
+  padding: 24px 16px 32px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.sheet-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: #f1c40f;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.row-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+}
+
+.row-option:hover:not(:disabled) {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+.row-option.cheapest {
+  border-color: rgba(46, 204, 113, 0.5);
+}
+
+.row-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.row-label {
+  font-family: 'Cinzel', serif;
+  color: #f1c40f;
+  font-size: 0.85rem;
+  min-width: 44px;
+}
+
+.row-cards {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex: 1;
+  overflow: hidden;
+}
+
+.row-cost {
+  font-weight: 700;
+  color: #e74c3c;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.row-cost.low-cost {
+  color: #2ecc71;
 }

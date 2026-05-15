@@ -1,46 +1,204 @@
-.nimmt-card {
-  border-radius: 8px;
+.card-scene {
+  perspective: 600px;
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
   position: relative;
-  /* transition: all .3s ease-in-out !important; */
-  user-select: none;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
 }
-.nimmt-card > p {
-  margin: 0;
-  color: black;
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
   position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
-.top-left {
-  top: 0;
-  left: 0;
-  transform: translateX(15%);
-}
-
-.top-right {
-  top: 0;
-  right: 0;
-  transform: translateX(-15%);
-}
-
-.bottom-left {
-  bottom: 0;
-  left: 0;
-  transform: translateX(15%);
-}
-
-.bottom-right {
-  bottom: 0;
-  right: 0;
-  transform: translateX(-15%);
-}
-
-.bullheads-wrapper {
-  width: 72%;
-  position: absolute;
-  top: 24%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+/* ── Front face ──────────────────────────────── */
+.card-front {
+  background: #ffffff;
+  border: 1px solid #c8c8c8;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6%;
+  box-sizing: border-box;
+}
+
+.card-empty {
+  border: 2px dashed rgba(212, 175, 55, 0.4);
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+}
+
+/* ── Corner: number on one side, bulls on the other ── */
+.card-corner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6%;
+  flex: 0 0 auto;
+  z-index: 2;
+}
+
+/* Bottom row rotates 180° so the bulls end up bottom-left and number bottom-right,
+   matching the real 6-nimmt card's playing-card-style symmetry. */
+.card-corner.bottom {
+  transform: rotate(180deg);
+}
+
+.corner-number {
+  font-family: 'Lilita One', 'Cinzel', serif;
+  font-weight: 400; /* Lilita One is single-weight */
+  color: var(--accent-color, #6b4a8c);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.corner-bulls {
+  display: flex;
   flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  align-content: start;
+  flex-shrink: 0;
+}
+
+.mini-bull {
+  display: block;
+  background-color: var(--bull-color, #7B5BA0);
+  -webkit-mask: url('/assets/bullhead.svg') no-repeat center / contain;
+  mask: url('/assets/bullhead.svg') no-repeat center / contain;
+}
+
+/* ── Center: large bull silhouette + number overlay ── */
+.card-center {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2% 0;
+  min-height: 0;
+}
+
+.big-bull {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bull-color, #7B5BA0);
+  -webkit-mask: url('/assets/bullhead.svg') no-repeat center / contain;
+  mask: url('/assets/bullhead.svg') no-repeat center / contain;
+}
+
+.big-number {
+  position: relative;
+  z-index: 2;
+  font-family: 'Lilita One', 'Cinzel', serif;
+  font-weight: 400;
+  color: var(--number-color, #ffffff);
+  -webkit-text-stroke-color: var(--number-stroke, #1a1a1a);
+  -webkit-text-stroke-width: 2px; /* overridden inline based on card height */
+  paint-order: stroke fill;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ── Color coding by penalty (matches the real 6-nimmt scheme) ──
+   Number fills are picked to contrast strongly against the bull silhouette below them. */
+
+/* 1 bull: default — purple bull, near-white number with dark purple stroke */
+.card-front[data-bullheads="1"] {
+  --bull-color: #7B5BA0;
+  --accent-color: #6b4a8c;
+  --number-color: #f5e9ff;
+  --number-stroke: #3a1f5e;
+}
+
+/* 2 bulls: ends-in-5 — light blue bull, bright green number with dark stroke */
+.card-front[data-bullheads="2"] {
+  --bull-color: #5BACD8;
+  --accent-color: #2f7aa8;
+  --number-color: #f7e26b;
+  --number-stroke: #0e3f25;
+}
+
+/* 3 bulls: ends-in-0 — green bull, bright yellow number with dark green stroke */
+.card-front[data-bullheads="3"] {
+  --bull-color: #5BA85E;
+  --accent-color: #2f6e35;
+  --number-color: #ffe14d;
+  --number-stroke: #1f3a20;
+}
+
+/* 5 bulls: doubles — red bull, bright green number with near-black stroke */
+.card-front[data-bullheads="5"] {
+  --bull-color: #d74a3d;
+  --accent-color: #9a2e22;
+  --number-color: #7dd47a;
+  --number-stroke: #1a1a1a;
+}
+
+/* 7 bulls: card 55 — yellow bull, bright red number with near-black stroke */
+.card-front[data-bullheads="7"] {
+  --bull-color: #f2d04d;
+  --accent-color: #b89320;
+  --number-color: #e74c3c;
+  --number-stroke: #1a1a1a;
+}
+
+/* ── Back face ───────────────────────────────── */
+.card-back {
+  background: #1a3a2a;
+  border: 2px solid #d4af37;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back-pattern {
+  width: 80%;
+  height: 80%;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(212, 175, 55, 0.08) 4px,
+    rgba(212, 175, 55, 0.08) 8px
+  );
+}
+
+/* ── Selectable / selected states ────────────── */
+.selectable {
+  cursor: pointer;
+}
+
+.selectable:hover .card-front {
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.55), 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.selected {
+  transform: translateY(-12px);
+}
+
+.selected .card-front {
+  border-color: #d4af37;
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
 }

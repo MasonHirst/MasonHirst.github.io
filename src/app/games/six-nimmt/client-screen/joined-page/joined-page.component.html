@@ -1,24 +1,15 @@
-<section class="w-100 d-flex flex-col align-items-center p-2 mt-5">
-  <p *ngIf="!isFirstPlayer(); else startGameBtn" style="text-align: center">
-    Sit back and relax! The game should start soon.
-  </p>
+<div class="waiting-wrapper">
+  <div class="waiting-content" *ngIf="!isFirst()">
+    <div class="spinner-ring"></div>
+    <p class="waiting-text">Waiting for the host to start the game…</p>
+    <p class="player-count">{{ playerCount() }} player{{ playerCount() === 1 ? '' : 's' }} joined</p>
+  </div>
 
-  <ng-template #startGameBtn>
-    <p style="text-align: center">
-      You're the first one in! Start the game once everyone has joined.
-    </p>
-
-    <section class="mt-4 d-flex flex-col align-items-center">
-      <p class="mb-2 text-faded" *ngIf="!canStartGame()">
-        This game requires at least 2 players!
-      </p>
-      <button
-        class="btn btn-info"
-        [disabled]="!canStartGame()"
-        (click)="startFreshGame()"
-      >
-        Everyone's in, let's go!
-      </button>
-    </section>
-  </ng-template>
-</section>
+  <div class="host-start" *ngIf="isFirst()">
+    <p class="player-count">{{ playerCount() }} player{{ playerCount() === 1 ? '' : 's' }} joined</p>
+    <button class="start-btn" [disabled]="!canStart()" (click)="startGame()">
+      Start Game
+    </button>
+    <p class="hint" *ngIf="!canStart()">Need at least 2 players</p>
+  </div>
+</div>

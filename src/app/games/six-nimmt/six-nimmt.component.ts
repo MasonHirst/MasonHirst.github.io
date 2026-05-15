@@ -1,48 +1,33 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import axios from 'axios';
 import { SixNimmtService } from './six-nimmt.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-six-nimmt',
   templateUrl: './six-nimmt.component.html',
   styleUrls: ['./six-nimmt.component.css'],
 })
-export class SixNimmtComponent implements OnInit, OnDestroy {
+export class SixNimmtComponent {
   constructor(private nimmtService: SixNimmtService, private router: Router) {}
 
-  ngOnInit(): void {}
-
-  handleCodeSubmit(data: {
-    code: string;
-    isHost: boolean;
-    playerName: string;
-  }) {
-    const { code, isHost, playerName } = data;
-    this.nimmtService.checkGameExists(code).then((res) => {
-      if (res) {
+  handleCodeSubmit(data: { code: string; isHost: boolean; playerName: string }) {
+    this.nimmtService.checkGameExists(data.code).then(exists => {
+      if (exists) {
+        localStorage.setItem('playerName', data.playerName);
         this.nimmtService.sendSocketMessage('join-game', {
-          gameCode: code,
-          isHost,
-          playerName,
+          gameCode: data.code,
+          isHost: data.isHost,
+          playerName: data.playerName,
         });
       }
     });
   }
 
   handleHostGame() {
-    axios
-      .post('/api/nimmt/create', {})
-      .then(({ data, status }) => {
-        if (status !== 200 || !data.code) {
-          return alert('Something went wrong, please try again');
-        }
-        if (data?.gameState === 'WAITING_FOR_PLAYERS') {
-          this.router.navigate([`/games/6-nimmt!/host/${data.code}`]);
-        }
-      })
-      .catch(console.error);
+    axios.post('/api/nimmt/create', {}).then(({ data, status }) => {
+      if (status !== 200 || !data?.code) return alert('Something went wrong, please try again');
+      this.router.navigate([`/games/6-nimmt!/host/${data.code}`]);
+    }).catch(console.error);
   }
-
-  ngOnDestroy(): void {}
 }

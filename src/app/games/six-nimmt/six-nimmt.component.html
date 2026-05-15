@@ -1,9 +1,5 @@
 <app-game-room-handler
   (submitGameCode)="handleCodeSubmit($event)"
   (submitHostGame)="handleHostGame()"
-  [gameInfo]="{
-    gameName: '6-nimmt!',
-    hostHref: 'host',
-  }"
->
-</app-game-room-handler>
+  [gameInfo]="{ gameName: '6-nimmt!', hostHref: 'host' }"
+></app-game-room-handler>

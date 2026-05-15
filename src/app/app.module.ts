@@ -38,6 +38,7 @@ import { CardSelectComponent } from './games/six-nimmt/client-screen/card-select
 import { PickARowComponent } from './games/six-nimmt/client-screen/card-select/pick-a-row/pick-a-row.component';
 import { GameReviewPageComponent } from './games/six-nimmt/host-screen/game-review-page/game-review-page.component';
 import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-review-client/game-review-client.component';
+import { CountdownOverlayComponent } from './games/six-nimmt/host-screen/countdown-overlay/countdown-overlay.component';
 import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
 import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-scoreboard.module';
 
@@ -75,6 +76,7 @@ import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-s
     PickARowComponent,
     GameReviewPageComponent,
     GameReviewClientComponent,
+    CountdownOverlayComponent,
     PinochleScoreboardComponent,
   ],
   imports: [

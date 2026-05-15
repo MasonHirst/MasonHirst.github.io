@@ -1,7 +1,7 @@
-.host-screen-wrapper {
-  min-height: calc(100vh - 55px);
-  /* border: 1px solid red; */
-  width: 100%;
-  z-index: 10;
-  margin-bottom: 200px;
+.host-root {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, #1f4a30 0%, #0f2016 100%);
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
 }
