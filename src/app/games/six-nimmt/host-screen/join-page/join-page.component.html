@@ -1,10 +1,10 @@
 <div class="join-wrapper">
   <h1 class="game-title">6-Nimmt!</h1>
 
-  <div class="code-block" (click)="copyCode()" title="Click to copy">
+  <div class="code-block" (click)="copyCode()" title="Click to copy invite link">
     <span class="code-label">Game Code</span>
     <span class="code-value">{{ gameData()?.code }}</span>
-    <span class="code-hint">click to copy</span>
+    <span class="code-hint">{{ justCopied() ? 'Link copied!' : 'click to copy invite link' }}</span>
   </div>
 
   <div class="players-section">

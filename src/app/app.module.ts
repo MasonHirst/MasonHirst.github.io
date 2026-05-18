@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -27,7 +26,6 @@ import { SongListComponent } from './extras/audio-library/song-list/song-list.co
 import { SoundAnimationComponent } from './extras/audio-library/audio-player/sound-animation/sound-animation.component';
 import { MusicControlsComponent } from './extras/audio-library/audio-player/music-controls/music-controls.component';
 import { SixNimmtComponent } from './games/six-nimmt/six-nimmt.component';
-import { GameRoomHandlerComponent } from './games/game-room-handler/game-room-handler.component';
 import { NimmtCardComponent } from './games/six-nimmt/nimmt-card/nimmt-card.component';
 import { HostScreenComponent } from './games/six-nimmt/host-screen/host-screen.component';
 import { ClientScreenComponent } from './games/six-nimmt/client-screen/client-screen.component';
@@ -39,6 +37,7 @@ import { PickARowComponent } from './games/six-nimmt/client-screen/card-select/p
 import { GameReviewPageComponent } from './games/six-nimmt/host-screen/game-review-page/game-review-page.component';
 import { GameReviewClientComponent } from './games/six-nimmt/client-screen/game-review-client/game-review-client.component';
 import { CountdownOverlayComponent } from './games/six-nimmt/host-screen/countdown-overlay/countdown-overlay.component';
+import { ReplayModalComponent } from './games/six-nimmt/host-screen/replay-modal/replay-modal.component';
 import { PinochleScoreboardComponent } from './games/pinochle-scoreboard/pinochle-scoreboard.component';
 import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-scoreboard.module';
 
@@ -65,7 +64,6 @@ import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-s
     SoundAnimationComponent,
     MusicControlsComponent,
     SixNimmtComponent,
-    GameRoomHandlerComponent,
     NimmtCardComponent,
     HostScreenComponent,
     ClientScreenComponent,
@@ -77,6 +75,7 @@ import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-s
     GameReviewPageComponent,
     GameReviewClientComponent,
     CountdownOverlayComponent,
+    ReplayModalComponent,
     PinochleScoreboardComponent,
   ],
   imports: [
@@ -85,11 +84,6 @@ import { PinochleScoreboardModule } from './games/pinochle-scoreboard/pinochle-s
     PinochleScoreboardModule,
     FormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      timeOut: 8000,
-      positionClass: 'toast-top-center',
-      enableHtml: true,
-    }),
   ],
   providers: [StylingService, DataService],
   bootstrap: [AppComponent],

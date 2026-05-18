@@ -1,11 +1,10 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 import { generate as shortId } from 'shortid';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 
 const SELF_HOSTED_URL = 'wss://portfolio.masonhirst.com';
@@ -24,10 +23,55 @@ export class SixNimmtService {
   readonly stackingSequence$ = new Subject<any>();
   readonly stackingContinuation$ = new Subject<any>();
 
-  constructor(private router: Router, private toastr: ToastrService) {
+  // Captured payload of the most recently played round, consumed by the self-contained
+  // replay modal. `snapshot` is the pre-stacking gameData; `moves` is appended across
+  // the original sequence + any pick-a-row continuations.
+  readonly lastReplay = signal<{
+    snapshot: any;
+    moves: any[];
+    finalGameState: any;
+  } | null>(null);
+
+  constructor(private router: Router) {
     if (!localStorage.getItem('userToken')) {
       localStorage.setItem('userToken', shortId());
     }
+
+    // Rehydrate the replay from sessionStorage so a host page-reload doesn't lose the
+    // ability to replay the most recent round. Scoped by gameCode so a different game
+    // in the same tab doesn't see another room's replay. Done BEFORE the persistence
+    // effect is declared below; we just call set() directly so the value is in place
+    // when the host-screen first reads `lastReplay()`.
+    const initialCode = this.codeFromUrl();
+    if (initialCode) {
+      const stored = sessionStorage.getItem(this.replayStorageKey(initialCode));
+      if (stored) {
+        try {
+          this.lastReplay.set(JSON.parse(stored));
+        } catch {
+          sessionStorage.removeItem(this.replayStorageKey(initialCode));
+        }
+      }
+    }
+
+    // Mirror lastReplay → sessionStorage so it survives a host reload. Keyed by the
+    // current gameCode (which doesn't change once the host is on /host/XYZW); on
+    // clear (null) we remove the entry rather than store the literal "null".
+    effect(() => {
+      const code = this.codeFromUrl();
+      if (!code) return;
+      const value = this.lastReplay();
+      const key = this.replayStorageKey(code);
+      if (value === null) {
+        sessionStorage.removeItem(key);
+      } else {
+        try {
+          sessionStorage.setItem(key, JSON.stringify(value));
+        } catch {
+          // Quota exceeded or similar — replay-on-reload is a nice-to-have, not critical.
+        }
+      }
+    });
 
     const { protocol, hostname } = document.location;
     const scheme = protocol === 'https:' ? 'wss' : 'ws';
@@ -51,7 +95,14 @@ export class SixNimmtService {
         this.socket.emit('join-game', { gameCode: code, userToken: this.userToken, isHost: true });
       } else if (path.includes('/client/')) {
         const playerName = localStorage.getItem('playerName') ?? '';
-        this.socket.emit('join-game', { gameCode: code, userToken: this.userToken, isHost: false, playerName });
+        // Skip the auto-join when there's no saved nickname (invite link opened on a
+        // fresh browser / incognito). ClientScreenComponent will render its nickname
+        // prompt and fire the join emit once the user submits a name. Otherwise the
+        // server would reject with `no-player-name` and the message handler below
+        // would bounce them to the landing page before they ever see the prompt.
+        if (playerName) {
+          this.socket.emit('join-game', { gameCode: code, userToken: this.userToken, isHost: false, playerName });
+        }
       }
     });
 
@@ -109,13 +160,58 @@ export class SixNimmtService {
     });
 
     this.socket.on('stacking-sequence', (data: any) => {
+      // Snapshot the pre-stacking gameData BEFORE forwarding the event. At this point
+      // gameData is still the end-of-PICKING_CARDS state (game-updated hasn't fired yet),
+      // which is exactly what the replay needs as its starting frame.
+      const preRoundData = this.gameData();
+      if (preRoundData) {
+        this.lastReplay.set({
+          snapshot: JSON.parse(JSON.stringify(preRoundData)),
+          moves: [...(data.moves ?? [])],
+          finalGameState: data.finalGameState ?? null,
+        });
+      }
       this.isAnimating.set(true);
       this.stackingSequence$.next(data);
     });
 
     this.socket.on('stacking-sequence-continuation', (data: any) => {
+      // Pick-a-row resumed: append the continuation's moves so the replay plays
+      // straight through as one continuous sequence.
+      this.lastReplay.update(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          moves: [...prev.moves, ...(data.moves ?? [])],
+          finalGameState: data.finalGameState ?? prev.finalGameState,
+        };
+      });
       this.stackingContinuation$.next(data);
     });
+
+    // Clear lastReplay when a new round is dealt (every player resets to 10 cards in
+    // PICKING_CARDS). Importantly: we only clear on the TRANSITION into a fresh-deal
+    // state from a non-fresh state — not whenever we observe a fresh-deal state.
+    // Why: on the very first trick of any round, gameData is still in its pre-stacking
+    // (hands=10) form at the moment `lastReplay.set(...)` fires inside the stacking-sequence
+    // handler. If this effect re-ran in that window and used a steady-state check, it
+    // would clear the replay we'd just captured. The transition check sidesteps that
+    // because `wasFreshDeal` is still true from before the trick started.
+    let wasFreshDeal = false;
+    effect(() => {
+      const data = this.gameData();
+      if (!data) return;
+      const players = Object.values<any>(data.players ?? {});
+      if (players.length === 0) return;
+      const isPickingFresh =
+        data.gameState === 'PICKING_CARDS' &&
+        players.every(p => (p.cards?.length ?? 0) === 10);
+
+      if (isPickingFresh && !wasFreshDeal && this.lastReplay()) {
+        this.lastReplay.set(null);
+      }
+      wasFreshDeal = isPickingFresh;
+    }, { allowSignalWrites: true });
   }
 
   sendSocketMessage(type: string, body: any = {}) {
@@ -146,14 +242,6 @@ export class SixNimmtService {
     if (finalGameState) this.gameData.set(finalGameState);
   }
 
-  showToast(data: any) {
-    const { playerName, takenRow, totalPoints, quip } = data;
-    const msg = `<strong>${playerName}</strong> took row <strong>${this.getRowString(takenRow)}</strong> for <strong>${totalPoints}</strong> pts!<p>${quip}</p>`;
-    if (totalPoints < 5) this.toastr.info(msg);
-    else if (totalPoints < 10) this.toastr.warning(msg);
-    else this.toastr.error(msg);
-  }
-
   get userToken(): string {
     return localStorage.getItem('userToken') ?? '';
   }
@@ -175,11 +263,11 @@ export class SixNimmtService {
     );
   }
 
-  getRowString(row: number): string {
-    return (['one', 'two', 'three', 'four'] as const)[row] ?? '';
-  }
-
   private codeFromUrl(): string {
     return location.pathname.split('/').pop() ?? '';
+  }
+
+  private replayStorageKey(code: string): string {
+    return `nimmt-replay-${code}`;
   }
 }

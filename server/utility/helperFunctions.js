@@ -68,8 +68,13 @@ function computeStackingSequence(gameData) {
   const state = JSON.parse(JSON.stringify(gameData));
   const moves = [];
 
+  // Defensive: require a non-null selectedCard. Belt-and-suspenders against any path
+  // that might invoke this with a stale state (e.g., a deselect that raced the countdown
+  // tick). The interval callback already re-checks allSelected, so this filter normally
+  // matches all non-stacked players — but if it doesn't, we'd rather skip a player than
+  // crash the sort on `null.number`.
   const sortedPlayers = Object.values(state.players)
-    .filter((p) => !p.cardIsStacked)
+    .filter((p) => !p.cardIsStacked && p.selectedCard)
     .sort((a, b) => a.selectedCard.number - b.selectedCard.number);
 
   for (const player of sortedPlayers) {
@@ -147,7 +152,6 @@ function applyPlayerMove(state, playerToken) {
   let tookRow = false;
   let rowCardsTaken = [];
   let pointsEarned = 0;
-  let quip = '';
 
   if (stackIndex === -1) {
     // Card is lower than every stack top — player must choose a row
@@ -155,7 +159,6 @@ function applyPlayerMove(state, playerToken) {
       const rowToTake = tableStacks[player.pickedRow];
       pointsEarned = rowToTake.reduce((acc, c) => acc + c.bullHeads, 0);
       rowCardsTaken = [...rowToTake];
-      quip = getTookPointsQuip(pointsEarned);
       player.pointCards.push(...rowToTake);
       tableStacks[player.pickedRow] = [player.selectedCard];
       stackIndex = player.pickedRow;
@@ -169,7 +172,6 @@ function applyPlayerMove(state, playerToken) {
     const rowToTake = tableStacks[stackIndex];
     pointsEarned = rowToTake.reduce((acc, c) => acc + c.bullHeads, 0);
     rowCardsTaken = [...rowToTake];
-    quip = getTookPointsQuip(pointsEarned);
     player.pointCards.push(...rowToTake);
     tableStacks[stackIndex] = [player.selectedCard];
     tookRow = true;
@@ -191,56 +193,11 @@ function applyPlayerMove(state, playerToken) {
       tookRow,
       rowCardsTaken,
       pointsEarned,
-      quip,
       // Full stack state after this move — client settles into this after the animation
       stackAfter: [...tableStacks[stackIndex]],
     },
   };
 }
-
-function getTookPointsQuip(points) {
-  if (points < 5) return lowQuips[Math.floor(Math.random() * lowQuips.length)];
-  if (points < 10) return medQuips[Math.floor(Math.random() * medQuips.length)];
-  return highQuips[Math.floor(Math.random() * highQuips.length)];
-}
-
-const lowQuips = [
-  "I've seen worse. Like when I tried to cook.",
-  'Try taking zero points next time. Revolutionary, I know.',
-  'Tis just a scratch!',
-  "Like getting a 'B' in P.E. class.",
-  'Warm-up round, right?',
-  "Taking points? That's so last season.",
-  'Like falling off a bike.',
-  "Just a few points, but who's counting? Oh, right, we are.",
-];
-
-const medQuips = [
-  'Not a great look for you.',
-  'Classic move for those who enjoy a challenge.',
-  'The pinnacle of strategic brilliance, clearly.',
-  'Because winning was just too mainstream, right?',
-  'Who needs points anyway? Certainly not you, it seems.',
-  "Taking points, because life is just too easy, isn't it?",
-  'Like breadcrumbs on the trail to defeat.',
-  'Clearly you love a good uphill battle.',
-  "I'd say that was unexpected, but I'd be lying.",
-  "Well, that's one way to keep it interesting.",
-  'Maybe try playing with a blindfold next time? Might improve your score.',
-];
-
-const highQuips = [
-  'You might just be a lost cause.',
-  'Embrace the thrill of impending doom.',
-  "I'd love to see how you play chess.",
-  'Dun Dun Dun...',
-  'Winning too mainstream for you? Clearly.',
-  'Winning is overrated, right?',
-  'Are you ok?',
-  "You just love uphill battles, don't you?",
-  'Do you think points are good? They are not.',
-  'Taking points with gusto! Not exactly the best strategy.',
-];
 
 module.exports = {
   new4LetterId,

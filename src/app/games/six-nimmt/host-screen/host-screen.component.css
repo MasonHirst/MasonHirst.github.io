@@ -5,3 +5,29 @@
   box-sizing: border-box;
   position: relative;
 }
+
+/* Replay button — fixed to the bottom-right of the host screen */
+.replay-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 12px 22px;
+  background: transparent;
+  border: 2px solid rgba(241, 196, 15, 0.7);
+  border-radius: 999px;
+  color: #f1c40f;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.replay-button:hover {
+  background: rgba(241, 196, 15, 0.12);
+  border-color: #f1c40f;
+  transform: translateY(-1px);
+}

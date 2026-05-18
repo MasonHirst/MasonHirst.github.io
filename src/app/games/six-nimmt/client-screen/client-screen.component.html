@@ -1,12 +1,36 @@
 <div class="client-root">
-  <header class="client-header">
-    <span class="header-name">{{ player()?.playerName }}</span>
-    <span class="header-score">{{ getTotalScore() }} 🐂</span>
-  </header>
-
-  <div class="client-body">
-    <app-joined-page      *ngIf="view() === 'waiting'"></app-joined-page>
-    <app-card-select      *ngIf="view() === 'cards'"></app-card-select>
-    <app-game-review-client *ngIf="view() === 'review'"></app-game-review-client>
+  <!-- First-visit nickname prompt (invite link opened with no saved name) -->
+  <div class="name-prompt-wrapper" *ngIf="needsName(); else joinedView">
+    <div class="name-prompt-card">
+      <h1 class="name-prompt-title">6-nimmt!</h1>
+      <p class="name-prompt-blurb">Pick a nickname to join the game.</p>
+      <form (submit)="$event.preventDefault(); submitName()" class="name-prompt-form">
+        <input
+          type="text"
+          class="name-prompt-input"
+          name="playerName"
+          [(ngModel)]="nameInput"
+          maxlength="15"
+          placeholder="Your name"
+          autocomplete="off"
+          autofocus
+        />
+        <button type="submit" class="name-prompt-btn">Join game</button>
+      </form>
+      <p *ngIf="nameError" class="name-prompt-error">{{ nameError }}</p>
+    </div>
   </div>
+
+  <ng-template #joinedView>
+    <header class="client-header">
+      <span class="header-name">{{ player()?.playerName }}</span>
+      <span class="header-score">{{ getTotalScore() }} 🐂</span>
+    </header>
+
+    <div class="client-body">
+      <app-joined-page      *ngIf="view() === 'waiting'"></app-joined-page>
+      <app-card-select      *ngIf="view() === 'cards'"></app-card-select>
+      <app-game-review-client *ngIf="view() === 'review'"></app-game-review-client>
+    </div>
+  </ng-template>
 </div>

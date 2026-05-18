@@ -1,0 +1,72 @@
+<div class="replay-backdrop">
+  <div class="replay-shell">
+
+    <!-- Header bar: badge + close -->
+    <div class="replay-header">
+      <span class="replay-badge">REPLAY</span>
+      <button class="replay-close" (click)="close()" aria-label="Close replay">×</button>
+    </div>
+
+    <!-- Table body: stacks left, player panels right -->
+    <div class="replay-table">
+
+      <section class="replay-stacks-section">
+        <div
+          *ngFor="let stack of localStacks(); let i = index"
+          class="replay-stack-row"
+          [id]="'replay-stack-row-' + i"
+        >
+          <span class="replay-row-number">{{ i + 1 }}</span>
+          <div class="replay-stack-cards">
+            <div
+              *ngFor="let slotIdx of slotIndices"
+              class="replay-stack-slot"
+              [class.filled]="isSlotSettled(stack, slotIdx)"
+            >
+              <app-nimmt-card
+                *ngIf="getSlotCard(stack, slotIdx) as card"
+                [id]="'replay-card-' + card.number"
+                [card]="card"
+                [height]="120"
+                [selectable]="false"
+              ></app-nimmt-card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="replay-players-section">
+        <div
+          *ngFor="let player of sortedPlayers(); trackBy: trackByToken"
+          class="replay-player-panel"
+          [id]="'replay-player-panel-' + player.userToken"
+          [class.active]="activeToken() === player.userToken"
+        >
+          <div class="replay-player-info">
+            <span class="replay-player-name">{{ player.playerName }}</span>
+            <span class="replay-player-score-row">
+              <span class="replay-round-score" [class.hot]="getRoundScore(player) >= 5">
+                {{ getRoundScore(player) }}<span class="bull-icon-inline"></span>
+              </span>
+              <span class="replay-total-score">Total: {{ getTotalScore(player) }}</span>
+            </span>
+          </div>
+
+          <div class="replay-player-card-slot" [id]="'replay-player-slot-' + player.userToken">
+            <ng-container *ngIf="player.selectedCard && !player.cardIsStacked">
+              <app-nimmt-card
+                [id]="'replay-card-' + player.selectedCard.number"
+                [card]="player.selectedCard"
+                [height]="65"
+                [selectable]="false"
+                [faceDown]="!cardsRevealed()"
+              ></app-nimmt-card>
+            </ng-container>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+</div>
