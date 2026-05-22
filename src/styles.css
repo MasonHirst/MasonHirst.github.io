@@ -175,25 +175,6 @@ button {
   z-index: 100;
 }
 
-.toast-top-center {
-  top: 55px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-}
-
-.ngx-toastr {
-  padding: 10px !important;
-  background-image: none !important;
-  box-shadow: 0 0 12px #686868 !important;
-  border-radius: 8px !important;
-}
-.ngx-toastr p {
-  margin: 0 !important;
-  text-align: center !important;
-}
-.toast-warning {
-  background-color: #d67d00 !important;
-}
 .golden-text {
   color: gold !important;
 }
@@ -203,4 +184,26 @@ button {
 
 .opacity-zero {
   opacity: 0 !important;
+}
+
+/* Floating "+N" popup for 6-nimmt score flashes. Global rule because the
+   popup is created with document.createElement and appended to <body>, so
+   it sits outside any Angular component's encapsulated style scope. */
+.score-popup {
+  position: fixed;
+  font-family: 'Lilita One', 'Cinzel', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffd633;
+  -webkit-text-stroke: 3px #1a1a1a;
+  paint-order: stroke fill;
+  text-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.85),
+    0 0 28px rgba(255, 214, 51, 0.9),
+    0 0 60px rgba(255, 214, 51, 0.55);
+  pointer-events: none;
+  z-index: 2000;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
 }

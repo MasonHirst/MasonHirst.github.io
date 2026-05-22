@@ -1,5 +1,102 @@
-<app-game-room-handler
-  (submitGameCode)="handleCodeSubmit($event)"
-  (submitHostGame)="handleHostGame()"
-  [gameInfo]="{ gameName: '6-nimmt!', hostHref: 'host' }"
-></app-game-room-handler>
+<div class="landing-root">
+  <div class="landing-card">
+    <header class="landing-header">
+      <h1 class="landing-title">6-nimmt!</h1>
+      <p class="landing-subtitle">Stack low. Dodge bulls. Beat your friends.</p>
+    </header>
+
+    <!-- Primary path: join an existing game -->
+    <section class="panel">
+      <h2 class="panel-title">Join a game</h2>
+
+      <form class="form-grid" (submit)="$event.preventDefault(); handleJoin()">
+        <label class="field">
+          <span class="field-label">Player name</span>
+          <input
+            type="text"
+            class="field-input"
+            name="playerName"
+            [(ngModel)]="playerName"
+            maxlength="15"
+            placeholder="Your name"
+            autocomplete="off"
+          />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Game code</span>
+          <input
+            type="text"
+            class="field-input code-input"
+            name="gameCode"
+            [ngModel]="gameCode"
+            (ngModelChange)="onCodeChange($event, 'join')"
+            maxlength="4"
+            placeholder="ABCD"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="joinPending || hostPending"
+        >
+          {{ joinPending ? 'Joining…' : 'Join game' }}
+        </button>
+      </form>
+    </section>
+
+    <div class="divider"><span>or</span></div>
+
+    <!-- Secondary path: host a new game -->
+    <section class="panel host-panel">
+      <p class="panel-blurb">Start a new room and share the 4-letter code with your friends.</p>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="handleHostNewGame()"
+        [disabled]="hostPending || joinPending"
+      >
+        {{ hostPending ? 'Creating…' : 'Host new game' }}
+      </button>
+
+      <button
+        type="button"
+        class="rejoin-toggle"
+        (click)="toggleRejoinHost()"
+      >
+        {{ rejoinHostOpen() ? '▾' : '▸' }} Rejoin an existing game as host
+      </button>
+
+      <form
+        *ngIf="rejoinHostOpen()"
+        class="rejoin-form"
+        (submit)="$event.preventDefault(); handleRejoinAsHost()"
+      >
+        <input
+          type="text"
+          class="field-input code-input"
+          name="rejoinHostCode"
+          [ngModel]="rejoinHostCode"
+          (ngModelChange)="onCodeChange($event, 'rejoin')"
+          maxlength="4"
+          placeholder="ABCD"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button
+          type="submit"
+          class="btn-secondary small"
+          [disabled]="joinPending || hostPending"
+        >
+          Rejoin as host
+        </button>
+      </form>
+    </section>
+
+    <p *ngIf="formError" class="form-error">{{ formError }}</p>
+  </div>
+</div>

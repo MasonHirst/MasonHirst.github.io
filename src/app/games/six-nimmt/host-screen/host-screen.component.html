@@ -4,4 +4,22 @@
   <app-join-page     *ngIf="view() === 'join'"></app-join-page>
   <app-game-table    *ngIf="view() === 'table'"></app-game-table>
   <app-game-review-page *ngIf="view() === 'review'"></app-game-review-page>
+
+  <!-- Replay button — only visible between rounds when there's a round to replay -->
+  <button
+    *ngIf="canShowReplayButton()"
+    class="replay-button"
+    (click)="openReplay()"
+    type="button"
+  >
+    ▶ Replay last round
+  </button>
+
+  <!-- Self-contained replay modal — fully separate DOM and animation pipeline -->
+  <app-replay-modal
+    *ngIf="replayOpen() && lastReplay() as replay"
+    [snapshot]="replay.snapshot"
+    [moves]="replay.moves"
+    (closed)="closeReplay()"
+  ></app-replay-modal>
 </div>

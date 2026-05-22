@@ -26,6 +26,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
   readonly pausedForName = signal<string | null>(null);
   // Whether to show player cards face-up (flips true just before stacking begins)
   readonly cardsRevealed = signal(false);
+  // While true, sortedPlayers uses the captured play order. Gated so the tile reorder
+  // happens AFTER the cards flip face-up (sequenced inside startSequence) instead of
+  // racing the reveal animation when `stacking-sequence` first arrives.
+  readonly tilesInPlayOrder = signal(false);
   // Card numbers whose flight animation has completed and are visually "settled" in their slot.
   // Used to keep the slot's dashed placeholder visible until the card actually arrives.
   readonly settledCards = signal<Set<number>>(new Set());
@@ -37,8 +41,17 @@ export class GameTableComponent implements OnInit, OnDestroy {
 
   readonly sortedPlayers = computed(() => {
     const players = Object.values<any>(this.localPlayers());
-    if (this.gameState() === 'STACKING_CARDS' || this.isAnimating()) {
-      return players.sort((a, b) => (a.selectedCard?.number ?? 0) - (b.selectedCard?.number ?? 0));
+    // Tile order is play-order ONLY while tilesInPlayOrder is true (set partway through
+    // startSequence, after the face-up reveal). Otherwise tiles sit in score-order — both
+    // between rounds and during the brief face-up reveal at the start of stacking, so
+    // the reorder animation is decoupled from the reveal animation.
+    if (this.tilesInPlayOrder() && this.playOrderTokens.length) {
+      const order = new Map(this.playOrderTokens.map((t, i) => [t, i] as const));
+      return players.sort((a, b) => {
+        const ai = order.get(a.userToken) ?? Number.MAX_SAFE_INTEGER;
+        const bi = order.get(b.userToken) ?? Number.MAX_SAFE_INTEGER;
+        return ai - bi;
+      });
     }
     return players.sort(
       (a, b) => this.nimmtService.getTotalScore(a) - this.nimmtService.getTotalScore(b),
@@ -49,6 +62,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
   private pendingFinalState: any = null;
   private pendingPausedPlayer: any = null;
   private moveQueue: any[] = [];
+  // Locked tile order for the reveal phase. Captured once at the start of the stacking
+  // sequence from each player's selectedCard.number — kept stable while cards fly off
+  // (their selectedCard gets nulled in localPlayers during the animation).
+  private playOrderTokens: string[] = [];
 
   constructor(private nimmtService: SixNimmtService) {
     // Keep local display state in sync with live gameData when not animating.
@@ -60,6 +77,9 @@ export class GameTableComponent implements OnInit, OnDestroy {
           this.localStacks.set(data.tableStacks ? data.tableStacks.map((s: any[]) => [...s]) : []);
           this.localPlayers.set({ ...data.players });
           this.cardsRevealed.set(data.gameState === 'STACKING_CARDS');
+          // Reset to score-order sorting between rounds; startSequence will flip it back
+          // to play-order partway through the next reveal phase.
+          this.tilesInPlayOrder.set(false);
           // All currently-displayed cards are visually settled when no animation is running.
           const settled = new Set<number>();
           (data.tableStacks ?? []).forEach((s: any[]) =>
@@ -74,9 +94,8 @@ export class GameTableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subs.add(
       this.nimmtService.stackingSequence$.subscribe(result => {
-        // Capture current panel positions BEFORE startSequence writes signals that trigger
-        // the sortedPlayers reorder, then FLIP-animate from old → new.
-        this.flipPanelReorder();
+        // No eager flipPanelReorder here — the reorder is now sequenced INSIDE
+        // startSequence (after the face-up reveal) so it doesn't race the card flip.
         this.startSequence(result.moves, result.finalGameState, true, result.pausedForPlayer);
       }),
     );
@@ -107,6 +126,14 @@ export class GameTableComponent implements OnInit, OnDestroy {
       // Snapshot live game state and run the card-reveal flip before processing
       const data = this.gameData();
       if (data) {
+        // Lock the play order BEFORE we mutate any player state. Every player here
+        // still has selectedCard set; once cards start flying we null them out, so
+        // sorting by live selectedCard.number mid-animation would reshuffle the tiles.
+        this.playOrderTokens = Object.values<any>(data.players)
+          .filter((p: any) => p.selectedCard)
+          .sort((a: any, b: any) => a.selectedCard.number - b.selectedCard.number)
+          .map((p: any) => p.userToken);
+
         this.localStacks.set(data.tableStacks.map((s: any[]) => [...s]));
         this.localPlayers.set(JSON.parse(JSON.stringify(data.players)));
         // Cards already on the table at sequence start are settled. Incoming cards
@@ -116,13 +143,26 @@ export class GameTableComponent implements OnInit, OnDestroy {
         this.settledCards.set(settled);
       }
       this.cardsRevealed.set(false);
+      // Reveal-phase choreography:
+      //   T=0       cards face-down, tiles in score order
+      //   T=200ms   cardsRevealed → face-up flip (tiles still score order)
+      //   T=1200ms  capture rects then flip tilesInPlayOrder true → FLIP animates the reorder
+      //   T=1900ms  first card flies
       setTimeout(() => {
         this.cardsRevealed.set(true);
-        setTimeout(() => this.processNextMove(), 500);
+        setTimeout(() => {
+          // FLIP capture happens BEFORE the signal write so we record the score-order
+          // positions; the signal write triggers an Angular re-render into play-order
+          // positions, and flipPanelReorder's setTimeout(0) reads those and tweens.
+          this.flipPanelReorder();
+          this.tilesInPlayOrder.set(true);
+          setTimeout(() => this.processNextMove(), 700);
+        }, 1000);
       }, 200);
     } else {
-      // Continuation after pick-a-row: local state is already mid-sequence, cards already revealed
-      this.processNextMove();
+      // Continuation after pick-a-row: local state is already mid-sequence, cards already revealed.
+      // Hold for a beat so the eye can register the row that was just chosen before the card flies in.
+      setTimeout(() => this.processNextMove(), 500);
     }
   }
 
@@ -139,9 +179,12 @@ export class GameTableComponent implements OnInit, OnDestroy {
         const transitionDelay = isFinalRound ? 3000 : 0;
 
         // Mid-game: FLIP-animate the panels reordering back to score order.
+        // Capture rects (still in play-order positions), THEN flip tilesInPlayOrder off
+        // so sortedPlayers re-sorts by score and the FLIP tweens from old → new.
         // Final round: skip the FLIP — the table view is about to unmount anyway.
         if (!isFinalRound) {
           this.flipPanelReorder();
+          this.tilesInPlayOrder.set(false);
         }
 
         const finalState = this.pendingFinalState;
@@ -335,12 +378,6 @@ export class GameTableComponent implements OnInit, OnDestroy {
   }
 
   private flashScore(move: any) {
-    this.nimmtService.showToast({
-      playerName: move.playerName,
-      takenRow: move.stackIndex,
-      totalPoints: move.pointsEarned,
-      quip: move.quip,
-    });
     const panelEl = document.getElementById(`player-panel-${move.playerToken}`);
     if (!panelEl) return;
 
@@ -348,10 +385,21 @@ export class GameTableComponent implements OnInit, OnDestroy {
     setTimeout(() => panelEl.classList.remove('score-flash'), 700);
 
     // Floating yellow "+N" that pops over the panel as the swept cards arrive.
+    // Appended to <body> with position:fixed and coords from the panel's bounding rect, so
+    // the popup is NOT a child of the panel — any GSAP transform on the panel (e.g. the FLIP
+    // reorder when the sequence ends) can't drag the popup along with it, and the popup
+    // can't shift the panel's internal layout while it's spawned.
+    const rect = panelEl.getBoundingClientRect();
     const popup = document.createElement('div');
     popup.className = 'score-popup';
     popup.textContent = `+${move.pointsEarned}`;
-    panelEl.appendChild(popup);
+    popup.style.left = `${rect.left + rect.width / 2}px`;
+    popup.style.top = `${rect.top + rect.height / 2}px`;
+    document.body.appendChild(popup);
+
+    // xPercent/yPercent for centering — GSAP-native so it composes cleanly with the scale/y/rotation
+    // tweens. Avoid CSS `transform: translate(-50%, -50%)`, which GSAP would overwrite.
+    gsap.set(popup, { xPercent: -50, yPercent: -50 });
 
     gsap.fromTo(
       popup,

@@ -124,11 +124,34 @@ function attachSocketServer(server) {
     // (currently only true when 1-card auto-select fired on the last round).
     socket.on('animation-complete', ({ gameCode }) => {
       const room = nimmtRooms[gameCode];
-      if (!room || room.gameState !== 'PICKING_CARDS') return;
+      if (!room) return;
+
+      // Pair to runStackingPhase / handlePlayerSelectRow: when the round closed out into
+      // GAME_REVIEW we deferred the game-updated broadcast so non-host clients wouldn't
+      // jump to the review screen mid-animation. Flush it now that the host has finished
+      // playing the closing animation + 3-second hold.
+      if (room.gameState === 'GAME_REVIEW') {
+        io.to(gameCode).emit('game-updated', room);
+      }
+
+      if (room.gameState !== 'PICKING_CARDS') return;
       const players = Object.values(room.players);
       if (players.length === 0) return;
       const allSelected = players.every((p) => p.selectedCard);
       if (allSelected) manageCountdown(gameCode, true);
+    });
+
+    // Host emits this when its replay modal opens (busy=true) and closes (busy=false).
+    // While busy, the countdown is deferred so it doesn't run silently underneath
+    // the replay overlay and skip the host audience past the reveal phase.
+    socket.on('host-busy', ({ gameCode, busy }) => {
+      const room = nimmtRooms[gameCode];
+      if (!room) return;
+      room.hostBusy = !!busy;
+      if (!busy && room.pendingCountdown) {
+        room.pendingCountdown = false;
+        manageCountdown(gameCode, true);
+      }
     });
 
     socket.on('disconnect', () => {
@@ -152,8 +175,15 @@ function attachSocketServer(server) {
 // Starts or clears the 3-second countdown before the stacking phase.
 // Emits `counting-down` with the current value (3/2/1) while ticking, or null when cancelled.
 // Idempotent when `start=true` and a countdown is already running (no-op).
+// If the host has signalled it is busy (replay modal open), defer the start until
+// host-busy=false arrives so the countdown plays for the live audience.
 function manageCountdown(gameCode, start) {
   if (start && countdowns[gameCode]) return;
+  const room = nimmtRooms[gameCode];
+  if (start && room?.hostBusy) {
+    room.pendingCountdown = true;
+    return;
+  }
 
   if (countdowns[gameCode]) {
     clearInterval(countdowns[gameCode].interval);
@@ -174,6 +204,16 @@ function manageCountdown(gameCode, start) {
         clearInterval(countdowns[gameCode].interval);
         delete countdowns[gameCode];
         io.to(gameCode).emit('counting-down', null);
+        // Re-verify: a deselect socket event may have been queued behind this timer fire,
+        // OR the deselect handler may have set selectedCard=null without successfully
+        // cancelling the interval in time. Skipping runStackingPhase here keeps the room
+        // in PICKING_CARDS — the next select-card will re-trigger manageCountdown.
+        const liveRoom = nimmtRooms[gameCode];
+        if (!liveRoom || liveRoom.gameState !== 'PICKING_CARDS') return;
+        const allStillSelected = Object.values(liveRoom.players).every(
+          (p) => p.selectedCard,
+        );
+        if (!allStillSelected) return;
         runStackingPhase(gameCode);
       }
     }, 1000),
@@ -198,8 +238,19 @@ function runStackingPhase(gameCode) {
     finalGameState: result.finalGameState,
   });
 
-  // game-updated keeps late-joining clients in sync with actual room state
-  io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
+  // Broadcast policy:
+  // - If the round just ended (GAME_REVIEW), DEFER the game-updated broadcast until
+  //   the host emits `animation-complete`. Otherwise non-host clients snap straight to
+  //   the review screen while the host is still playing its closing animation + 3s hold.
+  //   The host applies finalGameState locally via finishAnimation, so it doesn't need
+  //   this broadcast to reach its own review view.
+  // - Otherwise (mid-round next-picking transition OR a pick-a-row pause): broadcast
+  //   immediately so clients can either pick their next card or render the pick-a-row UI.
+  const isReviewTransition =
+    result.finalGameState && result.finalGameState.gameState === 'GAME_REVIEW';
+  if (!isReviewTransition) {
+    io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
+  }
 }
 
 // Applies a computeStackingSequence result to the live room.
@@ -272,7 +323,14 @@ module.exports = {
         finalGameState: result.finalGameState,
       });
 
-      io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
+      // Same broadcast policy as runStackingPhase: if the continuation closes out the
+      // round (GAME_REVIEW), defer until the host's animation-complete so clients don't
+      // jump to the review screen ahead of the host audience.
+      const isReviewTransition =
+        result.finalGameState && result.finalGameState.gameState === 'GAME_REVIEW';
+      if (!isReviewTransition) {
+        io.to(gameCode).emit('game-updated', nimmtRooms[gameCode]);
+      }
       res.status(200).send(true);
     } catch (err) {
       console.error(err);
