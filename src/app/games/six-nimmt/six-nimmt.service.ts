@@ -18,6 +18,9 @@ export class SixNimmtService {
   // True while the client is playing through a stacking-sequence animation.
   // HostScreenComponent uses this to avoid switching views mid-animation.
   readonly isAnimating = signal(false);
+  // True after the final-round animation ends, until the host clicks "View Results".
+  // Keeps HostScreenComponent on the table view so the replay button is still accessible.
+  readonly pendingReview = signal(false);
 
   // One-shot events for the animation queue — not state, so Subject not Signal.
   readonly stackingSequence$ = new Subject<any>();
@@ -139,6 +142,9 @@ export class SixNimmtService {
       // GameTableComponent guards its local display state via an effect() gated on isAnimating,
       // so its display won't snap to the new state mid-animation.
       this.gameData.set(data);
+      // Clear the pending-review gate when the server moves away from GAME_REVIEW
+      // (e.g. host clicks "Next Round" or "New Game" on the review page).
+      if (data.gameState !== 'GAME_REVIEW') this.pendingReview.set(false);
     });
 
     this.socket.on('counting-down', (value: number | null) => {
@@ -205,7 +211,7 @@ export class SixNimmtService {
       if (players.length === 0) return;
       const isPickingFresh =
         data.gameState === 'PICKING_CARDS' &&
-        players.every(p => (p.cards?.length ?? 0) === 10);
+        players.every(p => (p.cards?.length ?? 0) === 3);
 
       if (isPickingFresh && !wasFreshDeal && this.lastReplay()) {
         this.lastReplay.set(null);
@@ -239,7 +245,19 @@ export class SixNimmtService {
   // Called by GameTableComponent once the stacking animation completes.
   finishAnimation(finalGameState: any) {
     this.isAnimating.set(false);
-    if (finalGameState) this.gameData.set(finalGameState);
+    if (finalGameState) {
+      this.gameData.set(finalGameState);
+      // Final round: gate the transition to GAME_REVIEW so the host can use the
+      // replay button before the review screen takes over.
+      if (finalGameState.gameState === 'GAME_REVIEW') {
+        this.pendingReview.set(true);
+      }
+    }
+  }
+
+  // Called when the host clicks "View Round Results" on the final-round table.
+  proceedToReview() {
+    this.pendingReview.set(false);
   }
 
   get userToken(): string {

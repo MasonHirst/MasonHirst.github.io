@@ -222,6 +222,46 @@
   50%       { opacity: 0.8; transform: scale(1.3); }
 }
 
+/* ── Round-over "View Results" prompt ─────── */
+.review-prompt {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  animation: review-fadein 0.5s ease both;
+}
+
+@keyframes review-fadein {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.review-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #1a3a2a;
+  background: #d4af37;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 36px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(212, 175, 55, 0.5);
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.review-btn:hover {
+  background: #e8c84a;
+  transform: translateX(0) scale(1.04);
+}
+
+.review-btn:active {
+  transform: translateX(0) scale(0.97);
+}
+
 .pick-row-badge {
   position: absolute;
   top: -10px;

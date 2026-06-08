@@ -5,6 +5,13 @@
     <span class="state-label">{{ showGameState() }}</span>
   </div>
 
+  <!-- ── Round-over button — appears after final-round animation ── -->
+  <div class="review-prompt" *ngIf="pendingReview()">
+    <button class="review-btn" (click)="goToReview()" type="button">
+      View Round Results →
+    </button>
+  </div>
+
   <!-- ── Table stacks (left) ── -->
   <section class="stacks-section">
     <div

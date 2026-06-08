@@ -13,10 +13,11 @@ export class HostScreenComponent implements OnInit {
   readonly lastReplay = this.nimmtService.lastReplay;
   readonly countdown = this.nimmtService.countdown;
 
-  // Lock the view to 'table' while the animation queue is running so we never
-  // switch away from GameTableComponent mid-animation.
+  // Lock the view to 'table' while animating or while the host has not yet clicked
+  // "View Round Results" after the final-round animation.
   readonly view = computed(() => {
     if (this.nimmtService.isAnimating()) return 'table';
+    if (this.nimmtService.pendingReview()) return 'table';
     const state = this.gameData()?.gameState;
     if (state === 'WAITING_FOR_PLAYERS') return 'join';
     if (state === 'GAME_REVIEW') return 'review';
@@ -48,7 +49,10 @@ export class HostScreenComponent implements OnInit {
     if (this.countdown() !== null) return false;
     if (this.countdownSettling()) return false;
     if (!this.lastReplay()) return false;
-    return this.gameData()?.gameState === 'PICKING_CARDS';
+    const state = this.gameData()?.gameState;
+    // Show between rounds (PICKING_CARDS) and after the final round while the
+    // host is deciding whether to replay before proceeding to the review screen.
+    return state === 'PICKING_CARDS' || this.nimmtService.pendingReview();
   });
 
   constructor(

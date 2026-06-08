@@ -120,8 +120,7 @@ function attachSocketServer(server) {
     });
 
     // Host emits this once its stacking-sequence animation queue empties.
-    // Triggers the next round's countdown if all players are already selected
-    // (currently only true when 1-card auto-select fired on the last round).
+    // Triggers the next round's countdown if all players have already selected.
     socket.on('animation-complete', ({ gameCode }) => {
       const room = nimmtRooms[gameCode];
       if (!room) return;

@@ -116,14 +116,6 @@ function computeStackingSequence(gameData) {
       p.cardIsStacked = false;
       p.selectedCard = null;
     });
-    // Auto-select when a player has only one card left — no real choice to make.
-    // Countdown is NOT started here; the host emits `animation-complete` once the
-    // previous round's stacking animation finishes, which triggers the countdown then.
-    Object.values(state.players).forEach((p) => {
-      if (p.cards.length === 1) {
-        p.selectedCard = p.cards[0];
-      }
-    });
     state.gameState = 'PICKING_CARDS';
   }
 
