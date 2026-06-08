@@ -14,17 +14,15 @@ export class DataService {
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689656944/Screenshot_2023-07-17_at_11.08.01_PM_vueaa4.png',
       'Salt Lake City, Utah',
       'Jun 2023',
-      'Present',
-      'Primary owner of the legacy Ember.js transfer web application — the main brokerage transfer product used by millions of Fidelity customers — managing feature delivery, on-call reliability, and production deployments end-to-end.',
+      'May 2026',
+      'Software Engineer at Fidelity Investments.',
       [
-        'Built the Copy-Bank feature enabling customers to copy standing EFT instructions across linked bank accounts and Fidelity accounts, now accessible to the majority of brokerage customers.',
-        'Developed an EFT intent detection flow that evaluates a user\'s saved standing instructions on transfer entry and intelligently redirects to the bank-linking app when none exist, improving customer onboarding completion.',
-        'Refactored the tax withholding page using a factory pattern for state-specific rule management, resolving several state-behavior bugs and dramatically reducing complexity — the new pattern is being adopted as a reference for the next-generation Angular platform rebuild.',
-        'Designed and maintained the team\'s on-call process: authored Confluence runbooks, created a reusable Jira story template for on-call rotations, and led training sessions for the team and neighboring teams.',
-        'Became the subject-matter expert (SME) for the legacy transfer app, representing the team in cross-functional meetings and fielding capability questions from external stakeholders and partner teams.',
-        'Onboarded and mentored 2 new associate engineers through the codebase, development workflows, and their first independent feature stories.',
-        'Maintained and debugged Jenkins CI/CD pipelines; monitored deployed container health and triaged production issues using Argo CD and Splunk.',
-        'Wrote comprehensive test coverage using Playwright (E2E) and Mocha/QUnit (unit), leveraging GitHub Copilot to evaluate coverage gaps and generate edge-case tests.',
+        'Primary owner of the legacy Ember.js transfer app used by millions of Fidelity customers monthly - managed feature delivery, production deployments, on-call reliability, and cross-functional representation end-to-end.',
+        'Built two major customer-facing features: Copy-Bank (EFT instruction reuse across linked accounts, accessible to the majority of brokerage customers) and an EFT intent A/B redirect experiment to improve new customer onboarding.',
+        'Refactored the tax withholding page using a factory pattern for state-specific rule isolation - earned principal engineer approval, resolved state-behavior bugs, and became the reference architecture for the Angular platform rebuild.',
+        'Overhauled the team\'s Wiremock mock data process and Playwright E2E suite - improved test reliability ~70% and reduced mobile test run times ~70% through Copilot-assisted automation scripts.',
+        'Redesigned the team\'s on-call process from scratch: Confluence runbooks, reusable weekly Jira templates, and cross-team training sessions - adopted by multiple neighboring teams.',
+        'Onboarded and mentored 2 associate engineers to be fully independent contributors.'
       ]
     ),
     new ExperienceModel(
@@ -33,8 +31,8 @@ export class DataService {
       'Sparkz Systems',
       'https://res.cloudinary.com/dk9vsivmu/image/upload/v1689657359/sparkz-logo_gqcisu.png',
       'Pleasant Grove, Utah',
-      'Nov 2022',
-      'Jun 2023',
+      'Jan 2023',
+      'Jul 2023',
       'Contributed features to Sparkz Cloud, a Vue.js/FeathersJS SaaS website builder, and built client sites to surface UX bugs and validate workflows.',
       [
         'Contributed features to Sparkz Cloud, a Vue.js/FeathersJS SaaS website builder, and built client sites to surface UX bugs and validate workflows.',

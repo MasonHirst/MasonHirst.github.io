@@ -36,6 +36,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
 
   readonly gameData = this.nimmtService.gameData;
   readonly isAnimating = this.nimmtService.isAnimating;
+  readonly pendingReview = this.nimmtService.pendingReview;
 
   readonly gameState = computed(() => this.gameData()?.gameState);
 
@@ -172,28 +173,26 @@ export class GameTableComponent implements OnInit, OnDestroy {
       // If paused waiting for a player to pick a row, keep animating flag true
       // until stacking-sequence-continuation arrives, and surface the indicator.
       if (this.pendingFinalState !== null) {
-        // After the final round, hold on the table for a beat so the closing score popup
-        // can finish playing and players can take in the result before the review screen
-        // takes over. Mid-game transitions stay snappy.
         const isFinalRound = this.pendingFinalState?.gameState === 'GAME_REVIEW';
-        const transitionDelay = isFinalRound ? 3000 : 0;
 
         // Mid-game: FLIP-animate the panels reordering back to score order.
-        // Capture rects (still in play-order positions), THEN flip tilesInPlayOrder off
-        // so sortedPlayers re-sorts by score and the FLIP tweens from old → new.
-        // Final round: skip the FLIP — the table view is about to unmount anyway.
+        // Final round: skip the FLIP — the table stays up for the pending-review button.
         if (!isFinalRound) {
           this.flipPanelReorder();
           this.tilesInPlayOrder.set(false);
         }
 
         const finalState = this.pendingFinalState;
+        // Brief settle so the last score popup has time to peak before the button appears.
+        // No long delay needed — finishAnimation sets pendingReview which shows the button,
+        // and the host controls when to proceed to the review screen.
+        const settleDelay = isFinalRound ? 800 : 0;
         setTimeout(() => {
           this.nimmtService.finishAnimation(finalState);
           // Server uses this to kick off the next countdown when players were auto-selected
           // (1-card last round). For normal rounds nothing happens server-side.
           this.nimmtService.sendSocketMessage('animation-complete', {});
-        }, transitionDelay);
+        }, settleDelay);
       } else if (this.pendingPausedPlayer) {
         this.pausedForToken.set(this.pendingPausedPlayer.playerToken);
         this.pausedForName.set(this.pendingPausedPlayer.playerName);
@@ -220,7 +219,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
         sweepClones = this.cloneStackCards(move.stackIndex);
       }
 
-      // 3. Update display state: remove card from player slot, add to stack
+      // 3. Update display state: remove card from player slot, add to stack.
       this.localPlayers.update(players => ({
         ...players,
         [move.playerToken]: { ...players[move.playerToken], selectedCard: null, cardIsStacked: true },
@@ -420,6 +419,22 @@ export class GameTableComponent implements OnInit, OnDestroy {
             duration: 0.7,
             delay: 0.7,
             ease: 'power2.in',
+            onStart: () => {
+              if (move.tookRow && move.rowCardsTaken?.length) {
+                setTimeout(() => {
+                  this.localPlayers.update(players => {
+                    const prev = players[move.playerToken];
+                    return {
+                      ...players,
+                      [move.playerToken]: {
+                        ...prev,
+                        pointCards: [...(prev.pointCards ?? []), ...move.rowCardsTaken],
+                      },
+                    };
+                  });
+                }, 250);
+              }
+            },
             onComplete: () => popup.remove(),
           });
         },
@@ -446,6 +461,10 @@ export class GameTableComponent implements OnInit, OnDestroy {
       case 'STACKING_CARDS': return 'Cards are in…';
       default: return '';
     }
+  }
+
+  goToReview() {
+    this.nimmtService.proceedToReview();
   }
 
   stacksForDisplay(stack: any[]): any[] {

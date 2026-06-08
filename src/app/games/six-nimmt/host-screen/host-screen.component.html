@@ -1,4 +1,12 @@
 <div class="host-root">
+  <a
+    class="host-menu-btn"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#drawer"
+    role="button"
+    aria-controls="drawer"
+  >&#9776;</a>
+
   <app-countdown-overlay></app-countdown-overlay>
 
   <app-join-page     *ngIf="view() === 'join'"></app-join-page>
