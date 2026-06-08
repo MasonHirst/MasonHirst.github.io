@@ -23,7 +23,16 @@
 
   <ng-template #joinedView>
     <header class="client-header">
-      <span class="header-name">{{ player()?.playerName }}</span>
+      <div class="header-left">
+        <a
+          class="header-menu-btn"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#drawer"
+          role="button"
+          aria-controls="drawer"
+        >&#9776;</a>
+        <span class="header-name">{{ player()?.playerName }}</span>
+      </div>
       <span class="header-score">{{ getTotalScore() }} 🐂</span>
     </header>
 

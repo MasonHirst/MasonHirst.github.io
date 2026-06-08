@@ -219,7 +219,7 @@ export class GameTableComponent implements OnInit, OnDestroy {
         sweepClones = this.cloneStackCards(move.stackIndex);
       }
 
-      // 3. Update display state: remove card from player slot, add to stack
+      // 3. Update display state: remove card from player slot, add to stack.
       this.localPlayers.update(players => ({
         ...players,
         [move.playerToken]: { ...players[move.playerToken], selectedCard: null, cardIsStacked: true },
@@ -419,6 +419,22 @@ export class GameTableComponent implements OnInit, OnDestroy {
             duration: 0.7,
             delay: 0.7,
             ease: 'power2.in',
+            onStart: () => {
+              if (move.tookRow && move.rowCardsTaken?.length) {
+                setTimeout(() => {
+                  this.localPlayers.update(players => {
+                    const prev = players[move.playerToken];
+                    return {
+                      ...players,
+                      [move.playerToken]: {
+                        ...prev,
+                        pointCards: [...(prev.pointCards ?? []), ...move.rowCardsTaken],
+                      },
+                    };
+                  });
+                }, 250);
+              }
+            },
             onComplete: () => popup.remove(),
           });
         },

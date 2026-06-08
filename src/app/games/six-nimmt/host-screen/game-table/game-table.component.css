@@ -224,7 +224,7 @@
 
 /* ── Round-over "View Results" prompt ─────── */
 .review-prompt {
-  position: absolute;
+  position: fixed;
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);

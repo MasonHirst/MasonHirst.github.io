@@ -57,12 +57,11 @@
   line-height: 1;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
-  /* Flex-center the × glyph — relying on line-height alone leaves it offset because
-     the × character has uneven vertical metrics inside its glyph box. */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 0 0 3px 0;
+  box-sizing: border-box;
 }
 .replay-close:hover {
   background: rgba(241, 196, 15, 0.12);
